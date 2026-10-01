@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-parchment: #FAF7F2;
+    --color-paper-alt: #F4EFEA;
+    --color-paper-dark: #ECE5DC;
+    --color-ink: #181513;
+    --color-ink-muted: #57524E;
+    --color-raffia: #C8B28B;
+    --color-raffia-light: #E8DFC8;
+    --color-raffia-dark: #8C7355;
+    --color-terracotta: #B84A28;
+    --color-terracotta-hover: #9E3E20;
+    --color-deep-brown: #241D19;
+    --color-border-hairline: rgba(24, 21, 19, 0.12);
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    background-color: var(--color-parchment);
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-editorial {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+
+  /* Accessible focus visible outlines */
+  :focus-visible {
+    outline: 2px solid var(--color-terracotta);
+    outline-offset: 2px;
+  }
+}
+
+/* Subtle organic tactile paper fiber texture overlay */
+.bg-tactile-paper {
+  background-color: #FAF7F2;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(200, 178, 139, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(184, 74, 40, 0.04) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(140, 115, 85, 0.03) 0px, transparent 100%);
+}
+
+.bg-dark-editorial {
+  background-color: #1F1A17;
+  color: #FAF7F2;
+}
+
+/* Custom delicate hairline dividers */
+.hairline-border {
+  border-color: rgba(24, 21, 19, 0.1);
+}
+
+.hairline-border-light {
+  border-color: rgba(250, 247, 242, 0.14);
+}
+
+/* Tabular numbers for price and dates */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom scrollbar for horizontal panels and cart */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(200, 178, 139, 0.15);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 115, 85, 0.35);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(184, 74, 40, 0.6);
+}
+
+/* Accessible reduced-motion overrides */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

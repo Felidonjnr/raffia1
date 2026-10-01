@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raffia Legacy | A Living Journey of Heritage, Creativity & Opportunity</title>
+    <meta name="description" content="A living journey of heritage, creativity and opportunity by Dance Ville. Celebrating African raffia culture, the Legacy Year, makers, and contemporary marketplace." />
+    <meta property="og:title" content="Raffia Legacy | A Living Journey of Heritage, Creativity & Opportunity" />
+    <meta property="og:description" content="A living journey of heritage, creativity and opportunity by Dance Ville. Celebrating African raffia culture, the Legacy Year, makers, and contemporary marketplace." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script>
+      // Gracefully prevent browser extension injection exceptions (e.g. MetaMask in sandboxed iframe)
+      window.addEventListener('error', function(event) {
+        var msg = (event && event.message) ? String(event.message).toLowerCase() : '';
+        var src = (event && event.filename) ? String(event.filename).toLowerCase() : '';
+        if (
+          msg.includes('metamask') ||
+          msg.includes('ethereum') ||
+          msg.includes('solana') ||
+          src.includes('chrome-extension') ||
+          src.includes('moz-extension')
+        ) {
+          if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+          if (event.preventDefault) event.preventDefault();
+          return true;
+        }
+      }, true);
+
+      window.addEventListener('unhandledrejection', function(event) {
+        var reason = event && event.reason;
+        var msg = '';
+        if (typeof reason === 'string') {
+          msg = reason.toLowerCase();
+        } else if (reason && reason.message) {
+          msg = String(reason.message).toLowerCase();
+        } else if (reason && reason.stack) {
+          msg = String(reason.stack).toLowerCase();
+        }
+        if (
+          msg.includes('metamask') ||
+          msg.includes('failed to connect to metamask') ||
+          msg.includes('ethereum') ||
+          msg.includes('solana') ||
+          msg.includes('web3')
+        ) {
+          if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+          if (event.preventDefault) event.preventDefault();
+        }
+      }, true);
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#FAF7F2] text-[#181513] antialiased selection:bg-[#B84A28] selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

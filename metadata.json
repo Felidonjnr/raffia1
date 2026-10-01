@@ -1,0 +1,6 @@
+{
+  "name": "Raffia Legacy",
+  "description": "A living journey of heritage, creativity and opportunity by Dance Ville. Celebrating African raffia culture, the Legacy Year, makers, and contemporary marketplace.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
