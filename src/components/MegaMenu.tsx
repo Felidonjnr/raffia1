@@ -8,6 +8,7 @@ interface MegaMenuProps {
   activeTab: MegaMenuTab | null;
   onClose: () => void;
   onNavigate: (route: ViewRoute) => void;
+  onKeepOpen?: () => void;
 }
 
 const menus: Record<MegaMenuTab, { title: string; items: string[] }> = {
@@ -37,7 +38,7 @@ const menus: Record<MegaMenuTab, { title: string; items: string[] }> = {
   },
 };
 
-export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNavigate }) => {
+export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNavigate, onKeepOpen }) => {
   if (!activeTab) return null;
   const menu = menus[activeTab];
 
@@ -55,7 +56,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
   };
 
   return (
-    <div className="mega-menu" onMouseEnter={() => {}}>
+    <div className="mega-menu" onMouseEnter={onKeepOpen}>
       <div className="mega-menu-inner">
         <div className="mega-menu-heading">
           <p className="eyebrow">RAFFIA LEGACY</p>

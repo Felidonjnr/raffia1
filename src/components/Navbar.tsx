@@ -65,7 +65,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate, onOpen
             <button onClick={() => setMobileOpen(true)} className="mobile-menu-button" aria-label="Open menu"><Menu size={24}/></button>
           </div>
         </div>
-        <MegaMenu activeTab={active} onClose={() => setActive(null)} onNavigate={onNavigate} />
+        <MegaMenu
+          activeTab={active}
+          onClose={() => setActive(null)}
+          onNavigate={onNavigate}
+          onKeepOpen={() => {
+            if (closeRef.current) window.clearTimeout(closeRef.current);
+          }}
+        />
       </header>
 
       {mobileOpen && (
