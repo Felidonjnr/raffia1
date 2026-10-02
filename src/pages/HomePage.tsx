@@ -15,7 +15,7 @@ interface HomePageProps {
   onSelectProduct: (slug: string) => void;
 }
 
-const launch = new Date('2027-10-01T10:00:00+01:00');
+const launch = new Date('2026-10-29T00:00:00+01:00');
 
 // 04. THE PROJECT - 5 Vision Pillars from PDF Page 2
 const PROJECT_CATEGORIES = [
