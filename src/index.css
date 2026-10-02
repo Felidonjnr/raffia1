@@ -3,14 +3,15 @@
 
 @layer base {
   :root {
-    --ivory: #F7F4EE;
-    --paper: #EDE6D8;
-    --ink: #17130F;
-    --brown: #332116;
-    --terracotta: #B94E2E;
-    --raffia: #C7A979;
-    --muted: #665D54;
-    --line: rgba(23, 19, 15, 0.14);
+    --ivory: #F3EBDD;
+    --paper: #EAE1D1;
+    --ink: #11100E;
+    --brown: #241A14;
+    --terracotta: #B65332;
+    --raffia: #C8A978;
+    --palm: #42543A;
+    --muted: #73695E;
+    --line: rgba(36, 26, 20, 0.12);
 
     /* Ultra-Legible Font System */
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -372,11 +373,19 @@
   top: 0;
   z-index: 50;
   height: 82px;
-  background: rgba(245, 240, 232, 0.94);
+  background: rgba(243, 235, 221, 0.94);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
-  transition: background-color 0.2s ease;
+  transition: all 0.25s ease;
+}
+
+.site-nav.site-nav-scrolled,
+header.site-nav-scrolled {
+  height: 70px;
+  background: rgba(36, 26, 20, 0.96) !important;
+  border-bottom: 1px solid rgba(200, 169, 120, 0.25);
+  box-shadow: 0 12px 32px -8px rgba(17, 16, 14, 0.45);
 }
 
 .site-nav-inner {
@@ -575,13 +584,13 @@
 /* MEGA MENU OVERLAY                                                         */
 /* ========================================================================= */
 .mega-menu {
-  position: absolute;
+  position: fixed;
   top: 82px;
   left: 0;
   width: 100%;
-  background: var(--ivory);
-  border-bottom: 1px solid var(--line);
-  box-shadow: 0 24px 48px -12px rgba(23, 19, 15, 0.18);
+  background: var(--brown);
+  border-bottom: 1px solid rgba(200, 169, 120, 0.25);
+  box-shadow: 0 24px 48px -12px rgba(17, 16, 14, 0.45);
   animation: megaFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 49;
 }
