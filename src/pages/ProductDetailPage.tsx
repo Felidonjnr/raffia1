@@ -6,6 +6,7 @@ import { ArchivalImage } from '../components/ArchivalImage';
 import { ProductCard } from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
 import { ArrowLeft, Plus, Minus, ShieldCheck, Truck, Sparkles, MapPin } from 'lucide-react';
+import { formatNaira } from '../utils/format';
 
 interface ProductDetailPageProps {
   slug: string;
@@ -139,8 +140,8 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 <span className="text-xs uppercase font-mono tracking-widest text-[#57524E]">
                   Guild Value
                 </span>
-                <span className="font-editorial text-3xl lg:text-4xl font-semibold text-[#181513] tabular-nums">
-                  ${product.price.toLocaleString()} <span className="text-sm font-sans font-normal text-[#57524E]">{product.currency}</span>
+                <span className="font-editorial text-3xl lg:text-4xl font-bold text-[#181513] tabular-nums">
+                  {formatNaira(product.price)}
                 </span>
               </div>
             </div>

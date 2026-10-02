@@ -2,6 +2,7 @@ import React from 'react';
 import { X, Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { ArchivalImage } from './ArchivalImage';
+import { formatNaira } from '../utils/format';
 
 interface CartDrawerProps {
   onNavigateToProduct?: (slug: string) => void;
@@ -158,7 +159,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                       {/* Price */}
                       <span className="font-editorial text-base font-semibold text-[#181513] tabular-nums">
-                        ${(product.price * quantity).toLocaleString()} USD
+                        {formatNaira(product.price * quantity)}
                       </span>
                     </div>
                   </div>
@@ -173,7 +174,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="space-y-1.5 text-xs">
                 <div className="flex justify-between text-[#57524E]">
                   <span>Artisan Guild Subtotal</span>
-                  <span className="font-mono tabular-nums">${subtotal.toLocaleString()} USD</span>
+                  <span className="font-mono tabular-nums">{formatNaira(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-[#57524E]">
                   <span>Packaging & Museum Care</span>
@@ -182,7 +183,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <div className="pt-2 border-t border-[#181513]/10 flex justify-between text-sm font-semibold text-[#181513]">
                   <span>Total Due</span>
                   <span className="font-editorial text-xl tabular-nums">
-                    ${subtotal.toLocaleString()} USD
+                    {formatNaira(subtotal)}
                   </span>
                 </div>
               </div>

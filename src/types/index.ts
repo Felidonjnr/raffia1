@@ -1,10 +1,11 @@
 export type ProductCategory =
   | 'ALL'
-  | 'NEW ARRIVALS'
+  | 'TRADITIONAL CRAFT'
+  | 'OBJECTS & LIVING'
+  | 'ART & TEXTILES'
   | 'FASHION & ACCESSORIES'
   | 'HOME & LIFESTYLE'
   | 'ART & DESIGN'
-  | 'TRADITIONAL CRAFT'
   | 'GIFTS'
   | 'FESTIVAL MERCHANDISE';
 

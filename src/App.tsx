@@ -15,10 +15,10 @@ import { ProjectPage } from './pages/ProjectPage';
 import { LegacyYearPage } from './pages/LegacyYearPage';
 import { ComingSoon } from './components/ComingSoon';
 
-const comingSoon = (title: string): ViewRoute => ({
+const comingSoon = (title: string, subtitle?: string): ViewRoute => ({
   type: 'coming_soon',
   title,
-  subtitle: 'This section is outside today’s build scope and will be developed next.',
+  subtitle: subtitle || 'This section is currently being prepared for the upcoming launch.',
 });
 
 function routeFromHash(hash: string): ViewRoute {
@@ -27,8 +27,21 @@ function routeFromHash(hash: string): ViewRoute {
     if (slug) return { type: 'product', slug };
   }
   if (hash === '#/marketplace') return { type: 'marketplace' };
-  if (hash === '#/project') return { type: 'project', section: 'about' };
-  if (hash === '#/legacy-year') return { type: 'legacy_year' };
+  if (hash.startsWith('#/project')) {
+    return comingSoon('The Project', 'The full Raffia Legacy Project experience is currently being prepared.');
+  }
+  if (hash.startsWith('#/legacy-year')) {
+    return comingSoon('The Legacy Year', 'The 12-month calendar and timeline are currently being prepared.');
+  }
+  if (hash.startsWith('#/raffia')) {
+    return comingSoon('Raffia Heritage & Culture', 'The living story, botany, and craft of raffia are currently being prepared.');
+  }
+  if (hash.startsWith('#/festival')) {
+    return comingSoon('Raffia Festival 2027', 'Festival experiences, dates, and registrations are currently being prepared.');
+  }
+  if (hash.startsWith('#/makers')) {
+    return comingSoon('Meet The Makers', 'Artisan profiles, workshops, and stories are currently being prepared.');
+  }
   return { type: 'home' };
 }
 
@@ -52,8 +65,6 @@ export default function App() {
     if (route.type === 'home') window.location.hash = '#/';
     else if (route.type === 'marketplace') window.location.hash = '#/marketplace';
     else if (route.type === 'product') window.location.hash = `#/marketplace/${route.slug}`;
-    else if (route.type === 'project') window.location.hash = `#/project${route.section ? `/${route.section}` : ''}`;
-    else if (route.type === 'legacy_year') window.location.hash = '#/legacy-year';
     else if (route.type === 'coming_soon') {
       window.history.replaceState({}, '', window.location.pathname + '#/coming-soon');
     }
@@ -61,6 +72,7 @@ export default function App() {
 
   const routeKey = useMemo(() => {
     if (currentRoute.type === 'product') return `product-${currentRoute.slug}`;
+    if (currentRoute.type === 'coming_soon') return `coming-soon-${currentRoute.title}`;
     return currentRoute.type;
   }, [currentRoute]);
 
@@ -71,28 +83,39 @@ export default function App() {
         <Navbar currentRoute={currentRoute} onNavigate={navigateTo} onOpenSearch={() => setIsSearchOpen(true)} />
         <main className="app-main">
           <PageTransition routeKey={routeKey}>
-            {currentRoute.type === 'home' && <HomePage onNavigate={navigateTo} onSelectProduct={(slug) => navigateTo({type:'product', slug})} />}
-            {currentRoute.type === 'project' && <ProjectPage initialSection={currentRoute.section || 'about'} onNavigate={navigateTo} />}
-            {currentRoute.type === 'legacy_year' && <LegacyYearPage onNavigate={navigateTo} />}
+            {currentRoute.type === 'home' && (
+              <HomePage
+                onNavigate={navigateTo}
+                onSelectProduct={(slug) => navigateTo({ type: 'product', slug })}
+              />
+            )}
             {currentRoute.type === 'marketplace' && (
               <MarketplacePage
                 initialCategory={currentRoute.category || 'ALL'}
                 initialCollection={currentRoute.collection}
                 onNavigate={navigateTo}
-                onSelectProduct={(slug) => navigateTo({type:'product', slug})}
+                onSelectProduct={(slug) => navigateTo({ type: 'product', slug })}
               />
             )}
             {currentRoute.type === 'product' && (
-              <ProductDetailPage slug={currentRoute.slug} onNavigate={navigateTo} onSelectProduct={(slug) => navigateTo({type:'product', slug})} />
+              <ProductDetailPage
+                slug={currentRoute.slug}
+                onNavigate={navigateTo}
+                onSelectProduct={(slug) => navigateTo({ type: 'product', slug })}
+              />
             )}
-            {currentRoute.type === 'coming_soon' && (
-              <ComingSoon title={currentRoute.title} subtitle={currentRoute.subtitle} onNavigate={navigateTo} />
+            {currentRoute.type !== 'home' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && (
+              <ComingSoon
+                title={('title' in currentRoute && currentRoute.title) || 'The Project'}
+                subtitle={('subtitle' in currentRoute && currentRoute.subtitle) || 'This section is currently being prepared for the upcoming launch.'}
+                onNavigate={navigateTo}
+              />
             )}
           </PageTransition>
         </main>
         <CartDrawer
-          onNavigateToProduct={(slug) => navigateTo({type:'product', slug})}
-          onNavigateToCheckout={() => navigateTo({type:'coming_soon', title:'Checkout', subtitle:'Payment integration is being prepared.'})}
+          onNavigateToProduct={(slug) => navigateTo({ type: 'product', slug })}
+          onNavigateToCheckout={() => navigateTo(comingSoon('Checkout', 'Payment integration is currently being prepared.'))}
         />
         <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} onNavigate={navigateTo} />
         <CheckoutModal />

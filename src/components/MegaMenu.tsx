@@ -48,18 +48,10 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
       onNavigate({ type: 'marketplace' });
       return;
     }
-    if (activeTab === 'THE PROJECT') {
-      const map: Record<string, any> = {
-        'About the Project':'about','Our Vision':'vision','The Legacy Year':'legacy-year','Our Programmes':'programmes','Impact':'impact','Partners':'partners'
-      };
-      if (item === 'The Legacy Year') onNavigate({ type:'legacy_year' });
-      else onNavigate({ type:'project', section: map[item] || 'about' });
-      return;
-    }
     onNavigate({
       type: 'coming_soon',
       title: item,
-      subtitle: `${menu.title} — this page is being prepared for the next build phase.`,
+      subtitle: `The ${item} experience is currently being prepared for the launch.`,
     });
   };
 

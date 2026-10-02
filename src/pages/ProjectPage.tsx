@@ -26,7 +26,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection='about'
       <section className="project-hero">
         <div>
           <button className="text-link project-back" onClick={()=>onNavigate({type:'home'})}><ArrowLeft size={16}/> RETURN HOME</button>
-          <p className="eyebrow">DANCE VILLE PRESENTS · THE RAFFIA LEGACY PROJECT</p>
+          <p className="eyebrow">THE RAFFIA LEGACY PROJECT</p>
           <h1>THE RAFFIA<br/><em>LEGACY PROJECT.</em></h1>
         </div>
         <div>

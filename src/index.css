@@ -893,3 +893,182 @@
 @media(max-width:600px){.project-hero{padding:40px 20px 60px}.project-hero h1{font-size:clamp(4rem,20vw,7rem)}.project-tabs{padding:10px 20px}.project-block{padding:75px 20px}.project-copy h2{font-size:clamp(3.3rem,17vw,6rem);margin-bottom:30px}.project-copy>p{font-size:18px;line-height:1.58}.vision-grid{grid-template-columns:1fr}.vision-grid article{border-right:0;border-bottom:1px solid var(--line);margin:0;padding:25px 0}.year-line{grid-template-columns:repeat(2,1fr)}.year-line div:nth-child(2n){border-right:0}.programme-list article{grid-template-columns:45px 1fr}.impact-grid,.partner-grid{grid-template-columns:1fr 1fr}.project-close{padding:85px 20px}}
 /* Global readability guard: body copy stays comfortably readable. */
 .project-page button,.project-page a{min-height:44px}
+
+/* ========================================================================= */
+/* LAUNCH PREPARATION SCREEN & TACTILE WEAVE ANIMATION                      */
+/* ========================================================================= */
+.launch-prep-screen {
+  min-height: calc(100vh - 82px);
+  background: var(--ivory);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(60px, 9vw, 120px) clamp(24px, 6vw, 80px);
+  border-bottom: 1px solid var(--line);
+}
+
+/* Ambient animated weaving strands in the background */
+.prep-weave-ambient {
+  position: absolute;
+  top: 0;
+  right: 6%;
+  width: 42%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.5;
+  display: flex;
+  justify-content: space-around;
+  z-index: 1;
+}
+
+.prep-loom-thread {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(199, 169, 121, 0.35) 15%,
+    rgba(185, 78, 46, 0.45) 50%,
+    rgba(199, 169, 121, 0.35) 85%,
+    transparent 100%
+  );
+  animation: threadUndulate 6s ease-in-out infinite alternate;
+}
+
+.prep-loom-thread.t1 { animation-delay: 0s; transform: skewX(-4deg); }
+.prep-loom-thread.t2 { animation-delay: 1.2s; transform: skewX(3deg); }
+.prep-loom-thread.t3 { animation-delay: 2.4s; transform: skewX(-2deg); }
+.prep-loom-thread.t4 { animation-delay: 3.6s; transform: skewX(5deg); }
+.prep-loom-thread.t5 { animation-delay: 4.8s; transform: skewX(-3deg); }
+
+@keyframes threadUndulate {
+  0% {
+    opacity: 0.25;
+    transform: translateY(-10px) scaleY(0.96);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(12px) scaleY(1.04);
+  }
+  100% {
+    opacity: 0.25;
+    transform: translateY(-10px) scaleY(0.96);
+  }
+}
+
+.launch-prep-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Rotating Spindle Seal */
+.spindle-seal-wrap {
+  margin-bottom: 32px;
+}
+
+.spindle-seal {
+  width: 82px;
+  height: 82px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brown);
+}
+
+.spindle-svg {
+  width: 100%;
+  height: 100%;
+  animation: rotateSpindle 24s linear infinite;
+  transform-origin: center center;
+}
+
+@keyframes rotateSpindle {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spindle-center-node {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--terracotta);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(185, 78, 46, 0.2);
+}
+
+.prep-eyebrow {
+  color: var(--terracotta);
+  margin-bottom: 20px;
+}
+
+.prep-heading {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(3.2rem, 7.8vw, 7.8rem);
+  font-weight: 900;
+  line-height: 0.82;
+  letter-spacing: -0.08em;
+  margin: 0 0 28px;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.prep-heading em {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--terracotta);
+}
+
+.prep-statement {
+  font-size: clamp(19px, 2.2vw, 28px);
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--ink);
+  max-width: 720px;
+  margin: 0 0 42px;
+}
+
+.prep-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.prep-btn-main {
+  min-height: 52px;
+  padding: 0 26px;
+}
+
+.prep-btn-sub {
+  min-height: 52px;
+  padding: 0 24px;
+}
+
+@media (max-width: 640px) {
+  .prep-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  .prep-actions .button {
+    width: 100%;
+  }
+  .prep-weave-ambient {
+    display: none;
+  }
+  .prep-statement {
+    font-size: 19px;
+    line-height: 1.4;
+  }
+}
+
+
