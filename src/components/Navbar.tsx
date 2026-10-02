@@ -238,7 +238,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate, onOpen
               <span>VIEW SELECTION ({totalItems})</span>
             </button>
 
-            <p className="text-[11px] font-mono text-[#C8A978] text-center sm:text-right">
+            <p className="text-xs font-mono text-[#C8A978] text-center sm:text-right font-semibold">
               12 MONTHS · ONE LEGACY · ONE FESTIVAL
             </p>
           </div>

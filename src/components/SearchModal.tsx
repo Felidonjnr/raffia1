@@ -260,7 +260,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                             {f.category}
                           </p>
                         </div>
-                        <span className="text-[10px] font-mono text-[#B84A28] uppercase">
+                        <span className="text-xs font-mono text-[#B84A28] uppercase font-semibold">
                           Coming 2027
                         </span>
                       </div>
@@ -280,7 +280,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-3 bg-[#ECE5DC] border-t border-[#181513]/10 flex items-center justify-between text-[11px] font-mono uppercase text-[#8C7355]">
+        <div className="p-3 bg-[#ECE5DC] border-t border-[#181513]/10 flex items-center justify-between text-xs font-mono uppercase text-[#8C7355]">
           <span>Raffia Legacy Platform Search</span>
           <span>Press ESC to exit</span>
         </div>

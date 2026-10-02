@@ -60,7 +60,7 @@ export const InquiryModal: React.FC = () => {
             </p>
 
             {/* Type selector tabs */}
-            <div className="grid grid-cols-4 gap-1 p-1 bg-[#ECE5DC] mb-6 text-[11px] font-mono uppercase text-center">
+            <div className="grid grid-cols-4 gap-1 p-1 bg-[#ECE5DC] mb-6 text-xs font-mono uppercase text-center">
               {(['PARTNER', 'SPONSOR', 'DONOR', 'LEGACY'] as const).map((t) => (
                 <button
                   key={t}

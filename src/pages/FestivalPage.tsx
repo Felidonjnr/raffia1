@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ViewRoute } from '../types';
 import { FESTIVAL_EXPERIENCES } from '../data/legacyData';
-import { ArrowLeft, Sparkles, MapPin, Calendar, Check, ChevronDown, Maximize2, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, Sparkles, MapPin, Check, ChevronDown, Maximize2 } from 'lucide-react';
 import { ImageLightbox, LightboxImage } from '../components/ImageLightbox';
 
 interface FestivalPageProps {
@@ -33,28 +33,27 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
 
   const faqs = [
     {
-      q: 'Where will the Raffia Festival 2027 take place?',
-      a: 'The flagship festival grounds will be established across the historic craft center of Ikot Ekpene and the riverine wetland cultural pavilions of Cross River State, Nigeria.',
+      q: 'Where will the Raffia Festival take place?',
+      a: 'The flagship Raffia Festival takes place in Ikot Ekpene LGA, Akwa Ibom State, Nigeria.',
     },
     {
-      q: 'When will visitor and delegate accreditation open?',
-      a: 'Official pass reservations for international buyers, curators, and cultural tourists will open in Quarter 4, 2026. Early registrants on this page receive 48-hour priority access.',
+      q: 'What is the Raffia Festival?',
+      a: 'The Raffia Festival is the flagship event of the entire project. It brings together communities, artisans, farmers, designers, artists, young people, businesses, visitors and investors for a celebration of what raffia can inspire.',
     },
     {
-      q: 'Can designers apply to showcase at the Fashion Show or Biennale?',
-      a: 'Yes. The Create Raffia Design Challenge (Months 05–06 of the Legacy Year) serves as the open jury submission portal for participating runway collections and sculptural installations.',
+      q: 'What experiences are featured at the festival?',
+      a: 'The festival features 8 flagship experiences: Raffia Parade, Raffia Economy Summit, Innovation Lab, Art & Design Biennale, Fashion Show, Dance & Performance (including Utta), Raffia Marketplace, and Raffia Village.',
     },
     {
-      q: 'Will on-site purchases at the Raffia Marketplace be shippable internationally?',
-      a: 'Dance Ville is partnering with insured international freight couriers to provide turnkey crating and worldwide door-to-door delivery directly from the festival hall.',
+      q: 'How can partners and sponsors get involved?',
+      a: 'Partners can participate as Festival Sponsors, Programme Sponsors, Legacy Partners, Knowledge Partners, Media & Creative Partners, or Tourism & Destination Partners.',
     },
   ];
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] pb-28">
-      {/* Dark Hero Section for High Event Energy with Atmospheric Background Photography */}
+      {/* Dark Hero Section for High Event Energy */}
       <section className="relative bg-[#1F1A17] text-[#FAF7F2] pt-12 pb-24 px-6 lg:px-12 border-b border-[#FAF7F2]/10 overflow-hidden">
-        {/* Cinematic Backdrop Image */}
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=2400&q=85"
@@ -78,44 +77,44 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
             <div className="lg:col-span-8 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 border border-[#C8B28B]/40 text-[#C8B28B] text-xs font-mono uppercase tracking-widest bg-black/30 backdrop-blur-md">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>The Flagship Gathering · Coming October 2027</span>
+                <span>The Flagship Event · Coming Soon</span>
               </div>
               <h1 className="font-editorial text-5xl sm:text-7xl lg:text-9xl font-light tracking-tight leading-[0.88] text-[#FAF7F2]">
-                RAFFIA FESTIVAL <br />
-                <span className="italic font-normal text-[#C8B28B]">2027</span>
+                THE RAFFIA <br />
+                <span className="italic font-normal text-[#C8B28B]">FESTIVAL</span>
               </h1>
               <p className="text-base sm:text-xl text-[#FAF7F2]/80 max-w-2xl font-light leading-relaxed pt-2 font-sans">
-                The grand culmination of the Legacy Year. Four days of masquerade street pageantry, circular materials summits, runway fashion, and international craft trade under monumental woven pavilions.
+                The flagship event of the entire project. It brings together communities, artisans, farmers, designers, artists, young people, businesses, visitors and investors for a celebration of what raffia can inspire.
               </p>
             </div>
 
             <div className="lg:col-span-4 bg-[#28221D]/90 backdrop-blur-md p-6 border border-[#FAF7F2]/15 space-y-4 shadow-xl">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#C8B28B]">
                 <MapPin className="w-4 h-4 text-[#B84A28]" />
-                <span>Location & Venue</span>
+                <span>Location</span>
               </div>
               <p className="font-editorial text-2xl font-medium text-[#FAF7F2]">
-                Ikot Ekpene & Cross River Grounds
+                Ikot Ekpene LGA
               </p>
               <p className="text-xs text-[#FAF7F2]/75 leading-relaxed font-sans">
-                Akwa Ibom State, Nigeria · Accessible via Uyo (QUO) and Calabar (CBQ) International Airports.
+                Akwa Ibom State, Nigeria
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* The 8 Flagship Experiences with Rich Photography Cards */}
+      {/* The 8 Flagship Experiences strictly from PDF Page 3 */}
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 py-20 border-b border-[#181513]/10">
         <div className="max-w-2xl mb-14">
           <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2 font-bold">
-            The Curated Programme
+            03 / EXHIBITION CATALOGUE
           </span>
           <h2 className="font-editorial text-4xl sm:text-5xl font-light text-[#181513]">
-            THE 8 FESTIVAL EXPERIENCES
+            EXPERIENCE RAFFIA IN MANY FORMS
           </h2>
           <p className="text-sm text-[#73695E] mt-2 font-sans">
-            Every day of the festival immerses visitors in a different facet of African craft, couture, performance, and living ecology.
+            One festival. Many worlds of raffia.
           </p>
         </div>
 
@@ -128,15 +127,14 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
                 whileHover={{ y: -5 }}
                 className="bg-[#FAF7F2] border border-[#181513]/15 overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-xl transition-all group"
               >
-                {/* Visual Image Header */}
                 <div
                   onClick={() =>
                     setLightboxImage({
                       src: img,
                       title: `${exp.number}. ${exp.title}`,
                       subtitle: exp.description,
-                      location: 'Festival Village Pavilion',
-                      category: exp.category,
+                      location: 'Ikot Ekpene LGA, Akwa Ibom State',
+                      category: 'RAFFIA FESTIVAL',
                     })
                   }
                   className="relative aspect-[16/10] w-full overflow-hidden bg-[#241A14] cursor-pointer"
@@ -148,20 +146,14 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter brightness-[0.9]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#181513]/80 via-transparent to-transparent" />
-                  <div className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-[#181513] text-[#C8B28B] font-mono text-[11px] font-bold">
+                  <div className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-[#181513] text-[#C8B28B] font-mono text-xs font-bold">
                     {exp.number}
                   </div>
                   <div className="absolute top-2.5 right-2.5 p-1 bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity">
                     <Maximize2 size={13} />
                   </div>
-                  <div className="absolute bottom-2 left-2.5 right-2.5 text-white">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#C8B28B]">
-                      {exp.category}
-                    </span>
-                  </div>
                 </div>
 
-                {/* Card Body */}
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
                     <h3 className="font-editorial text-xl font-medium text-[#181513] mb-2 leading-snug">
@@ -171,15 +163,6 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
                       {exp.description}
                     </p>
                   </div>
-
-                  <div className="pt-3 border-t border-[#181513]/10 space-y-1 text-xs text-[#181513]">
-                    {exp.highlights.map((h, i) => (
-                      <p key={i} className="text-[#57524E] flex items-center gap-1.5 font-sans">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#B84A28]" />
-                        <span>{h}</span>
-                      </p>
-                    ))}
-                  </div>
                 </div>
               </motion.div>
             );
@@ -187,30 +170,17 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Travel, Accommodation & FAQs */}
+      {/* Frequently Asked Questions */}
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 py-20 border-b border-[#181513]/10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          <div className="lg:col-span-5 space-y-6">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#B84A28] font-bold">
-              Travel & Logistics
-            </span>
-            <h3 className="font-editorial text-4xl font-light text-[#181513]">
-              Visiting The Raffia City
-            </h3>
-            <p className="text-sm text-[#57524E] leading-relaxed font-sans">
-              Curated hotel partner rates, private airport shuttles, and VIP escorted tour itineraries will be published in collaboration with the Akwa Ibom State Tourism Bureau.
-            </p>
-            <div className="p-6 bg-[#ECE5DC] border border-[#DDD4C5] space-y-3 text-xs">
-              <p className="font-mono uppercase text-[#8C7355] font-bold">Airport Gateway</p>
-              <p className="text-[#181513] font-medium text-sm">Victor Attah International Airport (Uyo)</p>
-              <p className="text-[#57524E] font-sans">45-minute scenic highway transfer to the festival grounds.</p>
-            </div>
-          </div>
+        <div className="max-w-3xl mx-auto space-y-6">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#8C7355] block mb-2 font-bold text-center">
+            Information
+          </span>
+          <h3 className="font-editorial text-3xl sm:text-4xl font-light text-[#181513] text-center mb-8">
+            Frequently Asked Questions
+          </h3>
 
-          <div className="lg:col-span-7 space-y-4">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#8C7355] block mb-2 font-bold">
-              Frequently Asked Questions
-            </span>
+          <div className="space-y-4">
             {faqs.map((faq, idx) => (
               <div
                 key={idx}
@@ -232,17 +202,17 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Priority Passes Registration Form */}
+      {/* Registration / Updates */}
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-20">
         <div className="bg-[#181513] text-[#FAF7F2] p-8 sm:p-14 text-center max-w-3xl mx-auto shadow-2xl">
           <span className="text-xs font-mono uppercase tracking-widest text-[#C8B28B] block mb-3 font-bold">
-            Priority VIP & Patron Registry
+            THE RAFFIA FESTIVAL
           </span>
           <h3 className="font-editorial text-4xl sm:text-5xl font-light text-[#FAF7F2] mb-4">
-            Reserve Early Pass Access
+            Register for Festival Updates
           </h3>
           <p className="text-sm text-[#FAF7F2]/70 leading-relaxed mb-8 max-w-lg mx-auto font-sans">
-            Receive accredited invitations to the Economy Summit, front-row runway access, and private curator walks before tickets are released publicly.
+            Stay informed about the upcoming Raffia Festival schedule, programmes and exhibitions.
           </p>
 
           {!registered ? (
@@ -265,7 +235,7 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
           ) : (
             <div className="p-4 bg-[#28221D] text-xs text-[#C8B28B] max-w-md mx-auto flex items-center justify-center gap-2">
               <Check className="w-4 h-4" />
-              <span>Thank you. Your early access priority credentials have been registered.</span>
+              <span>Thank you. You will receive updates about the Raffia Festival.</span>
             </div>
           )}
         </div>

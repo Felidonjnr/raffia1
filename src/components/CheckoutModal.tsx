@@ -41,7 +41,7 @@ export const CheckoutModal: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#B84A28] mb-3">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Direct Guild Procurement</span>
+              <span>Direct Artisan Marketplace</span>
             </div>
 
             <h3 className="font-editorial text-3xl lg:text-4xl font-medium tracking-tight mb-3">
@@ -49,16 +49,16 @@ export const CheckoutModal: React.FC = () => {
             </h3>
 
             <p className="text-sm text-[#57524E] leading-relaxed mb-6 font-normal">
-              The Raffia Legacy marketplace directly empowers community artisan guilds across Nigeria. Our global payment gateway and international insured shipping integration are currently being configured for the inaugural drop.
+              The Raffia Legacy marketplace directly connects community artisans and designers in Nigeria with global markets. Our payment gateway is currently being configured for the inaugural drop.
             </p>
 
             <div className="bg-[#ECE5DC] p-4 mb-6 border border-[#DDD4C5] flex items-center justify-between text-xs">
               <div>
-                <p className="font-mono uppercase text-[#8C7355] text-[10px]">Your Order Reserve</p>
+                <p className="font-mono uppercase text-[#8C7355] text-xs">Your Order Reserve</p>
                 <p className="font-medium text-sm text-[#181513] mt-0.5">{totalItems} handcrafted {totalItems === 1 ? 'item' : 'items'}</p>
               </div>
               <div className="text-right">
-                <p className="font-mono uppercase text-[#8C7355] text-[10px]">Estimated Subtotal</p>
+                <p className="font-mono uppercase text-[#8C7355] text-xs">Estimated Subtotal</p>
                 <p className="font-editorial text-xl font-semibold text-[#181513] tabular-nums mt-0.5">{formatNaira(subtotal)}</p>
               </div>
             </div>
@@ -102,9 +102,9 @@ export const CheckoutModal: React.FC = () => {
               </div>
             </form>
 
-            <div className="mt-5 flex items-center justify-center gap-2 text-[11px] text-[#57524E]/80">
+            <div className="mt-5 flex items-center justify-center gap-2 text-xs text-[#57524E]/80">
               <ShieldCheck className="w-3.5 h-3.5 text-[#8C7355]" />
-              <span>Certified Artisan Provenance Guarantee by Dance Ville</span>
+              <span>Supporting African Cultural Heritage & Makers</span>
             </div>
           </div>
         ) : (
@@ -117,7 +117,7 @@ export const CheckoutModal: React.FC = () => {
               Order Reserve Recorded
             </h4>
             <p className="text-sm text-[#57524E] max-w-sm mx-auto mb-6 leading-relaxed">
-              Thank you, {name || 'patron'}. Your reserved basket of {totalItems} items (${subtotal} USD) has been logged with our curatorial liaison. You will receive private access before public release.
+              Thank you, {name || 'patron'}. Your reserved basket of {totalItems} items ({formatNaira(subtotal)}) has been registered. You will receive private access before public release.
             </p>
 
             <button

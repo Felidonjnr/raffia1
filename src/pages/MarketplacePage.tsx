@@ -75,7 +75,7 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
       <div className="market-notice-bar">
         <span>
           <span className="market-notice-dot" />
-          HAND-WOVEN GUILD EDITIONS
+          HAND-WOVEN CRAFT EDITIONS
         </span>
         <span className="hidden sm:inline">ALL PRICING IN NIGERIAN NAIRA (₦)</span>
       </div>
@@ -91,7 +91,7 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
             <span>RETURN TO HOME</span>
           </button>
 
-          <p className="eyebrow">DIRECT GUILD PROVENANCE</p>
+          <p className="eyebrow">RAFFIA LEGACY PROJECT</p>
 
           <h1>
             THE RAFFIA<br />
@@ -104,7 +104,7 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
 
         <div className="market-hero-pitch">
           <p className="market-pitch-text">
-            Objects, craft and contemporary creations connected to the raffia story. Every piece is hand-coiled and woven from sustainably harvested palm fronds, directly financing artisan livelihoods and preserving ancestral weaving guilds across Nigeria.
+            Buy, sell, discover and connect with makers and brands. Exploring contemporary creations and objects connected to raffia heritage.
           </p>
         </div>
       </section>
@@ -182,7 +182,7 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
               No creations match this selection
             </h3>
             <p className="text-xs text-[#57524E] mb-6">
-              Try adjusting your search criteria or select &quot;All Pieces&quot; to view all guild items.
+              Try adjusting your search criteria or select &quot;All Pieces&quot; to view all items.
             </p>
             <button
               onClick={() => {
@@ -198,42 +198,42 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
         )}
       </section>
 
-      {/* Guild Guarantee / Provenance Section */}
+      {/* Marketplace Value Creation Section from PDF */}
       <section className="market-guarantee">
         <div className="market-guarantee-inner">
           <div className="market-guarantee-copy">
-            <p className="eyebrow">THE GUILD COVENANT</p>
+            <p className="eyebrow">RAFFIA MARKETPLACE</p>
             <h2>
-              WHY WE WEAVE<br />
-              <em>IN NUMBERED RUNS.</em>
+              FROM PALM TO PRODUCT.<br />
+              <em>CULTURE TO COMMERCE.</em>
             </h2>
             <p>
-              Raffia is living nature, not industrial synthetic plastic. Each harvest follows the rain and tidal rhythms of the coastal palm groves, taking up to four weeks of retting, dyeing, and loom weaving.
+              Buy, sell, discover and connect with makers and brands. Transforming raffia heritage into sustainable creative enterprise.
             </p>
           </div>
 
           <div className="market-guarantee-grid">
             <div className="market-guarantee-card">
               <span>01 / VALUE</span>
-              <h4>Direct To Artisans</h4>
+              <h4>For Artisans</h4>
               <p>
-                Proceeds go straight to master weavers, apprentices, and community cooperatives in Akwa Ibom and Cross River.
+                Visibility, new markets, skills and better access to customers.
               </p>
             </div>
 
             <div className="market-guarantee-card">
-              <span>02 / HARVEST</span>
-              <h4>100% Botanical Bast</h4>
+              <span>02 / ENTERPRISE</span>
+              <h4>For Businesses</h4>
               <p>
-                Harvested without felling trees. Wild raffia palm regenerates naturally in wetlands, preventing soil erosion.
+                New products, customers, partnerships and markets.
               </p>
             </div>
 
             <div className="market-guarantee-card">
-              <span>03 / LEGACY</span>
-              <h4>Numbered Provenance</h4>
+              <span>03 / ECONOMY</span>
+              <h4>For the Wider Economy</h4>
               <p>
-                Every edition arrives with its certified accession card documenting the weaver guild, harvest date, and batch index.
+                A chance to turn indigenous knowledge and materials into sustainable creative enterprise.
               </p>
             </div>
           </div>

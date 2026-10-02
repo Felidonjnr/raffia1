@@ -72,7 +72,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   Your bag is currently empty
                 </p>
                 <p className="text-xs text-[#57524E] max-w-xs mb-6">
-                  Explore contemporary pieces and archival objects crafted by certified West African guilds.
+                  Explore hand-woven raffia objects, fashion and traditional craft.
                 </p>
                 <button
                   onClick={() => setIsCartOpen(false)}
@@ -107,7 +107,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     <div>
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <p className="text-[10px] font-mono uppercase tracking-widest text-[#8C7355]">
+                          <p className="text-xs font-mono uppercase tracking-widest text-[#8C7355]">
                             {product.category}
                           </p>
                           <h4
@@ -121,7 +121,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           >
                             {product.name}
                           </h4>
-                          <p className="text-[11px] text-[#57524E] mt-0.5">
+                          <p className="text-xs text-[#57524E] mt-0.5">
                             By {product.maker.name}
                           </p>
                         </div>
@@ -173,11 +173,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
             <div className="p-6 bg-[#F4EFEA] border-t border-[#181513]/10 space-y-4">
               <div className="space-y-1.5 text-xs">
                 <div className="flex justify-between text-[#57524E]">
-                  <span>Artisan Guild Subtotal</span>
+                  <span>Items Subtotal</span>
                   <span className="font-mono tabular-nums">{formatNaira(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-[#57524E]">
-                  <span>Packaging & Museum Care</span>
+                  <span>Packaging & Handling</span>
                   <span className="font-mono text-[#8C7355]">Complimentary</span>
                 </div>
                 <div className="pt-2 border-t border-[#181513]/10 flex justify-between text-sm font-semibold text-[#181513]">
@@ -196,8 +196,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
-              <p className="text-center text-[10px] text-[#57524E] tracking-wider uppercase font-mono">
-                100% Certified Provenance · Prepared for Paystack
+              <p className="text-center text-xs text-[#57524E] tracking-wider uppercase font-mono">
+                Prepared for Paystack
               </p>
             </div>
           )}

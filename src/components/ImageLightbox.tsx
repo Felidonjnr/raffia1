@@ -89,8 +89,8 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({ image, onClose }) 
                 </p>
               )}
               {image.location && (
-                <div className="inline-flex items-center gap-1.5 mt-2 text-[11px] font-mono tracking-widest uppercase text-[#C8A978]">
-                  <MapPin className="w-3 h-3 text-[#B65332]" />
+                <div className="inline-flex items-center gap-1.5 mt-2 text-xs font-mono tracking-widest uppercase text-[#C8A978]">
+                  <MapPin className="w-3.5 h-3.5 text-[#B65332]" />
                   <span>{image.location}</span>
                 </div>
               )}

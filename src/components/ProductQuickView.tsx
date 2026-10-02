@@ -68,9 +68,6 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
               />
-              <span className="absolute bottom-2.5 left-2.5 bg-[#FAF7F2]/95 backdrop-blur-xs text-[10px] font-mono tracking-wider uppercase px-2.5 py-1 text-[#181513]">
-                OBJ-{product.id.toUpperCase()}
-              </span>
             </div>
 
             {/* Thumbnail Carousel */}
@@ -97,7 +94,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
               </div>
             )}
 
-            <div className="mt-4 pt-3 border-t border-[#181513]/10 flex items-center justify-between text-[11px] font-mono text-[#8C7355] uppercase">
+            <div className="mt-4 pt-3 border-t border-[#181513]/10 flex items-center justify-between text-xs font-mono text-[#8C7355] uppercase">
               <span>{product.origin}</span>
               <span>{product.availability}</span>
             </div>
@@ -120,20 +117,20 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
                 {formatNaira(product.price)}
               </p>
 
-              <p className="text-xs sm:text-sm text-[#4A4036] leading-relaxed mb-6 font-sans">
+              <p className="text-sm text-[#4A4036] leading-relaxed mb-6 font-sans">
                 {product.description}
               </p>
 
               {/* Material tags */}
               <div className="space-y-2 mb-6">
-                <p className="text-[11px] font-mono uppercase text-[#8C7355] tracking-wider">
-                  Materials & Provenance
+                <p className="text-xs font-mono uppercase text-[#8C7355] tracking-wider">
+                  Materials & Craft
                 </p>
                 <div className="flex flex-wrap gap-1.5">
                   {product.materials.map((m) => (
                     <span
                       key={m}
-                      className="text-[11px] font-sans px-2.5 py-1 bg-[#ECE5DC] text-[#2E251F]"
+                      className="text-xs font-sans px-2.5 py-1 bg-[#ECE5DC] text-[#2E251F]"
                     >
                       {m}
                     </span>

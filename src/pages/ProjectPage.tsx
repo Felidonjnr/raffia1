@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, ArrowLeft, Maximize2, MapPin } from 'lucide-react';
+import { ArrowUpRight, ArrowLeft, Maximize2 } from 'lucide-react';
 import { ViewRoute } from '../types';
 import { BrushStrokeUnderline } from '../components/RaffiaLogo';
 import { ImageLightbox, LightboxImage } from '../components/ImageLightbox';
@@ -14,8 +14,8 @@ const sections = [
   ['vision', 'Our Vision'],
   ['legacy-year', 'The Legacy Year'],
   ['programmes', 'Our Programmes'],
-  ['impact', 'Impact'],
-  ['partners', 'Partners'],
+  ['impact', 'Why This Matters'],
+  ['partners', 'Partnerships'],
 ] as const;
 
 export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'about', onNavigate }) => {
@@ -29,13 +29,13 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
 
   return (
     <div className="project-page bg-[#F3EBDD] text-[#11100E]">
-      {/* Hero with Event Branding Lockup */}
+      {/* Hero with Event Branding Lockup (PDF Page 1) */}
       <section className="project-hero border-b border-[#241A14]/15 bg-[#F3EBDD]">
         <div>
           <button className="text-link project-back mb-6 inline-flex items-center gap-2 text-xs font-mono font-bold" onClick={() => onNavigate({ type: 'home' })}>
             <ArrowLeft size={16} /> RETURN HOME
           </button>
-          <p className="eyebrow text-[#B65332] font-mono text-xs font-bold tracking-widest uppercase">THE RAFFIA LEGACY PROJECT</p>
+          <p className="eyebrow text-[#B65332] font-mono text-xs font-bold tracking-widest uppercase">RAFFIA LEGACY PROJECT</p>
           <div className="hero-logo-lockup my-3">
             <h1 className="hero-brand-heading flex flex-wrap items-baseline gap-2">
               <span className="hero-brand-raffia font-serif text-5xl sm:text-7xl">Raffia</span>
@@ -48,11 +48,11 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
           </div>
         </div>
         <div>
-          <p className="project-hero-lede text-base sm:text-lg text-[#241A14] font-medium leading-relaxed">
-            A year-round programme celebrating raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.
+          <p className="project-hero-lede text-base sm:text-lg text-[#241A14] font-medium leading-relaxed font-sans">
+            A year-round of activities celebrating raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.
           </p>
           <p className="project-meta text-xs font-mono text-[#B65332] font-bold tracking-wider mt-4">
-            CULTURE · CREATIVITY · ENTERPRISE · COMMUNITY
+            CULTURE | CREATIVITY | ENTERPRISE | COMMUNITY
           </p>
         </div>
       </section>
@@ -72,19 +72,22 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
         ))}
       </nav>
 
-      {/* 01. ABOUT THE PROJECT */}
+      {/* 01. ABOUT THE PROJECT (PDF Page 2) */}
       <section id="about" className="project-block project-about py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-1 project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">
           01
         </div>
         <div className="lg:col-span-6 project-copy space-y-6">
-          <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">ABOUT THE PROJECT</p>
+          <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">WHY RAFFIA?</p>
           <h2 className="text-3xl sm:text-5xl font-black text-[#11100E] leading-tight">
             RAFFIA IS MORE THAN<br />
             <em className="text-[#B65332] font-serif font-normal">A MATERIAL.</em>
           </h2>
           <p className="text-base sm:text-lg text-[#241A14] font-medium leading-relaxed font-sans">
-            Raffia carries history, skill, identity and possibility. Used across generations for clothing, craft, shelter, dance, ceremony and everyday life.
+            It carries history, skill, identity and possibility.
+          </p>
+          <p className="text-sm text-[#73695E] leading-relaxed font-sans">
+            For generations, people have used raffia for clothing, craft, shelter, dance, ceremony and everyday life. Today, we can take that knowledge further.
           </p>
           <p className="text-sm text-[#73695E] leading-relaxed font-sans">
             The Raffia Legacy Project connects traditional knowledge with contemporary fashion, art, design, tourism, technology and enterprise.
@@ -96,15 +99,14 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
           </div>
         </div>
 
-        {/* Photography Showcase for About */}
         <div className="lg:col-span-5 relative">
           <div
             onClick={() =>
               setLightboxImage({
                 src: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1800&q=85',
-                title: 'The Ancestral Loom of Ikot Ekpene',
-                subtitle: 'Mathematical precision and hand tension preserved over 200 years.',
-                location: 'Akwa Ibom State, Nigeria',
+                title: 'Traditional Knowledge in Motion',
+                subtitle: 'Connecting traditional knowledge with contemporary practice.',
+                location: 'Ikot Ekpene LGA, Akwa Ibom State',
                 category: 'HERITAGE ARCHIVE',
               })
             }
@@ -112,61 +114,65 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
           >
             <img
               src="https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1200&q=85"
-              alt="Artisan at loom"
+              alt="Raffia Craft"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#11100E]/80 via-transparent to-transparent" />
             <div className="absolute bottom-4 left-4 right-4 text-white text-xs font-sans flex items-center justify-between">
-              <span>IKOT EKPENE MASTER WEAVERS</span>
+              <span>IKOT EKPENE LGA, AKWA IBOM STATE</span>
               <Maximize2 size={14} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* 02. OUR VISION: 5 CONNECTED PILLARS WITH PHOTOGRAPHY */}
+      {/* 02. OUR VISION (PDF Page 2) */}
       <section id="vision" className="project-block project-vision py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto space-y-10">
         <div className="flex items-center gap-6">
           <div className="project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">02</div>
           <div>
             <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">OUR VISION</p>
             <h2 className="text-3xl sm:text-5xl font-black text-[#11100E]">
-              TURNING HERITAGE <em className="text-[#B65332] font-serif font-normal">INTO POSSIBILITY.</em>
+              TO BUILD A LASTING <em className="text-[#B65332] font-serif font-normal">PLATFORM.</em>
             </h2>
           </div>
         </div>
+
+        <p className="text-base text-[#73695E] font-sans max-w-2xl">
+          To build a lasting platform that helps transform raffia heritage into:
+        </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {[
             {
               n: '01',
               t: 'CULTURE',
-              d: 'Celebrating raffia heritage, dance masquerades, and community identity.',
+              d: 'Stories, traditions and identity.',
               img: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=800&q=80',
             },
             {
               n: '02',
               t: 'CREATIVITY',
-              d: 'Connecting traditional knowledge with contemporary fashion and sculpture.',
+              d: 'Fashion, art, design, music and performance.',
               img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
             },
             {
               n: '03',
               t: 'OPPORTUNITY',
-              d: 'Creating fair-trade pathways for value, living wages, and guild enterprise.',
+              d: 'Skills, markets, investment and enterprise.',
               img: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
             },
             {
               n: '04',
               t: 'TOURISM',
-              d: 'Connecting wetland trails and living ateliers with global travelers.',
+              d: 'Experiences that give people a reason to visit and stay.',
               img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80',
             },
             {
               n: '05',
               t: 'LEGACY',
-              d: 'Building school curricula and endowments for the next generation.',
+              d: 'Knowledge and opportunities passed from one generation to the next.',
               img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
             },
           ].map((item) => (
@@ -177,7 +183,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
                   src: item.img,
                   title: `${item.n}. ${item.t}`,
                   subtitle: item.d,
-                  category: 'PROJECT PILLAR',
+                  category: 'OUR VISION',
                 })
               }
               className="bg-[#EAE1D1] border border-[#241A14]/15 overflow-hidden shadow-sm hover:shadow-lg transition-all cursor-pointer group"
@@ -189,7 +195,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#241A14] text-white font-mono text-[10px] font-bold">
+                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#241A14] text-white font-mono text-xs font-bold">
                   {item.n}
                 </div>
               </div>
@@ -202,7 +208,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
         </div>
       </section>
 
-      {/* 03. THE LEGACY YEAR */}
+      {/* 03. THE LEGACY YEAR (PDF Page 4) */}
       <section id="legacy-year" className="project-block project-year py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <div className="lg:col-span-1 project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">
           03
@@ -213,12 +219,12 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
             THE FESTIVAL <em className="text-[#B65332] font-serif font-normal">IS ONLY THE BEGINNING.</em>
           </h2>
           <p className="text-base sm:text-lg text-[#241A14] font-medium leading-relaxed font-sans">
-            The strongest part of the project is what happens before and after the festival—connecting schools, youth, designers, and cooperatives.
+            The strongest part of the Raffia Legacy Project is what happens before and after the festival. Five connected programmes create a continuous journey.
           </p>
           <div className="year-line grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-4">
             {['DISCOVER', 'IMAGINE', 'CREATE', 'BUILD', 'CELEBRATE', 'PASS IT ON'].map((x, i) => (
               <div key={x} className="p-3 bg-[#EAE1D1] border border-[#241A14]/15 text-center">
-                <span className="text-[10px] font-mono text-[#B65332] block font-bold">0{i + 1}</span>
+                <span className="text-xs font-mono text-[#B65332] block font-bold">0{i + 1}</span>
                 <strong className="text-xs font-mono text-[#11100E]">{x}</strong>
               </div>
             ))}
@@ -236,36 +242,36 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
             onClick={() =>
               setLightboxImage({
                 src: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1800&q=85',
-                title: 'Celebration at Twilight',
-                subtitle: 'Four days and nights uniting global creators with local guild communities.',
-                category: 'THE FESTIVAL MOMENT',
+                title: 'The Raffia Festival',
+                subtitle: 'The flagship event of the entire project.',
+                category: 'FLAGSHIP EVENT',
               })
             }
             className="relative aspect-[4/3] w-full overflow-hidden shadow-xl border border-[#241A14]/15 group cursor-pointer"
           >
             <img
               src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1000&q=85"
-              alt="Festival celebration"
+              alt="Raffia Festival"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#11100E]/80 via-transparent to-transparent" />
             <div className="absolute bottom-4 left-4 right-4 text-white text-xs font-sans flex items-center justify-between">
-              <span>CULMINATION · FESTIVAL 2027</span>
+              <span>CELEBRATE · RAFFIA FESTIVAL</span>
               <Maximize2 size={14} />
             </div>
           </div>
         </div>
       </section>
 
-      {/* 04. OUR PROGRAMMES IN MOTION */}
+      {/* 04. OUR PROGRAMMES (PDF Page 4) */}
       <section id="programmes" className="project-block project-programmes py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto space-y-10">
         <div className="flex items-center gap-6">
           <div className="project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">04</div>
           <div>
-            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">OUR PROGRAMMES</p>
+            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">04 / THE LEGACY YEAR</p>
             <h2 className="text-3xl sm:text-5xl font-black text-[#11100E]">
-              THE WORK <em className="text-[#B65332] font-serif font-normal">IN MOTION.</em>
+              OUR PROGRAMMES <em className="text-[#B65332] font-serif font-normal">IN MOTION.</em>
             </h2>
           </div>
         </div>
@@ -274,38 +280,38 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
           {[
             {
               n: '01',
-              t: 'DISCOVER RAFFIA SCHOOL PROGRAMME',
-              d: 'A school-based pathway introducing young people to palm botany and geometric weaving traditions.',
+              t: 'RAFFIA SCHOOL PROGRAMME',
+              d: 'Children discover raffia, heritage, craft, Utta, music, storytelling, nature and creativity.',
               img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
             },
             {
               n: '02',
               t: 'YOUNG RAFFIA INNOVATORS',
-              d: 'A fellowship programme centred on young engineers prototyping bio-plastics, packaging, and circular design.',
+              d: 'Young people ask: "What can raffia become in the future?"',
               img: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
             },
             {
               n: '03',
-              t: 'CREATE RAFFIA DESIGN CHALLENGE',
-              d: 'Pairing master weavers with contemporary labels to craft runway collections for the festival.',
+              t: 'RAFFIA DESIGN CHALLENGE',
+              d: 'Artisans, designers and creatives turn heritage into new products, fashion, art, performance and design.',
               img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
             },
             {
               n: '04',
               t: 'RAFFIA BUSINESS INCUBATOR',
-              d: 'Equipping rural cooperative workshops with digital tools, fair-trade certifications, and export logistics.',
+              d: 'Strong ideas become products, businesses, partnerships and livelihoods.',
               img: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
             },
             {
               n: '05',
-              t: 'CELEBRATE RAFFIA FESTIVAL',
-              d: 'The flagship physical celebration uniting artisans, international buyers, and performers in Akwa Ibom.',
+              t: 'RAFFIA FESTIVAL',
+              d: 'The community and the world experience the culture, creativity, products and opportunities created throughout the year.',
               img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80',
             },
             {
               n: '06',
-              t: 'PASS IT ON / COMMUNITY ENDOWMENT',
-              d: 'Reinvesting marketplace profits into permanent craft endowments and apprentice healthcare.',
+              t: 'THE NEXT LEGACY YEAR',
+              d: 'New students, artisans, designers and entrepreneurs enter the ecosystem. The cycle continues.',
               img: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
             },
           ].map((item) => (
@@ -316,7 +322,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
                   src: item.img,
                   title: `${item.n}. ${item.t}`,
                   subtitle: item.d,
-                  category: 'PROGRAMME ACTION',
+                  category: 'OUR PROGRAMMES',
                 })
               }
               className="bg-[#FAF7F2] border border-[#241A14]/15 overflow-hidden shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between"
@@ -328,7 +334,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#241A14] text-white font-mono text-[10px] font-bold">
+                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#241A14] text-white font-mono text-xs font-bold">
                   {item.n}
                 </div>
               </div>
@@ -343,46 +349,55 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
         </div>
       </section>
 
-      {/* 05. IMPACT & VALUE */}
+      {/* 05. WHY THIS MATTERS (PDF Page 6) */}
       <section id="impact" className="project-block project-impact py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto space-y-8">
         <div className="flex items-center gap-6">
           <div className="project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">05</div>
           <div>
-            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">IMPACT & VALUE</p>
+            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">06 / VALUE CREATION</p>
             <h2 className="text-3xl sm:text-5xl font-black text-[#11100E]">
-              CREATE VALUE <em className="text-[#B65332] font-serif font-normal">FROM WHAT WE ALREADY HAVE.</em>
+              THE LEGACY <em className="text-[#B65332] font-serif font-normal">WE WANT TO CREATE.</em>
             </h2>
           </div>
         </div>
 
         <p className="text-base text-[#73695E] max-w-2xl font-sans">
-          The project creates value, fair-trade jobs, and international export opportunities across a connected regional ecosystem.
+          The Raffia Legacy Project is designed to create value at many levels:
         </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            'YOUNG PEOPLE',
-            'ARTISANS',
-            'FARMERS',
-            'CREATIVES',
-            'BUSINESSES',
-            'COMMUNITY',
-            'HOST DESTINATION',
-            'WIDER ECONOMY',
-          ].map((x) => (
-            <div key={x} className="p-4 bg-[#EAE1D1] border border-[#241A14]/15 font-mono text-xs font-bold text-[#11100E] text-center">
-              {x}
+            { id: '01', title: 'FOR YOUNG PEOPLE', desc: 'Skills, confidence, creativity and new opportunities.' },
+            { id: '02', title: 'FOR ARTISANS', desc: 'Visibility, new markets, skills and better access to customers.' },
+            { id: '03', title: 'FOR FARMERS', desc: 'New conversations around the value and future of raffia.' },
+            { id: '04', title: 'FOR CREATIVES', desc: 'A platform to experiment, collaborate and reach new audiences.' },
+            { id: '05', title: 'FOR BUSINESSES', desc: 'New products, customers, partnerships and markets.' },
+            { id: '06', title: 'FOR THE COMMUNITY', desc: 'Pride, participation, opportunity and stronger connections.' },
+            { id: '07', title: 'FOR THE HOST DESTINATION', desc: 'A distinctive cultural identity and a reason for people to visit.' },
+            { id: '08', title: 'FOR THE WIDER ECONOMY', desc: 'A chance to turn indigenous knowledge and materials into sustainable creative enterprise.' },
+          ].map((v) => (
+            <div key={v.id} className="p-5 bg-[#EAE1D1] border border-[#241A14]/15">
+              <span className="font-mono text-xs text-[#B65332] font-bold block mb-1">{v.id}</span>
+              <h4 className="font-mono text-xs font-bold text-[#11100E] mb-2">{v.title}</h4>
+              <p className="text-xs text-[#73695E] font-sans leading-relaxed">{v.desc}</p>
             </div>
           ))}
         </div>
+
+        <div className="p-6 bg-[#241A14] text-[#F3EBDD] text-center border border-[#C8A978]/30">
+          <p className="font-mono text-xs uppercase tracking-widest text-[#C8A978] mb-1 font-bold">THE GOAL IS SIMPLE</p>
+          <p className="font-editorial text-xl sm:text-2xl font-light">
+            Create value from what we already have—and open the door to what is possible.
+          </p>
+        </div>
       </section>
 
-      {/* 06. PARTNERS */}
+      {/* 06. PARTNERSHIP OPPORTUNITIES (PDF Page 7 & 8) */}
       <section id="partners" className="project-block project-partners py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto space-y-8">
         <div className="flex items-center gap-6">
           <div className="project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">06</div>
           <div>
-            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">PARTNERS</p>
+            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">07 / PARTNERSHIPS</p>
             <h2 className="text-3xl sm:text-5xl font-black text-[#11100E]">
               THERE IS A PLACE <em className="text-[#B65332] font-serif font-normal">FOR YOU IN THE LEGACY.</em>
             </h2>
@@ -390,32 +405,63 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
         </div>
 
         <p className="text-base text-[#73695E] max-w-2xl font-sans">
-          We are seeking collaborators, institutions, cultural foundations, and enterprise partners dedicated to African craft continuity.
+          We welcome partners who want to help build something meaningful. We are looking for collaborators, not just cheques.
         </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            'FESTIVAL SPONSORS',
-            'PROGRAMME SPONSORS',
-            'LEGACY PARTNERS',
-            'KNOWLEDGE PARTNERS',
-            'MEDIA & CREATIVE PARTNERS',
-            'TOURISM & DESTINATION PARTNERS',
-          ].map((x) => (
-            <div key={x} className="p-4 bg-[#EAE1D1] border border-[#241A14]/15 font-mono text-xs font-bold text-[#11100E] text-center">
-              {x}
+            {
+              id: '01',
+              title: 'FESTIVAL SPONSORS',
+              desc: 'Support the flagship Raffia Festival and connect your brand with culture, creativity, community and innovation.',
+            },
+            {
+              id: '02',
+              title: 'PROGRAMME SPONSORS',
+              desc: 'Support a specific area such as: Raffia School Programme, Young Raffia Innovators, Design Challenge, Fashion Show, Art & Design Biennale, Dance & Performance, Innovation Lab, Raffia Economy Summit, Marketplace, Youth Programmes.',
+            },
+            {
+              id: '03',
+              title: 'LEGACY PARTNERS',
+              desc: 'Support the year-round ecosystem and help us build the Raffia Academy, Lab, Market, Experiences, Research and Network.',
+            },
+            {
+              id: '04',
+              title: 'KNOWLEDGE PARTNERS',
+              desc: 'Bring expertise, research, training, technology or mentorship.',
+            },
+            {
+              id: '05',
+              title: 'MEDIA & CREATIVE PARTNERS',
+              desc: 'Help tell the story through film, photography, publishing, digital media and storytelling.',
+            },
+            {
+              id: '06',
+              title: 'TOURISM & DESTINATION PARTNERS',
+              desc: 'Help develop experiences that bring visitors into the world of raffia.',
+            },
+          ].map((p) => (
+            <div key={p.id} className="p-6 bg-[#EAE1D1] border border-[#241A14]/15">
+              <span className="font-mono text-xs text-[#B65332] font-bold block mb-1">{p.id}</span>
+              <h4 className="font-mono text-sm font-bold text-[#11100E] mb-2">{p.title}</h4>
+              <p className="text-xs text-[#73695E] font-sans leading-relaxed">{p.desc}</p>
             </div>
           ))}
         </div>
+
+        <div className="p-4 bg-[#241A14] text-[#C8A978] font-mono text-xs text-center font-bold tracking-wider">
+          DONATE • SPONSOR AN ACTIVITY • GIVE IN-KIND • VOLUNTEER • SHARE YOUR EXPERTISE
+        </div>
       </section>
 
-      {/* Closing Statement */}
+      {/* Closing Statement (PDF Page 9) */}
       <section className="project-close py-24 text-center bg-[#11100E] text-white">
-        <p className="text-xs font-mono text-[#C8A978] tracking-widest uppercase font-bold mb-2">THE RAFFIA LEGACY PROJECT</p>
+        <p className="text-xs font-mono text-[#C8A978] tracking-widest uppercase font-bold mb-2">09 / THE INVITATION</p>
         <h2 className="text-3xl sm:text-5xl font-black">
-          OUR HERITAGE.<br />
-          OUR PEOPLE.<br />
-          <em className="text-[#C8A978] font-serif font-normal">OUR FUTURE.</em>
+          THAT IS THE LEGACY.<br />
+          <em className="text-[#C8A978] font-serif font-normal text-2xl sm:text-3xl block mt-2">
+            RAFFIA IS OUR THREAD. THE FUTURE IS WHAT WE WEAVE WITH IT.
+          </em>
         </h2>
       </section>
 

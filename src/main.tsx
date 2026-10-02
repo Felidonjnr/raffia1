@@ -63,14 +63,14 @@ class RootErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState
       return (
         <div className="min-h-screen bg-[#FAF7F2] text-[#181513] flex flex-col items-center justify-center p-8 text-center font-sans">
           <div className="max-w-md border border-[#181513]/15 bg-[#FAF7F2] p-8 shadow-sm space-y-5">
-            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#B84A28] block">
-              Dance Ville Archival System
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block font-bold">
+              Dance Ville Presents
             </span>
             <h1 className="font-serif text-3xl font-light text-[#181513]">
               Raffia Legacy
             </h1>
-            <p className="text-xs text-[#57524E] leading-relaxed">
-              The archive encountered a momentary state issue. Click below to refresh the collection experience.
+            <p className="text-sm text-[#57524E] leading-relaxed">
+              The platform encountered an unexpected issue. Click below to refresh the experience.
             </p>
             <button
               onClick={() => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, ArrowRight, Sparkles, ChevronRight, X, Heart, Eye, Maximize2, MapPin, Compass } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ChevronRight, Maximize2, MapPin } from 'lucide-react';
 import { ViewRoute, Product } from '../types';
 import { PRODUCTS } from '../data/products';
 import { MAKERS } from '../data/makers';
@@ -15,168 +15,167 @@ interface HomePageProps {
   onSelectProduct: (slug: string) => void;
 }
 
-const launch = new Date('2026-10-29T18:00:00+01:00');
+const launch = new Date('2027-10-01T10:00:00+01:00');
 
-// 04. THE PROJECT - 5 Interactive Categories with High-Impact Imagery
+// 04. THE PROJECT - 5 Vision Pillars from PDF Page 2
 const PROJECT_CATEGORIES = [
   {
     id: 'culture',
     title: 'CULTURE',
-    tagline: 'Living Heritage & Ceremonial Roots',
-    description: 'Ancestral masquerades, ritual regalia, and sacred community weaving traditions passed down across West African riverine cultures.',
+    tagline: 'Stories, traditions and identity.',
+    description: 'Stories, traditions and identity.',
     image: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1800&q=85',
-    location: 'Akwa Ibom & Cross River, Nigeria',
+    location: 'Akwa Ibom State, Nigeria',
   },
   {
     id: 'creativity',
     title: 'CREATIVITY',
-    tagline: 'Haute Couture & Avant-Garde Expression',
-    description: 'Collaborating with visionary Pan-African fashion houses, sculptural artists, and architects who use raffia as a cutting-edge luxury medium.',
+    tagline: 'Fashion, art, design, music and performance.',
+    description: 'Fashion, art, design, music and performance.',
     image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1800&q=85',
-    location: 'Lagos & International Runways',
+    location: 'Akwa Ibom State, Nigeria',
   },
   {
     id: 'opportunity',
     title: 'OPPORTUNITY',
-    tagline: 'Fair-Trade Value & Generational Enterprise',
-    description: 'Direct market sovereignty, guild apprenticeships, and cooperative economic models that ensure weavers, farmers, and artisans thrive.',
+    tagline: 'Skills, markets, investment and enterprise.',
+    description: 'Skills, markets, investment and enterprise.',
     image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1800&q=85',
-    location: 'Oron Mangroves & Riverine Cooperatives',
+    location: 'Akwa Ibom State, Nigeria',
   },
   {
     id: 'tourism',
     title: 'TOURISM',
-    tagline: 'Riverine Immersion & Living Ateliers',
-    description: 'Inviting global travelers and cultural curators to touch the source through palm grove walking trails, masterclasses, and festival journeys.',
+    tagline: 'Experiences that give people a reason to visit and stay.',
+    description: 'Experiences that give people a reason to visit and stay.',
     image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1800&q=85',
-    location: 'Cross River Wetland Sanctuaries',
+    location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
   {
     id: 'legacy',
     title: 'LEGACY',
-    tagline: 'Knowledge Transferred Generation to Generation',
-    description: 'School curricula integrations, young innovators fellowships, and permanent craft endowments keeping the 200-year lineage alive.',
+    tagline: 'Knowledge and opportunities passed from one generation to the next.',
+    description: 'Knowledge and opportunities passed from one generation to the next.',
     image: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1800&q=85',
-    location: 'Ikot Ekpene Weaving Guild Lineage',
+    location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
 ];
 
-// 05. LEGACY YEAR - 6 Stages
+// 05. LEGACY YEAR - 6 Programmes from PDF Page 4
 const LEGACY_STAGES = [
   {
     step: '01',
     title: 'DISCOVER',
-    subtitle: 'Raffia in Schools',
-    desc: 'Introducing children to the botany of palms, plant retting, and ancestral geometric weaving traditions.',
+    subtitle: 'Raffia School Programme',
+    desc: 'Children discover raffia, heritage, craft, Utta, music, storytelling, nature and creativity.',
     image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1000&q=80',
-    timeframe: 'MONTHS 01–02',
+    timeframe: 'PROGRAMME 01',
   },
   {
     step: '02',
     title: 'IMAGINE',
     subtitle: 'Young Raffia Innovators',
-    desc: 'Convening emerging engineers and designers to prototype sustainable biomaterials, packaging, and interior objects.',
+    desc: 'Young people ask: "What can raffia become in the future?"',
     image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80',
-    timeframe: 'MONTHS 03–04',
+    timeframe: 'PROGRAMME 02',
   },
   {
     step: '03',
     title: 'CREATE',
     subtitle: 'Raffia Design Challenge',
-    desc: 'Pairing master weavers with contemporary couture labels to craft capsule collections for the international runway.',
+    desc: 'Artisans, designers and creatives turn heritage into new products, fashion, art, performance and design.',
     image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=80',
-    timeframe: 'MONTHS 05–06',
+    timeframe: 'PROGRAMME 03',
   },
   {
     step: '04',
     title: 'BUILD',
     subtitle: 'Raffia Business Incubator',
-    desc: 'Equipping rural cooperative workshops with modern tools, export logistics, and transparent fair-trade standards.',
+    desc: 'Strong ideas become products, businesses, partnerships and livelihoods.',
     image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1000&q=80',
-    timeframe: 'MONTHS 07–09',
+    timeframe: 'PROGRAMME 04',
   },
   {
     step: '05',
     title: 'CELEBRATE',
-    subtitle: 'Raffia Festival 2027',
-    desc: 'The historic physical culmination gathering thousands of creators, buyers, diplomats, and performers.',
+    subtitle: 'Raffia Festival',
+    desc: 'The community and the world experience the culture, creativity, products and opportunities created throughout the year.',
     image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1000&q=80',
-    timeframe: 'MONTH 10 · THE FLAGSHIP',
+    timeframe: 'PROGRAMME 05',
   },
   {
     step: '06',
     title: 'PASS IT ON',
-    subtitle: 'Next Legacy Year',
-    desc: 'Reinvesting festival and marketplace proceeds into permanent community craft infrastructure and bursaries.',
+    subtitle: 'The Next Legacy Year',
+    desc: 'New students, artisans, designers and entrepreneurs enter the ecosystem. The cycle continues.',
     image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1000&q=80',
-    timeframe: 'MONTHS 11–12',
+    timeframe: 'PROGRAMME 06',
   },
 ];
 
-// 08. FESTIVAL 2027 - 8 Experiences with Rich Photography
+// 08. FESTIVAL - 8 Experiences from PDF Page 3
 const FESTIVAL_EVENTS = [
   {
     id: '01',
     title: 'RAFFIA PARADE',
     image: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1200&q=85',
-    summary: 'Grand street procession of traditional masquerade societies and colossal woven ceremonial regalia.',
-    category: 'STREET PAGEANTRY',
+    summary: 'A colourful public celebration of culture and creativity.',
+    category: 'CELEBRATION',
   },
   {
     id: '02',
-    title: 'FASHION SHOW',
-    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85',
-    summary: 'Haute-couture evening runway showcasing Pan-African designers and bespoke raffia couture.',
-    category: 'HAUTE COUTURE',
+    title: 'RAFFIA ECONOMY SUMMIT',
+    image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=85',
+    summary: 'Conversations around business, investment, policy, innovation and opportunity.',
+    category: 'BUSINESS & POLICY',
   },
   {
     id: '03',
-    title: 'DANCE & PERFORMANCE',
-    image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=85',
-    summary: 'Percussive master drummers, ceremonial choreography, and acoustic palm fibre instruments.',
-    category: 'LIVE PERFORMANCE',
+    title: 'INNOVATION LAB',
+    image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=85',
+    summary: 'Explore what raffia could become next.',
+    category: 'INNOVATION',
   },
   {
     id: '04',
     title: 'ART & DESIGN BIENNALE',
     image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=1200&q=85',
-    summary: 'Monumental sculptural installations, architectural pavilions, and site-specific commissions.',
-    category: 'CONTEMPORARY ART',
+    summary: 'New ideas, new materials and creative interpretations of raffia.',
+    category: 'ART & DESIGN',
   },
   {
     id: '05',
-    title: 'INNOVATION LAB',
-    image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=85',
-    summary: 'Bio-materials, carbon-neutral architecture, and circular bast fiber technology demonstrations.',
-    category: 'BIOMATERIALS',
+    title: 'FASHION SHOW',
+    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=85',
+    summary: 'Where traditional techniques meet contemporary fashion.',
+    category: 'FASHION',
   },
   {
     id: '06',
-    title: 'ECONOMY SUMMIT',
-    image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=85',
-    summary: 'Trade ministers, international buyers, and guild elders shaping sustainable creative export policies.',
-    category: 'ENTERPRISE & TRADE',
+    title: 'DANCE & PERFORMANCE',
+    image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=85',
+    summary: 'Utta, traditional performance and contemporary expression.',
+    category: 'PERFORMANCE',
   },
   {
     id: '07',
     title: 'RAFFIA MARKETPLACE',
     image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1200&q=85',
-    summary: 'Curated trading pavilions with direct maker authentication and door-to-door global shipping.',
-    category: 'CURATED TRADING',
+    summary: 'Buy, sell, discover and connect with makers and brands.',
+    category: 'MARKETPLACE',
   },
   {
     id: '08',
     title: 'RAFFIA VILLAGE',
     image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=85',
-    summary: 'Hands-on masterclass workshops, natural clay dyeing vats, and riverine culinary heritage.',
-    category: 'IMMERSIVE WORKSHOPS',
+    summary: 'Step into the world of raffia—from palm to craft.',
+    category: 'CULTURAL EXPERIENCE',
   },
 ];
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct }) => {
   const [remaining, setRemaining] = useState(launch.getTime() - Date.now());
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
-  const [activeFestivalIdx, setActiveFestivalIdx] = useState(0);
   const [activePillarWord, setActivePillarWord] = useState<string>('HISTORY');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
@@ -192,7 +191,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
 
-  // Real curated products from source data
   const marketplacePreview = PRODUCTS.slice(0, 3);
 
   const scrollToSection = (id: string) => {
@@ -201,36 +199,17 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
   };
 
   const currentProjectPillar = PROJECT_CATEGORIES[activeProjectIdx];
-  const activeFestivalEvent = FESTIVAL_EVENTS[activeFestivalIdx];
 
-  const pillarDetails: Record<string, { title: string; quote: string; image: string }> = {
-    HISTORY: {
-      title: 'Centuries of West African ceremonial textiles and regalia',
-      quote: 'The palm frond remembers the weather of the year it grew.',
-      image: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1600&q=85',
-    },
-    SKILL: {
-      title: 'Mathematical pattern memory encoded in handlooms',
-      quote: 'Knotting without nails or glue; geometry woven directly by eye.',
-      image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=85',
-    },
-    IDENTITY: {
-      title: 'Sacred masquerade, dance, and community belonging',
-      quote: 'When the masquerade moves in raffia, the ancestors walk among us.',
-      image: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1600&q=85',
-    },
-    POSSIBILITY: {
-      title: 'Haute couture, biomaterials, and circular enterprise',
-      quote: 'From sustainable zero-waste fibre to international architectural luxury.',
-      image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1600&q=85',
-    },
+  const pillarDetails: Record<string, { desc: string }> = {
+    HISTORY: { desc: 'Carrying history across generations of African heritage.' },
+    SKILL: { desc: 'Traditional craft knowledge, weaving techniques and hand mastery.' },
+    IDENTITY: { desc: 'Stories, traditions, ceremony, and community belonging.' },
+    POSSIBILITY: { desc: 'Opening the door to what is possible through sustainable creativity.' },
   };
 
   return (
     <div className="home-event-root bg-[#F3EBDD] text-[#11100E] overflow-hidden">
-      {/* ========================================================================= */}
-      {/* 01. & 02. HERO: FULL-VIEWPORT CINEMATIC EVENT HERO                        */}
-      {/* ========================================================================= */}
+      {/* 01. & 02. HERO */}
       <InteractiveHeroGallery
         days={days}
         hours={hours}
@@ -249,61 +228,55 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         }
       />
 
-      {/* ========================================================================= */}
-      {/* CONTINUOUS CULTURAL MARQUEE / EVENT TICKER                                */}
-      {/* ========================================================================= */}
+      {/* CONTINUOUS CULTURAL MARQUEE / EVENT TICKER (PDF Page 1 & 2) */}
       <div className="bg-[#241A14] text-[#F3EBDD] py-3 sm:py-4 border-y border-[#C8A978]/30 overflow-hidden relative select-none">
         <div className="animate-marquee flex items-center gap-8 whitespace-nowrap text-xs font-mono uppercase tracking-[0.24em] font-semibold text-[#C8A978]">
-          <span>✦ 29 OCTOBER 2026</span>
-          <span className="text-[#F3EBDD]">ONE LEGACY · ONE FESTIVAL</span>
-          <span>✦ AKWA IBOM & CROSS RIVER</span>
-          <span className="text-[#F3EBDD]">CULTURE · CREATIVITY · ENTERPRISE</span>
-          <span>✦ IKOT EKPENE MASTER GUILD</span>
-          <span className="text-[#F3EBDD]">HAUTE COUTURE & LIVING TEXTILES</span>
-          <span>✦ LAGOS · ACCRA · DAKAR · LONDON · PARIS · NEW YORK</span>
-          <span className="text-[#F3EBDD]">12 MONTHS OF PROGRAMMES</span>
+          <span>✦ DANCE VILLE PRESENTS</span>
+          <span className="text-[#F3EBDD]">RAFFIA LEGACY PROJECT</span>
+          <span>✦ CULTURE · CREATIVITY · ENTERPRISE · COMMUNITY</span>
+          <span className="text-[#F3EBDD]">FROM PALM TO PRODUCT</span>
+          <span>✦ CULTURE TO COMMERCE</span>
+          <span className="text-[#F3EBDD]">HERITAGE TO OPPORTUNITY</span>
+          <span>✦ IKOT EKPENE LGA, AKWA IBOM STATE</span>
+          <span className="text-[#F3EBDD]">THE FESTIVAL IS ONLY THE BEGINNING</span>
           {/* Loop repeat */}
-          <span>✦ 29 OCTOBER 2026</span>
-          <span className="text-[#F3EBDD]">ONE LEGACY · ONE FESTIVAL</span>
-          <span>✦ AKWA IBOM & CROSS RIVER</span>
-          <span className="text-[#F3EBDD]">CULTURE · CREATIVITY · ENTERPRISE</span>
-          <span>✦ IKOT EKPENE MASTER GUILD</span>
-          <span className="text-[#F3EBDD]">HAUTE COUTURE & LIVING TEXTILES</span>
-          <span>✦ LAGOS · ACCRA · DAKAR · LONDON · PARIS · NEW YORK</span>
-          <span className="text-[#F3EBDD]">12 MONTHS OF PROGRAMMES</span>
+          <span>✦ DANCE VILLE PRESENTS</span>
+          <span className="text-[#F3EBDD]">RAFFIA LEGACY PROJECT</span>
+          <span>✦ CULTURE · CREATIVITY · ENTERPRISE · COMMUNITY</span>
+          <span className="text-[#F3EBDD]">FROM PALM TO PRODUCT</span>
+          <span>✦ CULTURE TO COMMERCE</span>
+          <span className="text-[#F3EBDD]">HERITAGE TO OPPORTUNITY</span>
+          <span>✦ IKOT EKPENE LGA, AKWA IBOM STATE</span>
+          <span className="text-[#F3EBDD]">THE FESTIVAL IS ONLY THE BEGINNING</span>
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 03. WHY RAFFIA: DUAL-IMAGE EDITORIAL COMPOSITION                           */}
-      {/* ========================================================================= */}
+      {/* 03. WHY RAFFIA? (PDF Page 2) */}
       <section id="why-raffia" className="py-24 sm:py-32 px-6 lg:px-12 bg-[#F3EBDD] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Dual-Image Composition: Main Master Loom + Overlapping Detail Card */}
+          {/* Image composition */}
           <div className="lg:col-span-7 relative">
             <MotionReveal direction="none">
-              {/* Primary Main Image: Master Weaver at the Loom */}
               <div
                 onClick={() =>
                   setLightboxImage({
                     src: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1800&q=85',
-                    title: 'Master Weaver at the Upright Loom',
-                    subtitle: 'Centuries of mathematical pattern memory and hand-tension craft.',
-                    location: 'Ikot Ekpene, Akwa Ibom State, Nigeria',
-                    category: 'HERITAGE ARCHIVE',
+                    title: 'Traditional Raffia Weaving',
+                    subtitle: 'Connecting traditional knowledge with contemporary practice.',
+                    location: 'Ikot Ekpene LGA, Akwa Ibom State',
+                    category: 'HERITAGE CRAFT',
                   })
                 }
                 className="relative aspect-[4/3] sm:aspect-[16/11] w-full overflow-hidden shadow-2xl bg-[#EAE1D1] group cursor-pointer border border-[#241A14]/15"
               >
                 <img
                   src="https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1600&q=85"
-                  alt="African artisan working with natural raffia fibre"
+                  alt="Artisan working with raffia fibre"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#11100E]/85 via-transparent to-transparent" />
 
-                {/* Inspect Action Cue */}
                 <div className="absolute top-4 right-4 p-2 bg-[#11100E]/70 hover:bg-[#B65332] text-white transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100 z-10 flex items-center gap-1.5 text-xs font-mono">
                   <Maximize2 size={14} />
                   <span>INSPECT</span>
@@ -312,88 +285,85 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 <div className="absolute bottom-6 left-6 right-6 text-white flex items-end justify-between">
                   <div>
                     <span className="text-xs font-mono tracking-widest text-[#C8A978] uppercase block mb-1">
-                      ANCESTRAL CRAFT IN MOTION
+                      TRADITIONAL KNOWLEDGE IN MOTION
                     </span>
                     <p className="text-base sm:text-lg font-bold font-sans">
-                      Master Weaver at the Upright Loom
+                      Raffia Weaving Heritage
                     </p>
                   </div>
                   <span className="text-xs font-mono text-white/70 hidden sm:inline">
-                    IKOT EKPENE, NIGERIA
+                    IKOT EKPENE LGA, AKWA IBOM STATE
                   </span>
                 </div>
               </div>
 
-              {/* Floating Overlapping Inset Card: Macro Natural Dye & Fiber Detail */}
-              <motion.div
-                whileHover={{ scale: 1.03 }}
+              {/* Inset Detail Card */}
+              <div
                 onClick={() =>
                   setLightboxImage({
                     src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=85',
-                    title: 'Sun-Bleached Raffia Bast & Botanical Dye Vats',
-                    subtitle: 'Organic river-retted fronds dyed with natural forest indigo and red camwood.',
-                    location: 'Cross River Estuary',
-                    category: 'MATERIAL BOTANY',
+                    title: 'From Palm to Craft',
+                    subtitle: 'Natural raffia palm fibres prepared for weaving.',
+                    location: 'Akwa Ibom State, Nigeria',
+                    category: 'MATERIAL & CRAFT',
                   })
                 }
-                className="hidden md:flex absolute -bottom-10 -right-8 w-64 p-3 bg-[#241A14]/95 text-white border border-[#C8A978]/40 shadow-2xl backdrop-blur-md cursor-pointer flex-col gap-2 z-20 group"
+                className="hidden md:flex absolute -bottom-8 -right-6 w-60 p-3 bg-[#241A14]/95 text-white border border-[#C8A978]/40 shadow-2xl backdrop-blur-md cursor-pointer flex-col gap-2 z-20 group"
               >
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-black">
                   <img
                     src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80"
-                    alt="Botanical raffia dyeing"
+                    alt="Raffia fibres"
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-[#B65332] text-white text-[9px] font-mono uppercase font-bold">
-                    NATURAL DYE VAT
+                  <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#B65332] text-white text-xs font-mono uppercase font-bold">
+                    NATURAL FIBRE
                   </div>
                 </div>
                 <div>
-                  <b className="font-mono text-xs text-[#C8A978] block">RAW FIBRE BOTANY</b>
-                  <p className="text-[11px] text-white/80 line-clamp-2 mt-0.5">
-                    100% biodegradable palm bast sun-dried along riverbanks.
+                  <b className="font-mono text-xs text-[#C8A978] block">FROM PALM TO PRODUCT</b>
+                  <p className="text-xs text-white/80 line-clamp-2 mt-0.5 font-sans">
+                    Heritage to opportunity.
                   </p>
                 </div>
-              </motion.div>
+              </div>
             </MotionReveal>
           </div>
 
-          {/* Beside It: Editorial Copy with 4 Interactive Visual Words */}
+          {/* Copy strictly from PDF Page 2 */}
           <div className="lg:col-span-5 space-y-6">
             <MotionReveal direction="up">
               <span className="font-mono text-xs tracking-[0.2em] text-[#B65332] uppercase font-bold block mb-2">
-                THE LIVING FIBRE
+                THE BIG IDEA
               </span>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.08]">
-                MORE THAN<br />
-                <span className="text-[#B65332] font-serif italic font-normal">A MATERIAL.</span>
+                WHY RAFFIA?<br />
+                <span className="text-[#B65332] font-serif italic font-normal">MORE THAN A MATERIAL.</span>
               </h2>
             </MotionReveal>
 
             <MotionReveal direction="up" delay={0.15}>
-              <p className="text-lg sm:text-xl text-[#241A14] font-medium leading-relaxed">
-                Raffia carries history, skill, identity and possibility.
+              <p className="text-lg sm:text-xl text-[#241A14] font-medium leading-relaxed font-sans">
+                Raffia is more than a material. It carries history, skill, identity and possibility.
               </p>
-              <p className="text-sm sm:text-base text-[#73695E] leading-relaxed mt-3">
-                Used across generations for clothing, craft, shelter, dance, ceremony and everyday life, raffia is a living thread connecting African heritage with contemporary cultural innovation.
+              <p className="text-sm sm:text-base text-[#73695E] leading-relaxed mt-3 font-sans">
+                For generations, people have used raffia for clothing, craft, shelter, dance, ceremony and everyday life. Today, we can take that knowledge further.
+              </p>
+              <p className="text-sm sm:text-base text-[#73695E] leading-relaxed mt-2 font-sans">
+                The Raffia Legacy Project connects traditional knowledge with contemporary fashion, art, design, tourism, technology and enterprise.
               </p>
             </MotionReveal>
 
-            {/* 4 Interactive Visual Words with Clickable Detail Exploration */}
+            {/* 4 Supported Words from PDF: HISTORY, SKILL, IDENTITY, POSSIBILITY */}
             <MotionReveal direction="up" delay={0.25}>
               <div className="grid grid-cols-2 gap-3 pt-4 border-t border-[#241A14]/15">
-                {[
-                  { word: 'HISTORY', desc: 'Centuries of West African ceremonial textiles and regalia' },
-                  { word: 'SKILL', desc: 'Mathematical pattern memory encoded in handlooms' },
-                  { word: 'IDENTITY', desc: 'Sacred masquerade, dance, and community belonging' },
-                  { word: 'POSSIBILITY', desc: 'Haute couture, biomaterials, and circular enterprise' },
-                ].map((item) => {
-                  const isSelected = activePillarWord === item.word;
+                {['HISTORY', 'SKILL', 'IDENTITY', 'POSSIBILITY'].map((word) => {
+                  const isSelected = activePillarWord === word;
                   return (
                     <button
-                      key={item.word}
-                      onClick={() => setActivePillarWord(item.word)}
+                      key={word}
+                      onClick={() => setActivePillarWord(word)}
                       className={`p-3.5 text-left border-l-2 transition-all cursor-pointer ${
                         isSelected
                           ? 'bg-[#241A14] text-white border-[#C8A978] shadow-md'
@@ -405,26 +375,19 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                           isSelected ? 'text-[#C8A978]' : 'text-[#11100E]'
                         }`}
                       >
-                        {item.word}
+                        {word}
                       </b>
                       <span
-                        className={`text-[11px] leading-tight block mt-0.5 ${
+                        className={`text-xs leading-tight block mt-0.5 font-sans ${
                           isSelected ? 'text-white/80' : 'text-[#73695E]'
                         }`}
                       >
-                        {item.desc}
+                        {pillarDetails[word]?.desc}
                       </span>
                     </button>
                   );
                 })}
               </div>
-
-              {/* Active Word Dynamic Quote Callout */}
-              {activePillarWord && (
-                <div className="mt-3 p-3 bg-[#241A14]/5 border-l-2 border-[#B65332] text-xs font-serif italic text-[#241A14]">
-                  “{pillarDetails[activePillarWord]?.quote}”
-                </div>
-              )}
             </MotionReveal>
 
             <MotionReveal direction="up" delay={0.35}>
@@ -432,7 +395,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 onClick={() => scrollToSection('the-project')}
                 className="button bg-[#241A14] text-white hover:bg-[#B65332] px-7 py-4 text-xs font-mono tracking-wider uppercase font-bold cursor-pointer transition-all flex items-center gap-2 mt-4"
               >
-                <span>DISCOVER RAFFIA</span>
+                <span>OUR VISION</span>
                 <ArrowRight size={16} />
               </button>
             </MotionReveal>
@@ -440,16 +403,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 04. THE PROJECT: LARGE EDITORIAL COMPOSITION WITH DYNAMIC VISUAL CHANGING */}
-      {/* ========================================================================= */}
+      {/* 04. THE PROJECT: OUR VISION (PDF Page 2) */}
       <section id="the-project" className="py-24 sm:py-32 px-6 lg:px-12 bg-[#241A14] text-[#F3EBDD] border-b border-white/10">
         <div className="max-w-[1560px] mx-auto space-y-12">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/15 pb-8">
             <MotionReveal direction="up">
               <span className="font-mono text-xs tracking-widest text-[#C8A978] uppercase block mb-2 font-bold">
-                THE RAFFIA LEGACY PROJECT
+                OUR VISION
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
                 FROM PALM TO PRODUCT.<br />
@@ -459,14 +420,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
 
             <MotionReveal direction="up" delay={0.15}>
               <p className="max-w-md text-sm sm:text-base text-white/80 leading-relaxed font-sans">
-                The Raffia Legacy Project connects traditional knowledge with contemporary fashion, art, design, tourism, technology and enterprise.
+                To build a lasting platform that helps transform raffia heritage into culture, creativity, opportunity, tourism and legacy.
               </p>
             </MotionReveal>
           </div>
 
-          {/* Interactive Visual Sequence: Dynamic Image Canvas + Interactive Tabs */}
+          {/* Interactive Visual Sequence: 5 Pillars from PDF Page 2 */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
-            {/* Interactive Category Selector (Left / Tabs) */}
+            {/* Left Pillar Buttons */}
             <div className="lg:col-span-5 flex flex-col justify-between space-y-3">
               {PROJECT_CATEGORIES.map((cat, idx) => {
                 const isActive = activeProjectIdx === idx;
@@ -492,36 +453,26 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                         }`}
                       />
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+                    <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-sans">
                       {cat.title}
                     </h3>
                     <p className="text-xs text-[#C8A978] font-mono mt-0.5">
                       {cat.tagline}
                     </p>
-                    {isActive && (
-                      <motion.p
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        transition={{ duration: 0.3 }}
-                        className="text-xs text-white/80 mt-3 font-sans leading-relaxed pt-2 border-t border-white/10"
-                      >
-                        {cat.description}
-                      </motion.p>
-                    )}
                   </button>
                 );
               })}
             </div>
 
-            {/* Dynamic Large Contextual Image Display (Right) with Ken Burns Motion */}
-            <div className="lg:col-span-7 relative min-h-[420px] lg:min-h-[580px] overflow-hidden border border-white/15 bg-[#11100E] group">
+            {/* Right Display */}
+            <div className="lg:col-span-7 relative min-h-[420px] lg:min-h-[520px] overflow-hidden border border-white/15 bg-[#11100E] group">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentProjectPillar.id}
-                  initial={{ opacity: 0, scale: 1.06 }}
+                  initial={{ opacity: 0, scale: 1.05 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.65, ease: 'easeOut' }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
                   className="absolute inset-0"
                 >
                   <img
@@ -532,37 +483,32 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#11100E] via-[#241A14]/40 to-transparent" />
 
-                  {/* Top Right Inspect Button */}
                   <button
                     onClick={() =>
                       setLightboxImage({
                         src: currentProjectPillar.image,
                         title: currentProjectPillar.title,
-                        subtitle: currentProjectPillar.description,
+                        subtitle: currentProjectPillar.tagline,
                         location: currentProjectPillar.location,
                         category: `PILLAR 0${activeProjectIdx + 1}`,
                       })
                     }
                     className="absolute top-6 right-6 p-2.5 bg-black/60 hover:bg-[#B65332] text-white border border-white/20 backdrop-blur-md transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-mono z-20"
-                    title="Inspect photo in full resolution"
+                    title="Inspect photo"
                   >
                     <Maximize2 size={15} />
                     <span className="hidden sm:inline">VIEW FULL</span>
                   </button>
 
                   <div className="absolute bottom-8 left-8 right-8 text-white z-10">
-                    <div className="flex items-center gap-2 mb-2 text-xs font-mono text-[#C8A978]">
-                      <MapPin size={13} className="text-[#B65332]" />
-                      <span className="uppercase tracking-widest">{currentProjectPillar.location}</span>
-                    </div>
-                    <span className="font-mono text-xs text-[#C8A978] tracking-widest uppercase block mb-1">
-                      ACTIVE PILLAR · 0{activeProjectIdx + 1}
+                    <span className="font-mono text-xs text-[#C8A978] tracking-widest uppercase block mb-1 font-bold">
+                      0{activeProjectIdx + 1} · {currentProjectPillar.title}
                     </span>
-                    <h4 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                      {currentProjectPillar.title}
+                    <h4 className="text-2xl sm:text-3xl font-extrabold tracking-tight font-sans">
+                      {currentProjectPillar.tagline}
                     </h4>
-                    <p className="text-sm text-white/85 mt-2 max-w-lg leading-relaxed">
-                      {currentProjectPillar.description}
+                    <p className="text-xs font-mono text-white/70 mt-2">
+                      {currentProjectPillar.location}
                     </p>
                   </div>
                 </motion.div>
@@ -572,280 +518,142 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 05. LEGACY YEAR: VISUAL JOURNEY ACROSS THE 6 STAGES                       */}
-      {/* ========================================================================= */}
+      {/* 05. LEGACY YEAR: THE 6 PROGRAMMES (PDF Page 4) */}
       <section className="py-24 sm:py-32 px-6 lg:px-12 bg-[#EAE1D1] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto space-y-12">
-          {/* Header */}
+          {/* Header strictly from PDF Page 4 */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <MotionReveal direction="up">
               <span className="font-mono text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
-                THE 12-MONTH CALENDAR
+                THE LEGACY YEAR
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E]">
-                THE LEGACY YEAR<br />
-                <span className="text-[#B65332] font-serif italic font-normal">PROGRAMME JOURNEY.</span>
+                THE FESTIVAL<br />
+                <span className="text-[#B65332] font-serif italic font-normal">IS ONLY THE BEGINNING.</span>
               </h2>
             </MotionReveal>
             <MotionReveal direction="up" delay={0.15}>
-              <p className="max-w-md text-sm sm:text-base text-[#73695E] leading-relaxed">
-                The festival is the physical flagship moment. The Legacy Year is everything that happens before and after it—connecting schools, youth, designers, and cooperatives.
+              <p className="max-w-md text-sm sm:text-base text-[#73695E] leading-relaxed font-sans">
+                The strongest part of the Raffia Legacy Project is what happens before and after the festival. Five connected programmes create a continuous journey.
               </p>
             </MotionReveal>
           </div>
 
-          {/* Horizontal Storytelling Grid on Desktop / Vertical on Mobile */}
-          <div className="relative pt-6">
-            {/* Subtle Raffia Weaving Thread Line connecting the stages */}
-            <div className="hidden lg:block absolute top-[110px] left-0 right-0 h-[2px] bg-gradient-to-r from-[#B65332] via-[#C8A978] to-[#B65332] z-0 opacity-40" />
+          {/* 6 Programmes Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 relative z-10">
+            {LEGACY_STAGES.map((st) => (
+              <motion.div
+                key={st.step}
+                whileHover={{ y: -6 }}
+                onClick={() =>
+                  setLightboxImage({
+                    src: st.image,
+                    title: `${st.step}. ${st.subtitle}`,
+                    subtitle: st.desc,
+                    category: `THE LEGACY YEAR`,
+                  })
+                }
+                className="group bg-[#F3EBDD] border border-[#241A14]/15 overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-xl transition-all cursor-pointer"
+              >
+                <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#DDD4C5]">
+                  <img
+                    src={st.image}
+                    alt={st.subtitle}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-[#241A14] text-white font-mono text-xs font-bold">
+                    {st.step}
+                  </div>
+                </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 relative z-10">
-              {LEGACY_STAGES.map((st) => (
-                <motion.div
-                  key={st.step}
-                  whileHover={{ y: -6 }}
-                  onClick={() =>
-                    setLightboxImage({
-                      src: st.image,
-                      title: `Stage ${st.step}: ${st.title} — ${st.subtitle}`,
-                      subtitle: st.desc,
-                      category: `LEGACY YEAR · ${st.timeframe}`,
-                    })
-                  }
-                  className="group bg-[#F3EBDD] border border-[#241A14]/15 overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-xl transition-all cursor-pointer"
-                >
-                  {/* Stage Image with Hover Zoom */}
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#DDD4C5]">
-                    <img
-                      src={st.image}
-                      alt={st.subtitle}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-[#241A14] text-white font-mono text-[11px] font-bold">
-                      {st.step}
-                    </div>
-                    <div className="absolute top-2.5 right-2.5 p-1 bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Maximize2 size={12} />
-                    </div>
+                <div className="p-4 flex-1 flex flex-col justify-between">
+                  <div>
+                    <b className="font-mono text-xs tracking-widest text-[#B65332] uppercase block mb-1">
+                      {st.title}
+                    </b>
+                    <h4 className="text-base font-bold text-[#11100E] leading-snug mb-2 font-sans">
+                      {st.subtitle}
+                    </h4>
+                    <p className="text-xs text-[#73695E] leading-relaxed font-sans">
+                      {st.desc}
+                    </p>
                   </div>
 
-                  {/* Stage Copy */}
-                  <div className="p-4 flex-1 flex flex-col justify-between">
-                    <div>
-                      <b className="font-mono text-[11px] tracking-widest text-[#B65332] uppercase block mb-1">
-                        {st.title}
-                      </b>
-                      <h4 className="text-base font-bold text-[#11100E] leading-snug mb-2">
-                        {st.subtitle}
-                      </h4>
-                      <p className="text-xs text-[#73695E] leading-relaxed">
-                        {st.desc}
-                      </p>
-                    </div>
-
-                    <div className="mt-4 pt-3 border-t border-[#241A14]/10 flex items-center justify-between text-[11px] font-mono text-[#B65332]">
-                      <span>STAGE {st.step}</span>
-                      <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                    </div>
+                  <div className="mt-4 pt-3 border-t border-[#241A14]/10 flex items-center justify-between text-xs font-mono text-[#B65332] font-semibold">
+                    <span>PROGRAMME {st.step}</span>
+                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
-                </motion.div>
-              ))}
-            </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 06. PEOPLE / MAKERS: ASYMMETRICAL EDITORIAL PHOTOGRAPHY GRID              */}
-      {/* ========================================================================= */}
+      {/* 06. COMMUNITY & VALUE CREATION (PDF Page 3 & 6) */}
       <section className="py-24 sm:py-32 px-6 lg:px-12 bg-[#F3EBDD] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto space-y-12">
-          {/* Header */}
+          {/* Header strictly from PDF Page 3 & 6 */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <MotionReveal direction="up">
               <span className="font-mono text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
-                COMMUNITY & CUSTODIANS
+                VALUE CREATION
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.08]">
-                THE PEOPLE<br />
-                <span className="text-[#B65332] font-serif italic font-normal">BEHIND THE LEGACY.</span>
+                THE LEGACY<br />
+                <span className="text-[#B65332] font-serif italic font-normal">WE WANT TO CREATE.</span>
               </h2>
             </MotionReveal>
             <MotionReveal direction="up" delay={0.15}>
-              <p className="max-w-md text-sm sm:text-base text-[#73695E] leading-relaxed">
-                Meet the elder guild custodians, innovative textile artists, and riverine harvesting collectives preserving and redefining African raffia.
+              <p className="max-w-md text-sm sm:text-base text-[#73695E] leading-relaxed font-sans">
+                The Raffia Legacy Project is designed to create value at many levels—for young people, artisans, farmers, creatives, businesses, the community, the host destination, and the wider economy.
               </p>
             </MotionReveal>
           </div>
 
-          {/* Asymmetrical Editorial Photography Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
-            {/* 1. Large Portrait: Ikot Ekpene Master Weavers (Col 1-5) */}
-            <div
-              onClick={() =>
-                setLightboxImage({
-                  src: MAKERS[0].image,
-                  title: MAKERS[0].name,
-                  subtitle: MAKERS[0].bio,
-                  location: MAKERS[0].location,
-                  category: 'MASTER GUILD CUSTODIANS',
-                })
-              }
-              className="md:col-span-5 relative overflow-hidden bg-[#241A14] text-white group min-h-[460px] flex flex-col justify-end p-8 border border-[#241A14]/15 cursor-pointer shadow-lg"
-            >
-              <img
-                src={MAKERS[0].image}
-                alt={MAKERS[0].name}
-                referrerPolicy="no-referrer"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#11100E] via-[#241A14]/50 to-transparent" />
-              <div className="absolute top-6 right-6 p-2 bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                <Maximize2 size={14} />
-              </div>
-              <div className="relative z-10">
-                <span className="font-mono text-xs text-[#C8A978] tracking-widest uppercase block mb-1">
-                  MASTER GUILD
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-2">
-                  {MAKERS[0].name}
-                </h3>
-                <p className="text-xs text-white/80 line-clamp-3 leading-relaxed font-sans mb-4">
-                  {MAKERS[0].bio}
-                </p>
-                <div className="text-xs font-mono text-[#C8A978] flex items-center gap-1.5">
-                  <MapPin size={13} className="text-[#B65332]" />
-                  <span>{MAKERS[0].location}</span>
+          {/* 8 Value Levels from PDF Page 6 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { id: '01', title: 'FOR YOUNG PEOPLE', desc: 'Skills, confidence, creativity and new opportunities.' },
+              { id: '02', title: 'FOR ARTISANS', desc: 'Visibility, new markets, skills and better access to customers.' },
+              { id: '03', title: 'FOR FARMERS', desc: 'New conversations around the value and future of raffia.' },
+              { id: '04', title: 'FOR CREATIVES', desc: 'A platform to experiment, collaborate and reach new audiences.' },
+              { id: '05', title: 'FOR BUSINESSES', desc: 'New products, customers, partnerships and markets.' },
+              { id: '06', title: 'FOR THE COMMUNITY', desc: 'Pride, participation, opportunity and stronger connections.' },
+              { id: '07', title: 'FOR THE HOST DESTINATION', desc: 'A distinctive cultural identity and a reason for people to visit.' },
+              { id: '08', title: 'FOR THE WIDER ECONOMY', desc: 'A chance to turn indigenous knowledge and materials into sustainable creative enterprise.' },
+            ].map((v) => (
+              <div key={v.id} className="p-5 bg-[#EAE1D1] border border-[#241A14]/15 flex flex-col justify-between">
+                <div>
+                  <span className="font-mono text-xs text-[#B65332] font-bold block mb-1">{v.id}</span>
+                  <h4 className="font-mono text-sm font-bold text-[#11100E] mb-2">{v.title}</h4>
+                  <p className="text-xs text-[#73695E] font-sans leading-relaxed">{v.desc}</p>
                 </div>
               </div>
-            </div>
+            ))}
+          </div>
 
-            {/* 2. Middle Stack: Two Smaller Images (Col 6-8) */}
-            <div className="md:col-span-3 flex flex-col gap-6">
-              {/* Top Small Card: Studio Nkem */}
-              <div
-                onClick={() =>
-                  setLightboxImage({
-                    src: MAKERS[1].image,
-                    title: MAKERS[1].name,
-                    subtitle: MAKERS[1].bio,
-                    location: MAKERS[1].location,
-                    category: 'CONTEMPORARY ATELIER',
-                  })
-                }
-                className="relative aspect-[4/3] flex-1 overflow-hidden bg-[#241A14] text-white p-5 flex flex-col justify-end group border border-[#241A14]/15 cursor-pointer shadow-md"
-              >
-                <img
-                  src={MAKERS[1].image}
-                  alt={MAKERS[1].name}
-                  referrerPolicy="no-referrer"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#11100E] via-[#11100E]/30 to-transparent" />
-                <div className="relative z-10">
-                  <span className="font-mono text-[10px] text-[#C8A978] uppercase block">
-                    CONTEMPORARY ATELIER
-                  </span>
-                  <h4 className="text-base font-bold text-white leading-snug">
-                    {MAKERS[1].name}
-                  </h4>
-                  <p className="text-[11px] text-white/70 line-clamp-1 mt-0.5">
-                    {MAKERS[1].discipline}
-                  </p>
-                </div>
-              </div>
-
-              {/* Bottom Small Card: Oron Cooperative */}
-              <div
-                onClick={() =>
-                  setLightboxImage({
-                    src: MAKERS[2].image,
-                    title: MAKERS[2].name,
-                    subtitle: MAKERS[2].bio,
-                    location: MAKERS[2].location,
-                    category: 'WOMEN’S FIBRE COOPERATIVE',
-                  })
-                }
-                className="relative aspect-[4/3] flex-1 overflow-hidden bg-[#241A14] text-white p-5 flex flex-col justify-end group border border-[#241A14]/15 cursor-pointer shadow-md"
-              >
-                <img
-                  src={MAKERS[2].image}
-                  alt={MAKERS[2].name}
-                  referrerPolicy="no-referrer"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#11100E] via-[#11100E]/30 to-transparent" />
-                <div className="relative z-10">
-                  <span className="font-mono text-[10px] text-[#C8A978] uppercase block">
-                    WOMEN’S FIBRE COOPERATIVE
-                  </span>
-                  <h4 className="text-base font-bold text-white leading-snug">
-                    {MAKERS[2].name}
-                  </h4>
-                  <p className="text-[11px] text-white/70 line-clamp-1 mt-0.5">
-                    {MAKERS[2].location}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Wide Image / Community Weaving Circle (Col 9-12) */}
-            <div
-              onClick={() =>
-                setLightboxImage({
-                  src: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1600&q=85',
-                  title: 'Passing the Needle Across Generations',
-                  subtitle: 'Elder master weavers instructing young apprentices in traditional knotting, tension geometry, and natural mordant dyeing.',
-                  location: 'Akwa Ibom & Cross River State',
-                  category: 'APPRENTICESHIP NETWORK',
-                })
-              }
-              className="md:col-span-4 relative overflow-hidden bg-[#241A14] text-white p-8 flex flex-col justify-between group border border-[#241A14]/15 min-h-[460px] cursor-pointer shadow-lg"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80"
-                alt="Apprentice and guild weavers"
-                referrerPolicy="no-referrer"
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#11100E] via-[#241A14]/60 to-[#11100E]/30" />
-              <div className="relative z-10 flex items-center justify-between text-xs font-mono text-[#C8A978]">
-                <span>APPRENTICESHIP NETWORK</span>
-                <span>AKWA IBOM & CROSS RIVER</span>
-              </div>
-              <div className="relative z-10">
-                <h4 className="text-2xl font-bold text-white mb-2 leading-tight">
-                  Passing the Needle Across Generations
-                </h4>
-                <p className="text-xs text-white/80 leading-relaxed font-sans mb-4">
-                  Elder master weavers instructing young apprentices in traditional knotting, tension geometry, and natural mordant dyeing.
-                </p>
-                <div className="pt-3 border-t border-white/15 flex items-center justify-between text-xs font-mono text-[#C8A978]">
-                  <span>OVER 250 REGISTERED MAKERS</span>
-                  <ArrowUpRight size={15} />
-                </div>
-              </div>
-            </div>
+          <div className="p-6 bg-[#241A14] text-[#F3EBDD] text-center border border-[#C8A978]/30">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#C8A978] mb-1 font-bold">THE GOAL IS SIMPLE</p>
+            <p className="font-editorial text-xl sm:text-2xl font-light">
+              Create value from what we already have—and open the door to what is possible.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 07. MARKETPLACE PREVIEW: EDITORIAL COMMERCE SHOWCASE                       */}
-      {/* ========================================================================= */}
+      {/* 07. MARKETPLACE PREVIEW */}
       <section className="py-24 sm:py-32 px-6 lg:px-12 bg-[#EAE1D1] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto space-y-12">
-          {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <MotionReveal direction="up">
               <span className="font-mono text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
-                CONTEMPORARY EDITIONS
+                RAFFIA MARKETPLACE
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.08]">
-                RAFFIA,<br />
-                <span className="text-[#B65332] font-serif italic font-normal">MADE TODAY.</span>
+                BUY, SELL, DISCOVER<br />
+                <span className="text-[#B65332] font-serif italic font-normal">& CONNECT.</span>
               </h2>
             </MotionReveal>
             <MotionReveal direction="up" delay={0.15}>
@@ -859,7 +667,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
             </MotionReveal>
           </div>
 
-          {/* Large Editorial Product Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {marketplacePreview.map((product) => (
               <ProductCard
@@ -873,15 +680,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 08. FESTIVAL 2027: UNMISTAKABLE EVENT PORTAL                              */}
-      {/* ========================================================================= */}
+      {/* 08. THE RAFFIA FESTIVAL (PDF Page 3) */}
       <section className="relative py-28 sm:py-36 px-6 lg:px-12 overflow-hidden bg-[#11100E] text-white">
-        {/* Full-Bleed Atmospheric Background with Festival Energy */}
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=2400&q=85"
-            alt="Festival cultural masquerade"
+            alt="Festival Atmosphere"
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover opacity-35 filter brightness-75 scale-105"
           />
@@ -889,46 +693,40 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
 
         <div className="relative z-10 max-w-[1560px] mx-auto space-y-16">
-          {/* Main Event Typography */}
+          {/* Header strictly from PDF Page 3 */}
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b border-white/15 pb-12">
             <div>
               <span className="font-mono text-xs tracking-[0.25em] text-[#C8A978] uppercase block mb-3 font-bold">
-                THE FLAGSHIP EVENT
+                THE HEART OF THE LEGACY
               </span>
               <h2 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-[0.95] text-white">
-                RAFFIA<br />
+                THE RAFFIA<br />
                 <span className="text-[#B65332]">FESTIVAL</span><br />
-                <span className="font-serif italic font-normal text-[#C8A978]">2027</span>
+                <span className="font-serif italic font-normal text-[#C8A978]">IKOT EKPENE LGA</span>
               </h2>
             </div>
 
             <div className="max-w-lg space-y-4">
               <p className="text-base sm:text-lg text-white/85 leading-relaxed font-sans">
-                The flagship celebration bringing communities, artisans, farmers, designers, artists, young people, businesses, visitors and investors together in Akwa Ibom & Cross River.
+                The Raffia Festival is the flagship event of the entire project. It brings together communities, artisans, farmers, designers, artists, young people, businesses, visitors and investors for a celebration of what raffia can inspire.
               </p>
               <div className="pt-2 flex flex-wrap gap-4">
                 <button
-                  onClick={() =>
-                    onNavigate({
-                      type: 'coming_soon',
-                      title: 'Festival 2027 Registration',
-                      subtitle: 'Festival passes and hotel travel packages are in preparation.',
-                    })
-                  }
+                  onClick={() => onNavigate({ type: 'festival' })}
                   className="button bg-[#B65332] text-white hover:bg-white hover:text-[#11100E] font-bold px-8 py-4 text-xs font-mono tracking-wider uppercase cursor-pointer transition-all"
                 >
-                  <span>REGISTER FOR UPDATES</span>
+                  <span>FESTIVAL DETAILS</span>
                   <ArrowUpRight size={16} />
                 </button>
               </div>
             </div>
           </div>
 
-          {/* 8 Source-Supported Festival Experiences: Visual Image-Overlay Cards */}
+          {/* 8 Experiences from PDF Page 3 */}
           <div>
             <div className="flex items-center justify-between text-xs font-mono text-[#C8A978] uppercase tracking-wider mb-6">
-              <span>8 FLAGSHIP EXPERIENCES</span>
-              <span className="text-white/50">OCTOBER 2026 — 2027</span>
+              <span>ONE FESTIVAL. MANY WORLDS OF RAFFIA.</span>
+              <span className="text-white/50">8 EXPERIENCES</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -938,10 +736,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                   onClick={() =>
                     setLightboxImage({
                       src: ev.image,
-                      title: `Experience 0${i + 1}: ${ev.title}`,
+                      title: ev.title,
                       subtitle: ev.summary,
-                      location: 'Festival Village Grounds, Akwa Ibom State',
-                      category: ev.category,
+                      location: 'Ikot Ekpene LGA, Akwa Ibom State',
+                      category: 'RAFFIA FESTIVAL',
                     })
                   }
                   className="group relative overflow-hidden bg-[#241A14] border border-white/10 p-6 min-h-[220px] flex flex-col justify-between hover:border-[#C8A978] transition-all cursor-pointer shadow-md"
@@ -958,10 +756,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     <Maximize2 size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                   <div className="relative z-10">
-                    <span className="text-[10px] font-mono text-[#C8A978] uppercase block mb-0.5">
-                      {ev.category}
-                    </span>
-                    <h3 className="text-lg font-bold text-white group-hover:text-[#C8A978] transition-colors">
+                    <h3 className="text-lg font-bold text-white group-hover:text-[#C8A978] transition-colors font-sans">
                       {ev.title}
                     </h3>
                     <p className="text-xs text-white/70 line-clamp-2 mt-1 font-sans leading-relaxed">
@@ -975,90 +770,75 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 09. GET INVOLVED: STRONG HUMAN/COMMUNITY IMAGE & PATHWAYS                 */}
-      {/* ========================================================================= */}
+      {/* 09. PARTNERSHIP OPPORTUNITIES (PDF Page 7 & 8) */}
       <section className="py-24 sm:py-32 px-6 lg:px-12 bg-[#F3EBDD] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto space-y-12">
-          {/* Main Statement with Human Community Image */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-6 space-y-4">
-              <span className="font-mono text-xs tracking-widest text-[#B65332] uppercase font-bold block">
-                PARTICIPATION & PARTNERSHIP
-              </span>
-              <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.05]">
-                THERE IS A PLACE<br />
-                <span className="text-[#B65332] font-serif italic font-normal">FOR YOU HERE.</span>
-              </h2>
-              <p className="text-base sm:text-lg text-[#73695E] leading-relaxed">
-                Whether you weave, design, build, educate, or patronize—join a year-round movement dedicated to African cultural heritage and sustainable innovation.
-              </p>
-            </div>
-
-            {/* Community Image with Clickable Zoom */}
-            <div
-              onClick={() =>
-                setLightboxImage({
-                  src: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1600&q=85',
-                  title: 'Community Harvest & Weaving Circle',
-                  subtitle: 'Artisans, apprentices, and elder custodians gathering along the Cross River estuary.',
-                  location: 'Cross River Wetland Sanctuary',
-                  category: 'COMMUNITY & PARTICIPATION',
-                })
-              }
-              className="lg:col-span-6 relative aspect-[16/10] overflow-hidden bg-[#241A14] border border-[#241A14]/15 shadow-xl cursor-pointer group"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1400&q=85"
-                alt="Community workshop"
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#11100E]/70 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 text-white text-xs font-mono flex items-center justify-between">
-                <span>COMMUNITY HARVEST & WEAVING CIRCLE · CROSS RIVER</span>
-                <Maximize2 size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-            </div>
+          <div className="space-y-4 max-w-3xl">
+            <span className="font-mono text-xs tracking-widest text-[#B65332] uppercase font-bold block">
+              PARTNERSHIP OPPORTUNITIES
+            </span>
+            <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.05]">
+              THERE IS A PLACE<br />
+              <span className="text-[#B65332] font-serif italic font-normal">FOR YOU IN THE LEGACY.</span>
+            </h2>
+            <p className="text-base sm:text-lg text-[#73695E] leading-relaxed font-sans">
+              We welcome partners who want to help build something meaningful. We are looking for collaborators, not just cheques.
+            </p>
           </div>
 
-          {/* 7 Clear Pathways */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 pt-6 border-t border-[#241A14]/15">
+          {/* 6 Partner Categories strictly from PDF Page 7 */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              'PARTNER',
-              'SPONSOR',
-              'VOLUNTEER',
-              'BECOME A MAKER',
-              'SCHOOLS',
-              'CREATIVES',
-              'BUSINESSES',
-            ].map((pathway) => (
-              <button
-                key={pathway}
-                onClick={() =>
-                  onNavigate({
-                    type: 'coming_soon',
-                    title: pathway,
-                    subtitle: `Involvement registration for ${pathway} is opening soon.`,
-                  })
-                }
-                className="group p-4 bg-[#EAE1D1] hover:bg-[#241A14] border border-[#241A14]/15 text-left transition-all cursor-pointer flex flex-col justify-between min-h-[110px]"
-              >
-                <ArrowUpRight size={14} className="text-[#B65332] group-hover:text-[#C8A978] transition-colors self-end" />
-                <span className="font-mono text-xs font-bold text-[#11100E] group-hover:text-white transition-colors">
-                  {pathway}
-                </span>
-              </button>
+              {
+                id: '01',
+                title: 'FESTIVAL SPONSORS',
+                desc: 'Support the flagship Raffia Festival and connect your brand with culture, creativity, community and innovation.',
+              },
+              {
+                id: '02',
+                title: 'PROGRAMME SPONSORS',
+                desc: 'Support a specific area such as the School Programme, Innovators, Design Challenge, Fashion Show, Biennale, Dance, Lab, Summit, Marketplace or Youth Programmes.',
+              },
+              {
+                id: '03',
+                title: 'LEGACY PARTNERS',
+                desc: 'Support the year-round ecosystem and help us build the Raffia Academy, Lab, Market, Experiences, Research and Network.',
+              },
+              {
+                id: '04',
+                title: 'KNOWLEDGE PARTNERS',
+                desc: 'Bring expertise, research, training, technology or mentorship.',
+              },
+              {
+                id: '05',
+                title: 'MEDIA & CREATIVE PARTNERS',
+                desc: 'Help tell the story through film, photography, publishing, digital media and storytelling.',
+              },
+              {
+                id: '06',
+                title: 'TOURISM & DESTINATION PARTNERS',
+                desc: 'Help develop experiences that bring visitors into the world of raffia.',
+              },
+            ].map((p) => (
+              <div key={p.id} className="p-6 bg-[#EAE1D1] border border-[#241A14]/15 flex flex-col justify-between">
+                <div>
+                  <span className="font-mono text-xs text-[#B65332] font-bold block mb-1">{p.id}</span>
+                  <h4 className="font-mono text-sm font-bold text-[#11100E] mb-2">{p.title}</h4>
+                  <p className="text-xs text-[#73695E] font-sans leading-relaxed">{p.desc}</p>
+                </div>
+              </div>
             ))}
+          </div>
+
+          {/* PDF Page 8: Ways to give */}
+          <div className="p-4 bg-[#241A14] text-[#C8A978] font-mono text-xs text-center font-bold tracking-wider">
+            DONATE • SPONSOR AN ACTIVITY • GIVE IN-KIND • VOLUNTEER • SHARE YOUR EXPERTISE
           </div>
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 10. CLOSING: STRONG VISUAL MOMENT                                         */}
-      {/* ========================================================================= */}
+      {/* 10. THE INVITATION & CLOSING (PDF Page 9) */}
       <section className="relative py-32 sm:py-44 px-6 text-center overflow-hidden bg-[#11100E] text-white">
-        {/* Cinematic Material Background */}
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1920&q=85"
@@ -1071,26 +851,40 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
 
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
           <p className="font-mono text-xs sm:text-sm tracking-[0.25em] text-[#C8A978] uppercase font-bold">
-            OUR HERITAGE. OUR PEOPLE. OUR FUTURE.
+            THE INVITATION
           </p>
+          <div className="max-w-xl mx-auto text-sm sm:text-base text-white/80 leading-relaxed font-sans space-y-2 py-4 border-y border-white/10">
+            <p>Imagine a child discovering raffia for the first time.</p>
+            <p>They learn the craft. They discover Utta. They make something.</p>
+            <p>A young designer sees a new possibility. An artisan shares knowledge.</p>
+            <p>Together, they create.</p>
+            <p>Their work reaches the festival. A visitor discovers it. A buyer sees an opportunity.</p>
+            <p>An entrepreneur builds a business. And the next generation learns from them.</p>
+          </div>
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15]">
-            RAFFIA IS OUR THREAD.<br />
-            <span className="text-[#C8A978] font-serif italic font-normal">
-              THE FUTURE IS WHAT WE WEAVE WITH IT.
+            THAT IS THE LEGACY.<br />
+            <span className="text-[#C8A978] font-serif italic font-normal text-2xl sm:text-4xl block mt-2">
+              RAFFIA IS OUR THREAD. THE FUTURE IS WHAT WE WEAVE WITH IT.
             </span>
           </h2>
-          <div className="pt-4 flex justify-center">
+          <div className="pt-4 flex flex-wrap justify-center gap-4 text-xs font-mono">
+            <button
+              onClick={() => onNavigate({ type: 'project' })}
+              className="button bg-[#B65332] text-white hover:bg-white hover:text-[#11100E] px-8 py-4 font-bold tracking-wider uppercase cursor-pointer transition-all"
+            >
+              ABOUT THE PROJECT
+            </button>
             <button
               onClick={() => onNavigate({ type: 'marketplace' })}
-              className="button bg-[#B65332] text-white hover:bg-white hover:text-[#11100E] px-8 py-4 font-mono text-xs tracking-wider uppercase font-bold cursor-pointer transition-all"
+              className="button bg-transparent border border-white/40 text-white hover:bg-white hover:text-[#11100E] px-8 py-4 font-bold tracking-wider uppercase cursor-pointer transition-all"
             >
-              EXPLORE THE MARKETPLACE COLLECTION
+              RAFFIA MARKETPLACE
             </button>
           </div>
         </div>
       </section>
 
-      {/* MODAL: Product Quick View (Preserves existing shopping functionality) */}
+      {/* MODAL: Product Quick View */}
       {quickViewProduct && (
         <ProductQuickView
           product={quickViewProduct}
@@ -1102,7 +896,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         />
       )}
 
-      {/* MODAL: Image Lightbox for High-Resolution Photography Inspection */}
+      {/* MODAL: Image Lightbox */}
       <ImageLightbox image={lightboxImage} onClose={() => setLightboxImage(null)} />
     </div>
   );

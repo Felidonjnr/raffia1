@@ -42,8 +42,8 @@ export const RaffiaArchivePage: React.FC<RaffiaArchivePageProps> = ({
             </h1>
           </div>
           <div className="lg:col-span-4">
-            <p className="text-sm text-[#57524E] leading-relaxed max-w-md font-normal">
-              Raffia is more than a material. It carries history, skill, identity and possibility. Discover the civilizational memory, botany, and living traditions of West Africa&apos;s sacred thread.
+            <p className="text-sm text-[#57524E] leading-relaxed max-w-md font-sans">
+              Raffia is more than a material. It carries history, skill, identity and possibility. For generations, people have used raffia for clothing, craft, shelter, dance, ceremony and everyday life.
             </p>
           </div>
         </div>
@@ -73,7 +73,7 @@ export const RaffiaArchivePage: React.FC<RaffiaArchivePageProps> = ({
                       : 'bg-[#FAF7F2] text-[#57524E] border-[#181513]/10 hover:border-[#181513]/30 hover:bg-[#F4EFEA]'
                   }`}
                 >
-                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest mb-1">
+                  <div className="flex items-center justify-between text-xs font-mono uppercase tracking-widest mb-1">
                     <span className={isSelected ? 'text-[#C8B28B]' : 'text-[#8C7355]'}>
                       Chapter 0{index + 1}
                     </span>
@@ -123,12 +123,12 @@ export const RaffiaArchivePage: React.FC<RaffiaArchivePageProps> = ({
             <div className="p-6 bg-[#ECE5DC] border border-[#DDD4C5] space-y-4">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#8C7355]">
                 <Sparkles className="w-3.5 h-3.5 text-[#B84A28]" />
-                <span>Archival Notes & Curatorial Attributes</span>
+                <span>Key Principles & Dimensions</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {activeTopic.keyFacts.map((fact, idx) => (
                   <div key={idx} className="border-t border-[#181513]/10 pt-2 text-xs">
-                    <span className="font-mono uppercase text-[#8C7355] block text-[10px]">
+                    <span className="font-mono uppercase text-[#8C7355] block text-xs">
                       {fact.label}
                     </span>
                     <span className="font-medium text-[#181513] mt-0.5 block">
@@ -142,7 +142,7 @@ export const RaffiaArchivePage: React.FC<RaffiaArchivePageProps> = ({
             {/* Next Chapter footer */}
             <div className="pt-8 border-t border-[#181513]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <span className="text-xs font-mono uppercase text-[#8C7355]">
-                Dance Ville Permanent Raffia Research Monograph
+                Raffia Legacy Project
               </span>
               <button
                 onClick={() => onNavigate({ type: 'marketplace' })}

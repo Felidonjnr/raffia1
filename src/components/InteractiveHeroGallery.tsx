@@ -16,42 +16,42 @@ export const HERO_SLIDES: HeroSlide[] = [
   {
     id: '01',
     theme: 'THE MOVEMENT',
-    title: 'Living Heritage & Cultural Gathering',
+    title: 'Heritage, Creativity & Opportunity',
     image: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=2400&q=85',
-    caption: 'Celebrating African heritage, ceremonial masquerade traditions, and collective creative energy.',
-    location: 'Akwa Ibom & Cross River, Nigeria',
+    caption: 'Celebrating raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.',
+    location: 'Akwa Ibom State, Nigeria',
   },
   {
     id: '02',
-    theme: 'THE FASHION',
-    title: 'Avant-Garde Raffia Haute Couture',
+    theme: 'CREATIVITY',
+    title: 'Fashion, Art & Performance',
     image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=2400&q=85',
-    caption: 'Visionary Pan-African designers transforming organic bast fibres into sculptural silhouettes.',
-    location: 'Lagos & Paris Runways',
+    caption: 'Where traditional techniques meet contemporary fashion, art, design, music and performance.',
+    location: 'Akwa Ibom State, Nigeria',
   },
   {
     id: '03',
     theme: 'THE MAKERS',
-    title: 'Ancestral Weaving & Loom Mastery',
+    title: 'Traditional Knowledge & Craft',
     image: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=2400&q=85',
-    caption: 'Centuries of mathematical pattern memory and handloom skill passed down generation to generation.',
-    location: 'Ikot Ekpene Master Guild',
+    caption: 'Artisans, designers and creatives turn heritage into new products, fashion, art, performance and design.',
+    location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
   {
     id: '04',
     theme: 'THE FESTIVAL',
-    title: 'Flagship Cultural Celebration',
+    title: 'The Flagship Gathering',
     image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=2400&q=85',
-    caption: 'Four nights of percussive rhythm, illuminated woven pavilions, and international cultural exchange.',
-    location: 'Festival Village Grounds',
+    caption: 'Bringing together communities, artisans, farmers, designers, artists, young people, businesses, visitors and investors.',
+    location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
   {
     id: '05',
-    theme: 'THE SOURCE',
-    title: 'Riverine Palm Groves & Natural Harvest',
+    theme: 'THE VILLAGE',
+    title: 'From Palm to Craft',
     image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=2400&q=85',
-    caption: 'Wild Raphia vinifera palms flourishing in protected riverine wetlands, harvested with generational stewardship.',
-    location: 'Cross River Estuary',
+    caption: 'Step into the world of raffia—from palm to craft.',
+    location: 'Akwa Ibom State, Nigeria',
   },
 ];
 
@@ -78,9 +78,8 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const SLIDE_DURATION = 7000; // 7 seconds per slide
+  const SLIDE_DURATION = 7000;
 
-  // Auto-advance slide with smooth progress indicator
   useEffect(() => {
     if (isHovered) return;
 
@@ -146,12 +145,8 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
             className="w-full h-full object-cover object-center filter brightness-[0.88] contrast-[1.05]"
           />
 
-          {/* Luxury Multi-Layered Atmospheric Gradients */}
-          {/* Top subtle vignette */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#11100E]/80 via-transparent to-[#11100E]" />
-          {/* Center warm raffia tint overlay */}
           <div className="absolute inset-0 bg-[#241A14]/40 mix-blend-multiply" />
-          {/* Radial vignette for cinematic focal focus */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(17,16,14,0.85)_100%)]" />
         </motion.div>
       </AnimatePresence>
@@ -160,9 +155,9 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
       <div className="absolute top-24 lg:top-28 inset-x-0 z-20 flex justify-center px-6 pointer-events-none">
         <div className="glass-pill px-4 py-1.5 flex items-center gap-2.5 text-[#F3EBDD] text-xs font-mono uppercase tracking-widest border border-[#C8A978]/30 shadow-lg">
           <span className="w-2 h-2 rounded-full bg-[#B65332] pulse-beacon" />
-          <span className="text-[#C8A978] font-bold">12-MONTH CULTURAL & CREATIVE MOVEMENT</span>
+          <span className="text-[#C8A978] font-bold">CULTURE · CREATIVITY · ENTERPRISE · COMMUNITY</span>
           <span className="hidden sm:inline text-white/40">·</span>
-          <span className="hidden sm:inline text-white/80">AKWA IBOM & CROSS RIVER, NIGERIA</span>
+          <span className="hidden sm:inline text-white/80">IKOT EKPENE LGA, AKWA IBOM STATE</span>
         </div>
       </div>
 
@@ -216,7 +211,6 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
             </span>
           </div>
 
-          {/* Authentic Hand-Painted Brush Underline */}
           <div className="w-full max-w-md sm:max-w-lg mt-3 sm:mt-4 overflow-visible filter drop-shadow-lg">
             <BrushStrokeUnderline
               className="w-full h-3 sm:h-4"
@@ -225,7 +219,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           </div>
         </motion.div>
 
-        {/* Event Cadence Tagline */}
+        {/* Event Cadence Tagline (PDF Page 1) */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -233,14 +227,14 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           className="mb-7 max-w-2xl"
         >
           <p className="text-sm sm:text-base md:text-lg font-mono tracking-widest text-[#F3EBDD] uppercase font-bold drop-shadow-sm">
-            12 MONTHS · ONE LEGACY · ONE FESTIVAL
+            A YEAR-ROUND CELEBRATION OF RAFFIA
           </p>
-          <p className="text-xs sm:text-sm text-[#F3EBDD]/85 mt-2 font-sans leading-relaxed line-clamp-2 max-w-xl mx-auto drop-shadow">
-            {slide.caption}
+          <p className="text-xs sm:text-sm text-[#F3EBDD]/90 mt-2 font-sans leading-relaxed max-w-xl mx-auto drop-shadow">
+            A year-round of activities celebrating raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.
           </p>
         </motion.div>
 
-        {/* Live Countdown & Event Date Lockup */}
+        {/* Festival Status Bar */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -248,8 +242,8 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           className="mb-9 w-full max-w-md bg-[#241A14]/85 backdrop-blur-md p-4 sm:p-5 border border-white/20 shadow-2xl"
         >
           <div className="flex items-center justify-between text-xs font-mono tracking-widest uppercase text-[#C8A978] pb-2.5 border-b border-white/10 mb-3">
-            <span>THE LEGACY PROJECT LAUNCHES IN</span>
-            <strong className="text-white">29 OCTOBER 2026</strong>
+            <span>THE RAFFIA FESTIVAL</span>
+            <strong className="text-white">COMING SOON</strong>
           </div>
 
           <div className="grid grid-cols-4 gap-2 text-center text-white">
@@ -257,7 +251,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
               <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#F3EBDD] tabular-nums">
                 {String(days).padStart(2, '0')}
               </b>
-              <small className="text-[10px] font-mono tracking-widest uppercase text-[#C8A978]">
+              <small className="text-xs font-mono tracking-widest uppercase text-[#C8A978] font-bold block mt-0.5">
                 DAYS
               </small>
             </div>
@@ -265,7 +259,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
               <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#F3EBDD] tabular-nums">
                 {String(hours).padStart(2, '0')}
               </b>
-              <small className="text-[10px] font-mono tracking-widest uppercase text-[#C8A978]">
+              <small className="text-xs font-mono tracking-widest uppercase text-[#C8A978] font-bold block mt-0.5">
                 HOURS
               </small>
             </div>
@@ -273,7 +267,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
               <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#F3EBDD] tabular-nums">
                 {String(minutes).padStart(2, '0')}
               </b>
-              <small className="text-[10px] font-mono tracking-widest uppercase text-[#C8A978]">
+              <small className="text-xs font-mono tracking-widest uppercase text-[#C8A978] font-bold block mt-0.5">
                 MINUTES
               </small>
             </div>
@@ -281,7 +275,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
               <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#B65332] tabular-nums">
                 {String(seconds).padStart(2, '0')}
               </b>
-              <small className="text-[10px] font-mono tracking-widest uppercase text-[#C8A978]">
+              <small className="text-xs font-mono tracking-widest uppercase text-[#C8A978] font-bold block mt-0.5">
                 SECONDS
               </small>
             </div>
@@ -299,7 +293,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
             onClick={onExploreLegacy}
             className="w-full sm:w-auto button bg-[#B65332] text-white hover:bg-[#a04627] font-bold px-8 py-4 text-xs sm:text-sm tracking-wider cursor-pointer shadow-xl transition-all flex items-center justify-center gap-2 group"
           >
-            <span>EXPLORE THE LEGACY</span>
+            <span>EXPLORE THE PROJECT</span>
             <ArrowRight size={17} className="group-hover:translate-x-1 transition-transform" />
           </button>
 
@@ -307,7 +301,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
             onClick={onShopCollection}
             className="w-full sm:w-auto button bg-transparent border-2 border-[#F3EBDD]/60 text-[#F3EBDD] hover:bg-[#F3EBDD] hover:text-[#11100E] font-bold px-8 py-4 text-xs sm:text-sm tracking-wider cursor-pointer transition-all flex items-center justify-center gap-2"
           >
-            <span>SHOP THE COLLECTION</span>
+            <span>RAFFIA MARKETPLACE</span>
             <ArrowUpRight size={17} />
           </button>
 
@@ -326,7 +320,6 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
 
       {/* Bottom Thumbnail Strip & Navigation Controls */}
       <div className="absolute bottom-6 inset-x-0 z-20 max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-white/75">
-        {/* Interactive Slide Thumbnail Tabs */}
         <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none">
           {HERO_SLIDES.map((s, idx) => {
             const isActive = currentIdx === idx;
@@ -341,7 +334,6 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
                 }`}
                 aria-label={`View slide ${s.id}: ${s.theme}`}
               >
-                {/* Mini Thumbnail */}
                 <div className="w-6 h-6 rounded-xs overflow-hidden shrink-0 hidden sm:block">
                   <img
                     src={s.image}
@@ -353,16 +345,15 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
 
                 <div className="text-left">
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-[11px] font-bold text-[#C8A978]">
+                    <span className="font-mono text-xs font-bold text-[#C8A978]">
                       {s.id}
                     </span>
-                    <span className="text-[11px] font-mono tracking-wider uppercase font-semibold">
+                    <span className="text-xs font-mono tracking-wider uppercase font-semibold">
                       {s.theme}
                     </span>
                   </div>
                 </div>
 
-                {/* Active Slide Progress Line */}
                 {isActive && (
                   <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/20 overflow-hidden">
                     <motion.div
@@ -376,7 +367,6 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           })}
         </div>
 
-        {/* Previous / Next Controls and Current Slide Meta */}
         <div className="flex items-center gap-4">
           <div className="hidden lg:flex items-center gap-1.5 text-xs font-mono text-[#C8A978]">
             <MapPin size={13} className="text-[#B65332]" />

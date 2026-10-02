@@ -4,7 +4,6 @@ interface ArchivalImageProps {
   src?: string | null;
   alt: string;
   aspectRatio?: '16:9' | '4:3' | '1:1' | '3:4' | '2:3' | 'custom';
-  accessionNumber?: string;
   caption?: string;
   className?: string;
   priority?: boolean;
@@ -14,7 +13,6 @@ export const ArchivalImage: React.FC<ArchivalImageProps> = ({
   src,
   alt,
   aspectRatio = '4:3',
-  accessionNumber,
   caption,
   className = '',
 }) => {
@@ -51,7 +49,7 @@ export const ArchivalImage: React.FC<ArchivalImageProps> = ({
         />
       )}
 
-      {/* Styled Archival Museum Fallback Container */}
+      {/* Styled Fallback Container */}
       {(hasError || !src) && (
         <div className="absolute inset-0 w-full h-full flex flex-col justify-between p-6 bg-[#EBE4D8] border border-[#DDD4C5]">
           {/* Subtle geometric weave watermark lines */}
@@ -66,10 +64,10 @@ export const ArchivalImage: React.FC<ArchivalImageProps> = ({
             </svg>
           </div>
 
-          {/* Top accession tag */}
-          <div className="relative z-10 flex items-center justify-between text-[11px] font-mono tracking-wider uppercase text-[#8C7355]">
-            <span>{accessionNumber || 'RLP // ARCHIVE'}</span>
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#B84A28]" />
+          {/* Top tag */}
+          <div className="relative z-10 flex items-center justify-between text-xs font-mono tracking-wider uppercase text-[#8C7355]">
+            <span>RAFFIA LEGACY</span>
+            <span className="inline-block w-2 h-2 rounded-full bg-[#B84A28]" />
           </div>
 
           {/* Center tactile craft motif */}
@@ -80,23 +78,23 @@ export const ArchivalImage: React.FC<ArchivalImageProps> = ({
             <p className="font-editorial text-xl italic text-[#241D19] leading-snug line-clamp-2">
               {alt}
             </p>
-            <p className="text-[11px] tracking-widest uppercase text-[#8C7355] mt-1">
-              Archival Object Study
+            <p className="text-xs tracking-widest uppercase text-[#8C7355] mt-1 font-mono">
+              Craft Object
             </p>
           </div>
 
           {/* Bottom attribution */}
-          <div className="relative z-10 pt-2 border-t border-[#DDD4C5] flex items-center justify-between text-[10px] text-[#57524E]">
-            <span className="uppercase tracking-widest font-mono">Dance Ville Collection</span>
-            <span className="font-serif italic">Raphia vinifera</span>
+          <div className="relative z-10 pt-2 border-t border-[#DDD4C5] flex items-center justify-between text-xs text-[#57524E]">
+            <span className="uppercase tracking-widest font-mono">Raffia Heritage</span>
+            <span className="font-sans">Handcrafted</span>
           </div>
         </div>
       )}
 
       {/* Optional Editorial Caption Bar */}
       {caption && (
-        <div className="absolute bottom-0 inset-x-0 bg-[#181513]/75 backdrop-blur-[2px] p-2 text-center">
-          <p className="text-[11px] text-[#FAF7F2] font-serif tracking-wide">{caption}</p>
+        <div className="absolute bottom-0 inset-x-0 bg-[#181513]/75 backdrop-blur-[2px] p-2.5 text-center">
+          <p className="text-xs text-[#FAF7F2] font-sans tracking-wide">{caption}</p>
         </div>
       )}
     </div>

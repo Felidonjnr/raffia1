@@ -47,29 +47,28 @@ export const MakerDetailPage: React.FC<MakerDetailPageProps> = ({
             <div className="border border-[#181513]/15 overflow-hidden bg-[#ECE5DC]">
               <ArchivalImage
                 src={maker.image}
-                alt={`${maker.name} documentary atelier view`}
+                alt={`${maker.name} craft view`}
                 aspectRatio="4:3"
-                accessionNumber={`ATELIER-${maker.id.toUpperCase()}`}
                 className="w-full h-auto object-cover"
               />
             </div>
             <div className="p-4 bg-[#F4EFEA] border border-[#181513]/10 space-y-2 text-xs">
               <div className="flex items-center gap-2 text-[#181513]">
                 <ShieldCheck className="w-4 h-4 text-[#B84A28]" />
-                <span className="font-mono uppercase font-semibold">Registered Master Guild</span>
+                <span className="font-mono uppercase font-semibold">Raffia Heritage Maker</span>
               </div>
               <p className="text-[#57524E] leading-relaxed">
-                Certified with Dance Ville Fair-Trade Standards and guaranteed origin traceability in Akwa Ibom.
+                Connecting artisans and local communities with the Raffia Legacy movement.
               </p>
             </div>
           </div>
 
-          {/* Maker Editorial Profile (7 cols) */}
+          {/* Maker Profile (7 cols) */}
           <div className="lg:col-span-7 space-y-6">
             <div>
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#B84A28] mb-2">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Documented Master Atelier</span>
+                <span>Raffia Craft & Weaving</span>
               </div>
 
               <h1 className="font-editorial text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-[#181513] mb-2 leading-tight">
@@ -84,27 +83,31 @@ export const MakerDetailPage: React.FC<MakerDetailPageProps> = ({
               </div>
             </div>
 
-            <blockquote className="border-l-2 border-[#B84A28] pl-5 py-2 font-editorial italic text-2xl text-[#181513] leading-snug">
-              &ldquo;{maker.quote}&rdquo;
-            </blockquote>
+            {maker.quote ? (
+              <blockquote className="border-l-2 border-[#B84A28] pl-5 py-2 font-editorial italic text-2xl text-[#181513] leading-snug">
+                &ldquo;{maker.quote}&rdquo;
+              </blockquote>
+            ) : null}
 
             <div className="space-y-4 text-sm sm:text-base text-[#57524E] leading-relaxed font-normal">
-              <p>{maker.bio}</p>
               <p>
-                Operating with wild freshwater raffia bast harvested under seasonal lunar cycles, this workshop upholds ancestral retting and tension splitting techniques that maintain maximum tensile longevity.
+                {maker.bio ||
+                  'Artisans, designers and creatives working to turn heritage into new products, fashion, art, performance and design.'}
               </p>
             </div>
 
             <div className="p-6 bg-[#ECE5DC] border border-[#DDD4C5] space-y-3">
               <p className="font-mono text-xs uppercase tracking-widest text-[#8C7355]">
-                Speciality & Technical Mastery
+                Speciality & Focus
               </p>
               <p className="text-sm font-medium text-[#181513]">
                 {maker.speciality}
               </p>
-              <p className="text-xs text-[#57524E]">
-                {maker.heritageNotes}
-              </p>
+              {maker.heritageNotes && (
+                <p className="text-xs text-[#57524E]">
+                  {maker.heritageNotes}
+                </p>
+              )}
             </div>
 
             <div className="pt-2">
@@ -112,7 +115,7 @@ export const MakerDetailPage: React.FC<MakerDetailPageProps> = ({
                 onClick={() => openInquiry('PARTNER')}
                 className="px-6 py-3.5 bg-[#181513] text-[#FAF7F2] text-xs font-mono uppercase tracking-widest hover:bg-[#B84A28] transition-colors cursor-pointer"
               >
-                Inquire For Bespoke Guild Commission
+                Inquire / Connect With Makers
               </button>
             </div>
           </div>
@@ -150,7 +153,7 @@ export const MakerDetailPage: React.FC<MakerDetailPageProps> = ({
           </div>
         ) : (
           <p className="text-xs font-mono text-[#57524E]">
-            All current commissions by this guild have been acquired. New seasonal pieces arriving soon.
+            New craft pieces are currently in preparation.
           </p>
         )}
       </section>

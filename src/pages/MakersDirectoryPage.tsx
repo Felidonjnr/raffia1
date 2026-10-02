@@ -3,6 +3,7 @@ import { ViewRoute } from '../types';
 import { MAKERS } from '../data/makers';
 import { PRODUCTS } from '../data/products';
 import { ArchivalImage } from '../components/ArchivalImage';
+import { formatNaira } from '../utils/format';
 import { ArrowRight, MapPin, ArrowLeft } from 'lucide-react';
 
 interface MakersDirectoryPageProps {
@@ -29,16 +30,16 @@ export const MakersDirectoryPage: React.FC<MakersDirectoryPageProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
           <div className="lg:col-span-8">
             <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-3">
-              The Living Hands
+              Makers & Artisans
             </span>
             <h1 className="font-editorial text-4xl sm:text-6xl lg:text-7xl font-light tracking-tight text-[#181513] leading-[1.05]">
-              CUSTODIANS & <br />
-              <span className="italic font-normal">MASTER MAKERS</span>
+              ARTISANS & <br />
+              <span className="italic font-normal">CREATIVES</span>
             </h1>
           </div>
           <div className="lg:col-span-4">
             <p className="text-sm text-[#57524E] leading-relaxed max-w-md font-normal">
-              Every object in the Raffia Legacy collection carries the fingerprints and civilizational memory of an artisan. We partner with multigenerational guilds and forward-thinking ateliers across West Africa.
+              Connecting traditional raffia craft and local artisans with contemporary design, fashion and economic opportunity.
             </p>
           </div>
         </div>
@@ -47,7 +48,7 @@ export const MakersDirectoryPage: React.FC<MakersDirectoryPageProps> = ({
       {/* Directory Grid */}
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-16">
         <div className="space-y-20">
-          {MAKERS.map((maker, idx) => {
+          {MAKERS.map((maker) => {
             const makerProducts = PRODUCTS.filter((p) => maker.productIds.includes(p.id));
 
             return (
@@ -55,7 +56,7 @@ export const MakersDirectoryPage: React.FC<MakersDirectoryPageProps> = ({
                 key={maker.id}
                 className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start pb-16 border-b border-[#181513]/10 last:border-b-0"
               >
-                {/* Large Editorial Portrait / Guild Image (5 cols) */}
+                {/* Visual (5 cols) */}
                 <div
                   className="lg:col-span-5 cursor-pointer group"
                   onClick={() => onSelectMaker(maker.slug)}
@@ -63,15 +64,14 @@ export const MakersDirectoryPage: React.FC<MakersDirectoryPageProps> = ({
                   <div className="relative border border-[#181513]/15 overflow-hidden bg-[#ECE5DC]">
                     <ArchivalImage
                       src={maker.image}
-                      alt={`${maker.name} workshop documentary portrait`}
+                      alt={`${maker.name} craft portrait`}
                       aspectRatio="4:3"
-                      accessionNumber={`GUILD-${maker.id.toUpperCase()}`}
                       className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
                     />
                   </div>
-                  <div className="mt-3 flex items-center justify-between text-[11px] font-mono uppercase text-[#8C7355]">
-                    <span>Atelier Registry</span>
-                    <span>Documented · Dance Ville Archive</span>
+                  <div className="mt-3 flex items-center justify-between text-xs font-mono uppercase text-[#8C7355]">
+                    <span>Raffia Artisan</span>
+                    <span>Akwa Ibom, Nigeria</span>
                   </div>
                 </div>
 
@@ -95,20 +95,24 @@ export const MakersDirectoryPage: React.FC<MakersDirectoryPageProps> = ({
                     </p>
                   </div>
 
-                  <blockquote className="border-l-2 border-[#B84A28] pl-4 py-1 italic font-editorial text-lg text-[#181513]">
-                    &ldquo;{maker.quote}&rdquo;
-                  </blockquote>
+                  {maker.quote ? (
+                    <blockquote className="border-l-2 border-[#B84A28] pl-4 py-1 italic font-editorial text-lg text-[#181513]">
+                      &ldquo;{maker.quote}&rdquo;
+                    </blockquote>
+                  ) : null}
 
                   <p className="text-sm text-[#57524E] leading-relaxed font-normal">
-                    {maker.bio}
+                    {maker.bio || 'Artisans, designers and creatives working to turn heritage into new products, fashion, art, performance and design.'}
                   </p>
 
                   <div className="p-4 bg-[#F4EFEA] border border-[#181513]/10 text-xs">
                     <span className="font-mono uppercase text-[#8C7355] block mb-1">
-                      Signature Speciality:
+                      Speciality:
                     </span>
                     <p className="text-[#181513] font-medium">{maker.speciality}</p>
-                    <p className="text-[#57524E] mt-1 text-[11px]">{maker.heritageNotes}</p>
+                    {maker.heritageNotes ? (
+                      <p className="text-[#57524E] mt-1 text-xs">{maker.heritageNotes}</p>
+                    ) : null}
                   </div>
 
                   {/* Maker's Creations Preview */}
@@ -136,7 +140,7 @@ export const MakersDirectoryPage: React.FC<MakersDirectoryPageProps> = ({
                               {p.name}
                             </p>
                             <p className="font-editorial text-xs text-[#181513] font-semibold tabular-nums mt-0.5">
-                              ${p.price} USD
+                              {formatNaira(p.price)}
                             </p>
                           </div>
                         ))}
@@ -149,7 +153,7 @@ export const MakersDirectoryPage: React.FC<MakersDirectoryPageProps> = ({
                       onClick={() => onSelectMaker(maker.slug)}
                       className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#B84A28] hover:text-[#181513] transition-colors cursor-pointer font-semibold"
                     >
-                      <span>Read Full Maker Monograph & Interview</span>
+                      <span>View Maker Profile</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>

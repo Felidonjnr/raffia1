@@ -71,7 +71,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 src={currentImage}
                 alt={product.name}
                 aspectRatio="4:3"
-                accessionNumber={`OBJ-${product.id.toUpperCase()}`}
                 className="w-full h-auto object-cover"
               />
             </div>
@@ -100,9 +99,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               </div>
             )}
 
-            {/* Archival provenance footnote */}
-            <div className="pt-4 border-t border-[#181513]/10 flex items-center justify-between text-[11px] font-mono uppercase text-[#8C7355]">
-              <span>Curated by Dance Ville Guild Registry</span>
+            {/* Product details footnote */}
+            <div className="pt-4 border-t border-[#181513]/10 flex items-center justify-between text-xs font-mono uppercase text-[#8C7355]">
+              <span>Raffia Heritage Craft</span>
               <span>Origin: {product.origin}</span>
             </div>
           </div>
@@ -138,7 +137,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               {/* Price */}
               <div className="py-4 border-y border-[#181513]/10 flex items-baseline justify-between">
                 <span className="text-xs uppercase font-mono tracking-widest text-[#57524E]">
-                  Guild Value
+                  Price
                 </span>
                 <span className="font-editorial text-3xl lg:text-4xl font-bold text-[#181513] tabular-nums">
                   {formatNaira(product.price)}
@@ -172,7 +171,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   </button>
                 </div>
                 {product.leadTime && (
-                  <span className="text-[11px] text-[#8C7355] font-mono">
+                  <span className="text-xs text-[#8C7355] font-mono">
                     {product.leadTime}
                   </span>
                 )}
@@ -233,13 +232,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             </div>
 
             {/* Trust Assurance Strip */}
-            <div className="p-4 bg-[#F4EFEA] border border-[#181513]/10 space-y-2 text-[11px] text-[#57524E]">
+            <div className="p-4 bg-[#F4EFEA] border border-[#181513]/10 space-y-2 text-xs text-[#57524E]">
               <div className="flex items-center gap-2 text-[#181513]">
                 <ShieldCheck className="w-4 h-4 text-[#B84A28]" />
-                <span className="font-medium">100% Direct Guild Remittance</span>
+                <span className="font-medium font-sans">Artisan & Heritage Craft</span>
               </div>
               <p>
-                Sales proceeds directly support fair wages, elder pension reserves, and apprentice materials in Nigeria.
+                Connecting traditional raffia craft and local makers with contemporary markets.
               </p>
             </div>
           </div>
@@ -252,7 +251,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-5">
               <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">
-                Custodian Profile
+                Maker Profile
               </span>
               <h2 className="font-editorial text-3xl sm:text-4xl font-normal text-[#181513] mb-4">
                 About {product.maker.name}
@@ -262,26 +261,26 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 <span>{product.maker.region}</span>
               </div>
               <p className="text-sm text-[#57524E] leading-relaxed mb-6 font-normal">
-                {product.maker.story}
+                {product.maker.story || 'Artisans and designers creating hand-woven raffia objects and craft.'}
               </p>
-              {makerProfile && (
+              {makerProfile?.quote ? (
                 <blockquote className="border-l-2 border-[#B84A28] pl-4 py-1 italic font-editorial text-lg text-[#181513] mb-6">
                   &ldquo;{makerProfile.quote}&rdquo;
                 </blockquote>
-              )}
+              ) : null}
             </div>
 
             <div className="lg:col-span-7">
               <div className="bg-[#ECE5DC] p-8 border border-[#181513]/10 space-y-4">
                 <p className="font-mono text-xs uppercase tracking-widest text-[#8C7355]">
-                  Guild Heritage & Lineage
+                  Craft & Origin
                 </p>
                 <p className="text-sm text-[#57524E] leading-relaxed">
                   {makerProfile?.bio ||
-                    'Working in communion with regional wetland preservation groups, this atelier transforms raw wild-harvested palm bast into enduring contemporary objects of international renown.'}
+                    'Artisans, designers and creatives turning heritage into new products, fashion, art, performance and design.'}
                 </p>
                 <div className="pt-4 border-t border-[#181513]/10 flex items-center justify-between text-xs text-[#181513]">
-                  <span className="font-mono text-[11px] text-[#8C7355]">Status: Verified Master Artisan Guild</span>
+                  <span className="font-mono text-xs text-[#8C7355]">{product.materials.join(' · ')}</span>
                   <span className="font-medium text-[#B84A28]">Authentic Nigerian Raffia</span>
                 </div>
               </div>

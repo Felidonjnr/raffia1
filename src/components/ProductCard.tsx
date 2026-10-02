@@ -69,7 +69,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {/* Availability Badge */}
-        <div className="product-card-badge absolute top-3 left-3 text-[10px] font-mono tracking-wider">
+        <div className="product-card-badge absolute top-3 left-3 text-xs font-mono tracking-wider font-semibold">
           {product.availability}
         </div>
 
@@ -88,7 +88,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           <button
             onClick={handleQuickAdd}
-            className="product-card-quick-add flex items-center gap-1.5 shadow-md cursor-pointer"
+            className="product-card-quick-add flex items-center gap-1.5 shadow-md cursor-pointer text-xs"
             aria-label={`Add ${product.name} to bag`}
           >
             <Plus className="w-3.5 h-3.5" />
@@ -100,7 +100,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Card Content & Metadata */}
       <div className="product-card-body p-5 flex-1 flex flex-col justify-between">
         <div>
-          <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider mb-2 text-[#8C7355]">
+          <div className="flex items-center justify-between text-xs font-mono uppercase tracking-wider mb-2 text-[#8C7355]">
             <span>{product.category}</span>
             <span>{product.maker.region.split(',')[0]}</span>
           </div>

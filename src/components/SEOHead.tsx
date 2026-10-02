@@ -23,7 +23,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({ route }) => {
     if (route.type === 'marketplace') {
       title = 'The Raffia Marketplace | Contemporary African Craft & Objects';
       description =
-        'Explore handwoven raffia vessels, structured leather totes, and fiber tapestries directly supporting master artisan guilds in Nigeria.';
+        'Explore handwoven raffia vessels, totes, and textiles directly supporting artisans and creative enterprise in Nigeria.';
     } else if (route.type === 'product') {
       const prod = PRODUCTS.find((p) => p.slug === route.slug);
       if (prod) {
@@ -48,28 +48,28 @@ export const SEOHead: React.FC<SEOHeadProps> = ({ route }) => {
         };
       }
     } else if (route.type === 'collections') {
-      title = 'Curatorial Collections | Raffia Legacy';
+      title = 'Curated Collections | Raffia Legacy';
       description =
-        'Explore living narrative collections celebrating riverine harvesting, architectural vessels, and botanical dye traditions.';
+        'Explore collections celebrating raffia craft, design, objects and wearable fashion.';
     } else if (route.type === 'makers' || route.type === 'maker_detail') {
-      title = 'Custodians & Master Makers | Raffia Legacy Guild Directory';
+      title = 'Artisans & Creatives | Raffia Legacy';
       description =
-        'Meet the multigenerational guilds and contemporary designers safeguarding African palm weaving and botanical dye mastery.';
+        'Artisans, designers and creatives working to turn raffia heritage into new products, fashion, art and enterprise.';
     } else if (route.type === 'raffia') {
-      title = 'The Raffia Knowledge Archive | Cultural Discovery Platform';
+      title = 'Why Raffia? | Raffia Legacy Project';
       description =
-        'A comprehensive educational compendium exploring the botany, civilizational memory, and living ceremonial roles of Raphia palms.';
+        'Raffia is more than a material. It carries history, skill, identity and possibility.';
     } else if (route.type === 'project' || route.type === 'legacy_year') {
       title = 'The Project & The Legacy Year | Dance Ville';
       description =
-        'The 12-month ecosystem connecting schools, material science fellowships, design challenges, and enterprise incubators.';
+        'The year-round ecosystem connecting school programmes, young innovators, design challenges, business incubators, and the Raffia Festival.';
     } else if (route.type === 'festival') {
-      title = 'Raffia Festival 2027 | The Flagship Cultural Gathering';
+      title = 'Raffia Festival 2027 | The Flagship Cultural Event';
       description =
-        'October 2027 in Akwa Ibom: four days of masquerade street pageantry, circular materials summits, runway fashion, and trade halls.';
+        'Experience the culture, creativity, products and opportunities created throughout the Legacy Year.';
     } else if (route.type === 'checkout') {
-      title = 'Checkout & Acquisition | Raffia Legacy';
-      description = 'Complete your certified artisan guild acquisition.';
+      title = 'Checkout & Reservation | Raffia Legacy';
+      description = 'Complete your order reservation.';
     }
 
     // Set Document Title
