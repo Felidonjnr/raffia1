@@ -32,7 +32,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onNavigate }) => {
               />
               <text fontSize="8.5" letterSpacing="2.5" fill="currentColor">
                 <textPath href="#spindleCircle" startOffset="0%">
-                  RAFFIA LEGACY · 29 OCT 2026 ·
+                  RAFFIA LEGACY PROJECT · DANCE VILLE ·
                 </textPath>
               </text>
             </svg>

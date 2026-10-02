@@ -222,7 +222,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
             src: slide.image,
             title: slide.title,
             subtitle: slide.caption,
-            location: slide.location,
             category: slide.theme,
           })
         }

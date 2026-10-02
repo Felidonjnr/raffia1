@@ -64,7 +64,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({ route }) => {
       description =
         'The year-round ecosystem connecting school programmes, young innovators, design challenges, business incubators, and the Raffia Festival.';
     } else if (route.type === 'festival') {
-      title = 'Raffia Festival 2027 | The Flagship Cultural Event';
+      title = 'The Raffia Festival | The Flagship Cultural Event';
       description =
         'Experience the culture, creativity, products and opportunities created throughout the Legacy Year.';
     } else if (route.type === 'checkout') {

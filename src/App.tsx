@@ -34,10 +34,10 @@ function routeFromHash(hash: string): ViewRoute {
     return comingSoon('The Legacy Year', 'The 12-month calendar and timeline are currently being prepared.');
   }
   if (hash.startsWith('#/raffia')) {
-    return comingSoon('Raffia Heritage & Culture', 'The living story, botany, and craft of raffia are currently being prepared.');
+    return comingSoon('Raffia Heritage & Culture', 'The story, culture and craft of raffia are currently being prepared.');
   }
   if (hash.startsWith('#/festival')) {
-    return comingSoon('Raffia Festival 2027', 'Festival experiences, dates, and registrations are currently being prepared.');
+    return comingSoon('The Raffia Festival', 'Festival experiences and details are currently being prepared.');
   }
   if (hash.startsWith('#/makers')) {
     return comingSoon('Meet The Makers', 'Artisan profiles, workshops, and stories are currently being prepared.');

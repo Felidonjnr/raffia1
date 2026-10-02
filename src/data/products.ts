@@ -126,7 +126,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'prod-05',
-    slug: 'botanical-palm-table-runner-set',
+    slug: 'woven-palm-table-runner-set',
     name: 'Woven Raffia Table Runner & Mat Set',
     subtitle: 'Set of 1 runner and 6 dining mats',
     price: 210000,
@@ -216,7 +216,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'prod-08',
-    slug: 'festival-2027-inaugural-commemorative-foulard',
+    slug: 'festival-inaugural-commemorative-foulard',
     name: 'Raffia Festival Scarf',
     subtitle: 'Woven commemorative scarf with raffia accents',
     price: 165000,

@@ -48,12 +48,12 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
           <div className="lg:col-span-8">
             <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-3">
-              Curatorial Capsules
+              Curated Collections
             </span>
             <h1 className="font-editorial text-4xl sm:text-6xl lg:text-7xl font-light tracking-tight text-[#181513] leading-[1.05]">
               {activeCollection ? activeCollection.title : (
                 <>
-                  CURATED LIVING <br />
+                  CURATED CRAFT <br />
                   <span className="italic font-normal">COLLECTIONS</span>
                 </>
               )}
@@ -68,7 +68,7 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
             <p className="text-sm text-[#57524E] leading-relaxed max-w-md font-normal">
               {activeCollection
                 ? activeCollection.description
-                : 'Narrative capsules uniting wearables, vessels, and gallery tapestries under historical and material themes. Explore each capsule to inspect linked artisan works.'}
+                : 'Collections bringing together hand-woven wearables, vessels, and wall textiles. Explore each collection to view linked artisan works.'}
             </p>
           </div>
         </div>
@@ -125,7 +125,7 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
             <div className="flex items-center gap-3">
               <Bookmark className="w-4 h-4 text-[#B84A28] shrink-0" />
               <div>
-                <span className="font-mono uppercase text-[#8C7355] block">Curator Annotation</span>
+                <span className="font-mono uppercase text-[#8C7355] block">Collection Notes</span>
                 <span className="text-[#181513] font-medium">{activeCollection.curatorNotes}</span>
               </div>
             </div>
@@ -140,10 +140,10 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
           <div className="space-y-6">
             <div className="flex items-baseline justify-between border-b border-[#181513]/10 pb-4">
               <h3 className="font-editorial text-3xl font-light text-[#181513]">
-                Objects in this Capsule ({collectionProducts.length})
+                Objects in this Collection ({collectionProducts.length})
               </h3>
               <span className="font-mono text-xs uppercase text-[#8C7355]">
-                100% Certified Origin
+                Raffia Craft & Objects
               </span>
             </div>
 

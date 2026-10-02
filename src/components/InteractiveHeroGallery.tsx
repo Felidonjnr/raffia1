@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight, Maximize2, MapPin } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { BrushStrokeUnderline } from './RaffiaLogo';
 
 export interface HeroSlide {
@@ -9,7 +9,6 @@ export interface HeroSlide {
   title: string;
   image: string;
   caption: string;
-  location: string;
 }
 
 export const HERO_SLIDES: HeroSlide[] = [
@@ -19,7 +18,6 @@ export const HERO_SLIDES: HeroSlide[] = [
     title: 'Heritage, Creativity & Opportunity',
     image: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=2400&q=85',
     caption: 'Celebrating raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.',
-    location: 'Akwa Ibom State, Nigeria',
   },
   {
     id: '02',
@@ -27,7 +25,6 @@ export const HERO_SLIDES: HeroSlide[] = [
     title: 'Fashion, Art & Performance',
     image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=2400&q=85',
     caption: 'Where traditional techniques meet contemporary fashion, art, design, music and performance.',
-    location: 'Akwa Ibom State, Nigeria',
   },
   {
     id: '03',
@@ -35,7 +32,6 @@ export const HERO_SLIDES: HeroSlide[] = [
     title: 'Traditional Knowledge & Craft',
     image: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=2400&q=85',
     caption: 'Artisans, designers and creatives turn heritage into new products, fashion, art, performance and design.',
-    location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
   {
     id: '04',
@@ -43,7 +39,6 @@ export const HERO_SLIDES: HeroSlide[] = [
     title: 'The Flagship Gathering',
     image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=2400&q=85',
     caption: 'Bringing together communities, artisans, farmers, designers, artists, young people, businesses, visitors and investors.',
-    location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
   {
     id: '05',
@@ -51,7 +46,6 @@ export const HERO_SLIDES: HeroSlide[] = [
     title: 'From Palm to Craft',
     image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=2400&q=85',
     caption: 'Step into the world of raffia—from palm to craft.',
-    location: 'Akwa Ibom State, Nigeria',
   },
 ];
 
@@ -367,28 +361,21 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           })}
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="hidden lg:flex items-center gap-1.5 text-xs font-mono text-[#C8A978]">
-            <MapPin size={13} className="text-[#B65332]" />
-            <span className="uppercase">{slide.location}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={prevSlide}
-              className="p-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white border border-white/15 transition-colors cursor-pointer"
-              aria-label="Previous slide"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              onClick={nextSlide}
-              className="p-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white border border-white/15 transition-colors cursor-pointer"
-              aria-label="Next slide"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={prevSlide}
+            className="p-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white border border-white/15 transition-colors cursor-pointer"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="p-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white border border-white/15 transition-colors cursor-pointer"
+            aria-label="Next slide"
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
       </div>
     </div>

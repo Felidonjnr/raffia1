@@ -124,7 +124,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 Suggested Discovery
               </p>
               <div className="flex flex-wrap gap-2 text-xs font-mono">
-                {['Tote Bag', 'Sculptural Vessel', 'Ikot Ekpene', 'Indigo Tapestry', 'Festival 2027', 'What is Raffia?'].map((tag) => (
+                {['Tote Bag', 'Sculptural Vessel', 'Ikot Ekpene', 'Indigo Tapestry', 'The Festival', 'What is Raffia?'].map((tag) => (
                   <button
                     key={tag}
                     onClick={() => setQuery(tag)}
@@ -235,12 +235,12 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 </div>
               )}
 
-              {/* Festival 2027 */}
+              {/* The Festival */}
               {matchedFestival.length > 0 && (
                 <div>
                   <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#8C7355] mb-3">
                     <Sparkles className="w-3.5 h-3.5" />
-                    <span>Raffia Festival 2027 Experiences</span>
+                    <span>The Raffia Festival Experiences</span>
                   </div>
                   <div className="space-y-2">
                     {matchedFestival.map((f) => (
@@ -261,7 +261,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                           </p>
                         </div>
                         <span className="text-xs font-mono text-[#B84A28] uppercase font-semibold">
-                          Coming 2027
+                          Festival Experience
                         </span>
                       </div>
                     ))}

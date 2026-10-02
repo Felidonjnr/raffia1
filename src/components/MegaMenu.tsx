@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { ViewRoute } from '../types';
 
-export type MegaMenuTab = 'THE PROJECT' | 'RAFFIA' | 'EXPLORE' | 'MARKETPLACE' | 'FESTIVAL 2027' | 'GET INVOLVED';
+export type MegaMenuTab = 'THE PROJECT' | 'RAFFIA' | 'EXPLORE' | 'MARKETPLACE' | 'THE FESTIVAL' | 'GET INVOLVED';
 
 interface MegaMenuProps {
   activeTab: MegaMenuTab | null;
@@ -80,7 +80,7 @@ const MENUS: Record<MegaMenuTab, MenuData> = {
       { label: 'Makers & Brands', image: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1200&q=80', caption: 'Connect directly with artisans, designers and creators.' },
     ],
   },
-  'FESTIVAL 2027': {
+  'THE FESTIVAL': {
     title: 'The Raffia Festival',
     category: 'THE HEART OF THE LEGACY · COMING SOON',
     defaultImage: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1200&q=80',
@@ -132,7 +132,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
       onNavigate({ type: 'project' });
       return;
     }
-    if (activeTab === 'FESTIVAL 2027') {
+    if (activeTab === 'THE FESTIVAL') {
       onNavigate({ type: 'festival' });
       return;
     }

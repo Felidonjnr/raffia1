@@ -56,7 +56,7 @@ export const InquiryModal: React.FC = () => {
             </h3>
 
             <p className="text-sm text-[#57524E] leading-relaxed mb-6 font-normal">
-              Raffia is our thread. The future is what we weave with it. Connect with our curatorial and executive leadership team to shape the 2026–2027 Legacy Year.
+              Raffia is our thread. The future is what we weave with it. Connect with the Raffia Legacy Project team to be part of the Legacy Year.
             </p>
 
             {/* Type selector tabs */}
