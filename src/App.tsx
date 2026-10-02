@@ -11,6 +11,8 @@ import { PageTransition } from './components/PageTransition';
 import { HomePage } from './pages/HomePage';
 import { MarketplacePage } from './pages/MarketplacePage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
+import { ProjectPage } from './pages/ProjectPage';
+import { LegacyYearPage } from './pages/LegacyYearPage';
 import { ComingSoon } from './components/ComingSoon';
 
 const comingSoon = (title: string): ViewRoute => ({
@@ -25,6 +27,8 @@ function routeFromHash(hash: string): ViewRoute {
     if (slug) return { type: 'product', slug };
   }
   if (hash === '#/marketplace') return { type: 'marketplace' };
+  if (hash === '#/project') return { type: 'project', section: 'about' };
+  if (hash === '#/legacy-year') return { type: 'legacy_year' };
   return { type: 'home' };
 }
 
@@ -48,6 +52,8 @@ export default function App() {
     if (route.type === 'home') window.location.hash = '#/';
     else if (route.type === 'marketplace') window.location.hash = '#/marketplace';
     else if (route.type === 'product') window.location.hash = `#/marketplace/${route.slug}`;
+    else if (route.type === 'project') window.location.hash = `#/project${route.section ? `/${route.section}` : ''}`;
+    else if (route.type === 'legacy_year') window.location.hash = '#/legacy-year';
     else if (route.type === 'coming_soon') {
       window.history.replaceState({}, '', window.location.pathname + '#/coming-soon');
     }
@@ -66,6 +72,8 @@ export default function App() {
         <main className="app-main">
           <PageTransition routeKey={routeKey}>
             {currentRoute.type === 'home' && <HomePage onNavigate={navigateTo} onSelectProduct={(slug) => navigateTo({type:'product', slug})} />}
+            {currentRoute.type === 'project' && <ProjectPage initialSection={currentRoute.section || 'about'} onNavigate={navigateTo} />}
+            {currentRoute.type === 'legacy_year' && <LegacyYearPage onNavigate={navigateTo} />}
             {currentRoute.type === 'marketplace' && (
               <MarketplacePage
                 initialCategory={currentRoute.category || 'ALL'}
