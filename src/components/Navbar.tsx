@@ -3,6 +3,7 @@ import { Menu, Search, ShoppingBag, X, ChevronDown, ArrowUpRight } from 'lucide-
 import { useCart } from '../context/CartContext';
 import { ViewRoute } from '../types';
 import { MegaMenu, MegaMenuTab } from './MegaMenu';
+import { BrushStrokeUnderline } from './RaffiaLogo';
 
 interface NavbarProps {
   currentRoute: ViewRoute;
@@ -44,9 +45,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate, onOpen
     <>
       <header className="site-nav" onMouseLeave={closeTab}>
         <div className="site-nav-inner">
-          <button className="brandmark" onClick={() => onNavigate({ type: 'home' })}>
-            <span>RAFFIA</span>
-            <b>LEGACY</b>
+          <button className="brandmark" onClick={() => onNavigate({ type: 'home' })} aria-label="Raffia Legacy Project Home">
+            <div className="brandmark-words">
+              <span className="brandmark-raffia">Raffia</span>
+              <b className="brandmark-legacy">LEGACY</b>
+              <span className="brandmark-project">PROJECT</span>
+            </div>
+            <BrushStrokeUnderline className="brandmark-brush" />
           </button>
 
           <nav className="desktop-nav" aria-label="Primary navigation">
@@ -78,8 +83,13 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate, onOpen
       {mobileOpen && (
         <div className="mobile-nav">
           <div className="mobile-nav-top">
-            <button className="brandmark" onClick={() => {setMobileOpen(false); onNavigate({type:'home'});}}>
-              <span>RAFFIA</span><b>LEGACY</b>
+            <button className="brandmark" onClick={() => {setMobileOpen(false); onNavigate({type:'home'});}} aria-label="Raffia Legacy Project Home">
+              <div className="brandmark-words">
+                <span className="brandmark-raffia">Raffia</span>
+                <b className="brandmark-legacy">LEGACY</b>
+                <span className="brandmark-project">PROJECT</span>
+              </div>
+              <BrushStrokeUnderline className="brandmark-brush" />
             </button>
             <div className="mobile-nav-actions">
               <button onClick={() => {setMobileOpen(false); onOpenSearch();}} aria-label="Search"><Search size={20}/></button>

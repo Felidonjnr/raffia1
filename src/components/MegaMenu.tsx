@@ -59,9 +59,8 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
     <div className="mega-menu" onMouseEnter={onKeepOpen}>
       <div className="mega-menu-inner">
         <div className="mega-menu-heading">
-          <p className="eyebrow">RAFFIA LEGACY</p>
+          <p className="eyebrow mb-2">DIRECTORY</p>
           <h2>{menu.title}</h2>
-          <p>Explore this part of the platform.</p>
         </div>
         <div className="mega-menu-items">
           {menu.items.map((item, index) => (
@@ -70,11 +69,6 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
               <ArrowUpRight size={17} />
             </button>
           ))}
-        </div>
-        <div className="mega-menu-note">
-          {activeTab === 'MARKETPLACE'
-            ? 'SHOP · DISCOVER · COLLECT'
-            : 'THE PROJECT · RAFFIA · STORIES · FESTIVAL · PARTICIPATION'}
         </div>
       </div>
     </div>

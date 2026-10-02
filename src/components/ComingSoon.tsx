@@ -40,14 +40,14 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Bold, clean copy per user instruction */}
+        {/* Clean, editorial copy */}
         <h1 className="prep-heading">
-          THE PAGE IS STILL BEING PREPARED<br />
-          <em>TO THE LEGACY PROJECT LAUNCH.</em>
+          THIS SECTION IS IN PREPARATION<br />
+          <em>FOR THE LEGACY PROJECT LAUNCH.</em>
         </h1>
 
         <p className="prep-statement">
-          In the meantime you can check our marketplace
+          In the meantime, explore our marketplace collection of hand-woven pieces.
         </p>
 
         {/* Action Buttons */}
@@ -56,7 +56,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onNavigate }) => {
             onClick={() => onNavigate({ type: 'marketplace' })}
             className="button button-dark prep-btn-main"
           >
-            CHECK OUR MARKETPLACE <ArrowUpRight size={17} />
+            EXPLORE MARKETPLACE <ArrowUpRight size={17} />
           </button>
           <button
             onClick={() => onNavigate({ type: 'home' })}

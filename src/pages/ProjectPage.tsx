@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowUpRight, ArrowLeft } from 'lucide-react';
 import { ViewRoute } from '../types';
+import { BrushStrokeUnderline } from '../components/RaffiaLogo';
 
 interface ProjectPageProps {
   initialSection?: 'about' | 'vision' | 'legacy-year' | 'programmes' | 'impact' | 'partners';
@@ -27,7 +28,16 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection='about'
         <div>
           <button className="text-link project-back" onClick={()=>onNavigate({type:'home'})}><ArrowLeft size={16}/> RETURN HOME</button>
           <p className="eyebrow">THE RAFFIA LEGACY PROJECT</p>
-          <h1>THE RAFFIA<br/><em>LEGACY PROJECT.</em></h1>
+          <div className="hero-logo-lockup">
+            <h1 className="hero-brand-heading">
+              <span className="hero-brand-raffia">Raffia</span>
+              <span className="hero-brand-legacy">LEGACY</span>
+              <span className="hero-brand-project">PROJECT</span>
+            </h1>
+            <div className="hero-brush-wrap">
+              <BrushStrokeUnderline className="hero-brush-stroke" />
+            </div>
+          </div>
         </div>
         <div>
           <p className="project-hero-lede">A year-round programme celebrating raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.</p>

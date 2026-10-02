@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { formatNaira } from '../utils/format';
 
 export const CheckoutModal: React.FC = () => {
   const { isCheckoutModalOpen, setIsCheckoutModalOpen, subtotal, totalItems } = useCart();
@@ -58,7 +59,7 @@ export const CheckoutModal: React.FC = () => {
               </div>
               <div className="text-right">
                 <p className="font-mono uppercase text-[#8C7355] text-[10px]">Estimated Subtotal</p>
-                <p className="font-editorial text-xl font-semibold text-[#181513] tabular-nums mt-0.5">${subtotal.toLocaleString()} USD</p>
+                <p className="font-editorial text-xl font-semibold text-[#181513] tabular-nums mt-0.5">{formatNaira(subtotal)}</p>
               </div>
             </div>
 

@@ -35,11 +35,7 @@ export const ProductService = {
     }
 
     if (options.category && options.category !== 'ALL') {
-      if (options.category === 'NEW ARRIVALS') {
-        list = list.filter((p) => p.newArrival);
-      } else {
-        list = list.filter((p) => p.category === options.category);
-      }
+      list = list.filter((p) => p.category === options.category);
     }
 
     if (options.search && options.search.trim()) {

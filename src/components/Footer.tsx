@@ -1,6 +1,7 @@
 import React from 'react';
 import { ViewRoute } from '../types';
 import { ArrowUpRight } from 'lucide-react';
+import { BrushStrokeUnderline } from './RaffiaLogo';
 
 interface FooterProps { onNavigate: (route: ViewRoute) => void; }
 
@@ -9,8 +10,19 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
     <footer className="site-footer">
       <div className="footer-statement">
-        <p className="eyebrow">RAFFIA LEGACY · DANCE VILLE</p>
-        <h2>RAFFIA IS OUR THREAD.<br /><em>THE FUTURE IS WHAT WE WEAVE WITH IT.</em></h2>
+        <div className="footer-brandmark-lockup">
+          <button className="brandmark footer-brandmark" onClick={() => onNavigate({ type: 'home' })} aria-label="Raffia Legacy Project Home">
+            <div className="footer-brandmark-words">
+              <span className="brandmark-raffia text-white">Raffia</span>
+              <b className="brandmark-legacy text-[#E59C6D]">LEGACY</b>
+              <span className="brandmark-project text-white/70">PROJECT</span>
+            </div>
+            <BrushStrokeUnderline className="footer-brush" color="#E59C6D" />
+          </button>
+          <p className="footer-brand-tagline">
+            A year-round of activities celebrating raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.
+          </p>
+        </div>
       </div>
       <div className="footer-links">
         {[

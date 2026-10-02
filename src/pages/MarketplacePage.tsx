@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { ProductCategory, Product, ViewRoute } from '../types';
+import { ProductCategory, ViewRoute, Product } from '../types';
 import { PRODUCTS } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
-import { ArrowLeft, Search, SlidersHorizontal } from 'lucide-react';
+import { ProductQuickView } from '../components/ProductQuickView';
+import { ArrowLeft, Search, ArrowUpRight, ShieldCheck, Sparkles, Feather } from 'lucide-react';
+import { BrushStrokeUnderline } from '../components/RaffiaLogo';
 
 interface MarketplacePageProps {
   initialCategory?: ProductCategory;
@@ -11,15 +13,11 @@ interface MarketplacePageProps {
   onSelectProduct: (slug: string) => void;
 }
 
-const CATEGORIES: ProductCategory[] = [
-  'ALL',
-  'NEW ARRIVALS',
-  'FASHION & ACCESSORIES',
-  'HOME & LIFESTYLE',
-  'ART & DESIGN',
-  'TRADITIONAL CRAFT',
-  'GIFTS',
-  'FESTIVAL MERCHANDISE',
+const CATEGORIES: { id: ProductCategory; label: string }[] = [
+  { id: 'ALL', label: 'All Pieces' },
+  { id: 'TRADITIONAL CRAFT', label: 'Traditional Craft' },
+  { id: 'OBJECTS & LIVING', label: 'Objects & Living' },
+  { id: 'ART & TEXTILES', label: 'Art & Textiles' },
 ];
 
 export const MarketplacePage: React.FC<MarketplacePageProps> = ({
@@ -32,6 +30,7 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'name'>('featured');
   const [showInStockOnly, setShowInStockOnly] = useState(false);
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter((product) => {
@@ -40,10 +39,8 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
         if (product.collection !== initialCollection) return false;
       }
 
-      // Category filter
-      if (selectedCategory === 'NEW ARRIVALS') {
-        if (!product.isNewArrival) return false;
-      } else if (selectedCategory !== 'ALL' && product.category !== selectedCategory) {
+      // Streamlined category filter
+      if (selectedCategory !== 'ALL' && product.category !== selectedCategory) {
         return false;
       }
 
@@ -73,115 +70,119 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
   }, [selectedCategory, searchQuery, sortBy, showInStockOnly, initialCollection]);
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] pb-24">
-      {/* Editorial Header */}
-      <section className="pt-12 pb-16 px-6 lg:px-12 border-b border-[#181513]/10 max-w-[1440px] mx-auto">
-        <button
-          onClick={() => onNavigate({ type: 'home' })}
-          className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#57524E] hover:text-[#181513] transition-colors mb-8 cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Return to Homepage</span>
-        </button>
+    <div className="marketplace-page">
+      {/* Editorial Announcement Banner */}
+      <div className="market-notice-bar">
+        <span>
+          <span className="market-notice-dot" />
+          HAND-WOVEN GUILD EDITIONS
+        </span>
+        <span className="hidden sm:inline">ALL PRICING IN NIGERIAN NAIRA (₦)</span>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end">
-          <div className="lg:col-span-8">
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-3">
-              Direct Guild Marketplace
-            </span>
-            <h1 className="font-editorial text-4xl sm:text-6xl lg:text-7xl font-light tracking-tight text-[#181513] leading-[1.05]">
-              THE RAFFIA <br />
-              <span className="italic font-normal">MARKETPLACE</span>
-            </h1>
+      {/* Hero Header with Bold Typography */}
+      <section className="market-hero">
+        <div className="market-hero-main">
+          <button
+            onClick={() => onNavigate({ type: 'home' })}
+            className="market-back"
+          >
+            <ArrowLeft size={15} />
+            <span>RETURN TO HOME</span>
+          </button>
+
+          <p className="eyebrow">DIRECT GUILD PROVENANCE</p>
+
+          <h1>
+            THE RAFFIA<br />
+            <em>MARKETPLACE.</em>
+          </h1>
+          <div className="w-44 mt-3">
+            <BrushStrokeUnderline className="w-full h-2.5" />
           </div>
-          <div className="lg:col-span-4">
-            <p className="text-sm text-[#57524E] leading-relaxed max-w-md font-normal">
-              Objects, fashion, craft and contemporary creations connected to the raffia story. Every acquisition directly finances artisan apprenticeships and preserves ancestral weaving guilds in Nigeria.
-            </p>
-          </div>
+        </div>
+
+        <div className="market-hero-pitch">
+          <p className="market-pitch-text">
+            Objects, craft and contemporary creations connected to the raffia story. Every piece is hand-coiled and woven from sustainably harvested palm fronds, directly financing artisan livelihoods and preserving ancestral weaving guilds across Nigeria.
+          </p>
         </div>
       </section>
 
-      {/* Category Navigation & Filter Bar */}
-      <section className="sticky top-20 z-30 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#181513]/10 py-4 px-6 lg:px-12">
-        <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-          {/* Category Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none text-xs font-mono uppercase tracking-wider">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-2 whitespace-nowrap transition-colors cursor-pointer border ${
-                  selectedCategory === cat
-                    ? 'bg-[#181513] text-[#FAF7F2] border-[#181513] font-medium'
-                    : 'text-[#57524E] border-transparent hover:text-[#181513] hover:bg-[#181513]/5'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          {/* Search & Sort Controls */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search catalog..."
-                className="pl-8 pr-3 py-1.5 text-xs bg-[#FAF7F2] border border-[#181513]/20 focus:border-[#B84A28] focus:outline-none w-36 sm:w-44"
-              />
-              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[#57524E]" />
-            </div>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="px-2.5 py-1.5 text-xs bg-[#FAF7F2] border border-[#181513]/20 focus:border-[#B84A28] focus:outline-none cursor-pointer font-mono uppercase"
+      {/* Controls & Filter Bar */}
+      <section className="market-controls">
+        {/* Category Tabs */}
+        <div className="market-tabs">
+          {CATEGORIES.map(({ id, label }) => (
+            <button
+              key={id}
+              onClick={() => setSelectedCategory(id)}
+              className={`market-tab ${selectedCategory === id ? 'active' : ''}`}
             >
-              <option value="featured">Featured Curations</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="name">Alphabetical</option>
-            </select>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Search & Sort Controls */}
+        <div className="market-actions-strip">
+          <div className="market-search-box">
+            <Search size={14} />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search catalog..."
+            />
           </div>
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="market-sort-select"
+          >
+            <option value="featured">Featured Pieces</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name">Alphabetical</option>
+          </select>
+
+          <button
+            onClick={() => setShowInStockOnly(!showInStockOnly)}
+            className={`market-instock-toggle ${showInStockOnly ? 'active' : ''}`}
+          >
+            {showInStockOnly ? '✓ In Stock Only' : 'In Stock Only'}
+          </button>
         </div>
       </section>
 
       {/* Product Results Grid */}
-      <section className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-12">
-        <div className="flex items-center justify-between text-xs text-[#57524E] font-mono tracking-wider mb-8 pb-3 border-b border-[#181513]/10">
+      <section className="market-catalog">
+        <div className="market-catalog-meta">
           <span>
-            SHOWING {filteredProducts.length} {filteredProducts.length === 1 ? 'OBJECT' : 'OBJECTS'} IN {selectedCategory}
+            SHOWING {filteredProducts.length} {filteredProducts.length === 1 ? 'OBJECT' : 'OBJECTS'}
+            {selectedCategory !== 'ALL' && ` · ${selectedCategory}`}
           </span>
-          <button
-            onClick={() => setShowInStockOnly(!showInStockOnly)}
-            className={`cursor-pointer transition-colors ${
-              showInStockOnly ? 'text-[#B84A28] font-semibold underline' : 'hover:text-[#181513]'
-            }`}
-          >
-            {showInStockOnly ? '✓ In Stock Only' : 'Filter: In Stock Only'}
-          </button>
         </div>
 
         {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="market-grid">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
                 product={product}
                 onSelect={onSelectProduct}
+                onQuickView={(prod) => setQuickViewProduct(prod)}
               />
             ))}
           </div>
         ) : (
-          <div className="text-center py-24 bg-[#F4EFEA] border border-[#181513]/10 max-w-xl mx-auto p-10">
-            <p className="font-editorial text-3xl font-light text-[#181513] mb-2">
+          <div className="text-center py-20 bg-[#F4EFEA] border border-[#181513]/10 max-w-xl mx-auto p-10">
+            <h3 className="font-bold text-2xl mb-2 text-[#181513]">
               No creations match this selection
-            </p>
+            </h3>
             <p className="text-xs text-[#57524E] mb-6">
-              Try adjusting your search criteria or select &quot;All&quot; to view all guild items.
+              Try adjusting your search criteria or select &quot;All Pieces&quot; to view all guild items.
             </p>
             <button
               onClick={() => {
@@ -189,13 +190,67 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
                 setSearchQuery('');
                 setShowInStockOnly(false);
               }}
-              className="px-6 py-2.5 bg-[#181513] text-[#FAF7F2] text-xs font-mono uppercase tracking-widest hover:bg-[#B84A28] transition-colors cursor-pointer"
+              className="button button-dark"
             >
-              Reset Filters
+              RESET FILTERS
             </button>
           </div>
         )}
       </section>
+
+      {/* Guild Guarantee / Provenance Section */}
+      <section className="market-guarantee">
+        <div className="market-guarantee-inner">
+          <div className="market-guarantee-copy">
+            <p className="eyebrow">THE GUILD COVENANT</p>
+            <h2>
+              WHY WE WEAVE<br />
+              <em>IN NUMBERED RUNS.</em>
+            </h2>
+            <p>
+              Raffia is living nature, not industrial synthetic plastic. Each harvest follows the rain and tidal rhythms of the coastal palm groves, taking up to four weeks of retting, dyeing, and loom weaving.
+            </p>
+          </div>
+
+          <div className="market-guarantee-grid">
+            <div className="market-guarantee-card">
+              <span>01 / VALUE</span>
+              <h4>Direct To Artisans</h4>
+              <p>
+                Proceeds go straight to master weavers, apprentices, and community cooperatives in Akwa Ibom and Cross River.
+              </p>
+            </div>
+
+            <div className="market-guarantee-card">
+              <span>02 / HARVEST</span>
+              <h4>100% Botanical Bast</h4>
+              <p>
+                Harvested without felling trees. Wild raffia palm regenerates naturally in wetlands, preventing soil erosion.
+              </p>
+            </div>
+
+            <div className="market-guarantee-card">
+              <span>03 / LEGACY</span>
+              <h4>Numbered Provenance</h4>
+              <p>
+                Every edition arrives with its certified accession card documenting the weaver guild, harvest date, and batch index.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Modal: Product Quick View */}
+      {quickViewProduct && (
+        <ProductQuickView
+          product={quickViewProduct}
+          onClose={() => setQuickViewProduct(null)}
+          onViewFullDetail={(slug) => {
+            setQuickViewProduct(null);
+            onSelectProduct(slug);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { MAKERS } from '../data/makers';
 import { RAFFIA_TOPICS } from '../data/raffiaKnowledge';
 import { FESTIVAL_EXPERIENCES } from '../data/legacyData';
 import { ViewRoute } from '../types';
+import { formatNaira } from '../utils/format';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -162,7 +163,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                           </p>
                         </div>
                         <span className="font-editorial text-base font-semibold text-[#181513] tabular-nums">
-                          ${p.price} USD
+                          {formatNaira(p.price)}
                         </span>
                       </div>
                     ))}
