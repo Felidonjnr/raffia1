@@ -33,7 +33,7 @@ const MENUS: Record<MegaMenuTab, MenuData> = {
     items: [
       { label: 'About the Project', image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1200&q=80', caption: 'From palm to product. Culture to commerce. Heritage to opportunity.' },
       { label: 'Our Vision', image: 'https://images.unsplash.com/photo-1569388330292-79cc1ec67270?auto=format&fit=crop&w=1200&q=80', caption: 'Culture, Creativity, Opportunity, Tourism and Legacy.' },
-      { label: 'The Legacy Year', image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80', caption: 'The festival is only the beginning. Five connected programmes create a continuous journey.' },
+      { label: 'The Legacy Year', image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80', caption: 'The festival is only the beginning. Six connected programmes create a continuous journey.' },
       { label: 'Our Programmes', image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80', caption: 'School Programme, Young Innovators, Design Challenge, Incubator, Festival and The Next Legacy Year.' },
       { label: 'Why This Matters', image: 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=1200&q=80', caption: 'Create value from what we already have—and open the door to what is possible.' },
       { label: 'Partnerships', image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80', caption: 'There is a place for you in the legacy. We are looking for collaborators, not just cheques.' },
