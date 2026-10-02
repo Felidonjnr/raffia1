@@ -48,6 +48,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate, onOpen
   const go = (tab: MegaMenuTab) => {
     setActive(null);
     if (tab === 'MARKETPLACE') onNavigate({ type: 'marketplace' });
+    else if (tab === 'THE PROJECT') onNavigate({ type: 'project' });
+    else if (tab === 'FESTIVAL 2027') onNavigate({ type: 'festival' });
+    else if (tab === 'RAFFIA') onNavigate({ type: 'raffia' });
+    else if (tab === 'EXPLORE') onNavigate({ type: 'makers' });
     else onNavigate({ type: 'coming_soon', title: tab, subtitle: 'This section is being prepared for the Raffia Legacy launch.' });
   };
 

@@ -1,39 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight, Maximize2, MapPin } from 'lucide-react';
 import { BrushStrokeUnderline } from './RaffiaLogo';
 
-interface HeroSlide {
+export interface HeroSlide {
   id: string;
   theme: string;
+  title: string;
   image: string;
   caption: string;
+  location: string;
 }
 
-const HERO_SLIDES: HeroSlide[] = [
+export const HERO_SLIDES: HeroSlide[] = [
   {
     id: '01',
     theme: 'THE MOVEMENT',
-    image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1920&q=85',
-    caption: 'Celebrating African heritage, sustainable creativity, and economic opportunity.',
+    title: 'Living Heritage & Cultural Gathering',
+    image: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=2400&q=85',
+    caption: 'Celebrating African heritage, ceremonial masquerade traditions, and collective creative energy.',
+    location: 'Akwa Ibom & Cross River, Nigeria',
   },
   {
     id: '02',
-    theme: 'THE MAKERS',
-    image: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1920&q=85',
-    caption: 'Centuries of ancestral skill connecting with contemporary creative expression.',
+    theme: 'THE FASHION',
+    title: 'Avant-Garde Raffia Haute Couture',
+    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=2400&q=85',
+    caption: 'Visionary Pan-African designers transforming organic bast fibres into sculptural silhouettes.',
+    location: 'Lagos & Paris Runways',
   },
   {
     id: '03',
-    theme: 'THE FESTIVAL',
-    image: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1920&q=85',
-    caption: 'Bringing communities, artisans, designers and performers together.',
+    theme: 'THE MAKERS',
+    title: 'Ancestral Weaving & Loom Mastery',
+    image: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=2400&q=85',
+    caption: 'Centuries of mathematical pattern memory and handloom skill passed down generation to generation.',
+    location: 'Ikot Ekpene Master Guild',
   },
   {
     id: '04',
-    theme: 'THE CREATIVITY',
-    image: 'https://images.unsplash.com/photo-1569388330292-79cc1ec67270?auto=format&fit=crop&w=1920&q=85',
-    caption: 'From palm to product. Culture to commerce. A living journey.',
+    theme: 'THE FESTIVAL',
+    title: 'Flagship Cultural Celebration',
+    image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=2400&q=85',
+    caption: 'Four nights of percussive rhythm, illuminated woven pavilions, and international cultural exchange.',
+    location: 'Festival Village Grounds',
+  },
+  {
+    id: '05',
+    theme: 'THE SOURCE',
+    title: 'Riverine Palm Groves & Natural Harvest',
+    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=2400&q=85',
+    caption: 'Wild Raphia vinifera palms flourishing in protected riverine wetlands, harvested with generational stewardship.',
+    location: 'Cross River Estuary',
   },
 ];
 
@@ -44,6 +62,7 @@ interface InteractiveHeroGalleryProps {
   seconds: number;
   onExploreLegacy: () => void;
   onShopCollection: () => void;
+  onInspectImage?: (slide: HeroSlide) => void;
 }
 
 export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
@@ -53,27 +72,47 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
   seconds,
   onExploreLegacy,
   onShopCollection,
+  onInspectImage,
 }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  // Auto-advance slide every 7 seconds when not hovered
+  const SLIDE_DURATION = 7000; // 7 seconds per slide
+
+  // Auto-advance slide with smooth progress indicator
   useEffect(() => {
     if (isHovered) return;
-    const timer = setInterval(() => {
-      setCurrentIdx((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [isHovered]);
+
+    const intervalStep = 50;
+    const progressTimer = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          setCurrentIdx((current) => (current + 1) % HERO_SLIDES.length);
+          return 0;
+        }
+        return prev + (intervalStep / SLIDE_DURATION) * 100;
+      });
+    }, intervalStep);
+
+    return () => clearInterval(progressTimer);
+  }, [isHovered, currentIdx]);
 
   const slide = HERO_SLIDES[currentIdx];
 
   const prevSlide = () => {
+    setProgress(0);
     setCurrentIdx((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
   };
 
   const nextSlide = () => {
+    setProgress(0);
     setCurrentIdx((prev) => (prev + 1) % HERO_SLIDES.length);
+  };
+
+  const selectSlide = (idx: number) => {
+    setProgress(0);
+    setCurrentIdx(idx);
   };
 
   return (
@@ -82,45 +121,68 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Background Image Carousel with Ken Burns Motion */}
+      {/* Cinematic Ken Burns Animated Background */}
       <AnimatePresence mode="wait">
         <motion.div
           key={slide.id}
-          initial={{ opacity: 0, scale: 1.08 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.96 }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{
+            opacity: 1,
+            scale: [1.02, 1.09],
+            x: [0, -10],
+          }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{
+            opacity: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+            scale: { duration: 8, ease: 'linear' },
+            x: { duration: 8, ease: 'linear' },
+          }}
           className="absolute inset-0 z-0"
         >
           <img
             src={slide.image}
-            alt={slide.theme}
+            alt={slide.title}
             referrerPolicy="no-referrer"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center filter brightness-[0.88] contrast-[1.05]"
           />
-          {/* Cinematic Dual Gradient Overlays: Deep Raffia Brown & Vignette */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#11100E] via-[#241A14]/65 to-[#11100E]/70" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(17,16,14,0.85)_100%)]" />
+
+          {/* Luxury Multi-Layered Atmospheric Gradients */}
+          {/* Top subtle vignette */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#11100E]/80 via-transparent to-[#11100E]" />
+          {/* Center warm raffia tint overlay */}
+          <div className="absolute inset-0 bg-[#241A14]/40 mix-blend-multiply" />
+          {/* Radial vignette for cinematic focal focus */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(17,16,14,0.85)_100%)]" />
         </motion.div>
       </AnimatePresence>
 
-      {/* Main Event Overlay: Perfectly Balanced Typography within Imagery */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 sm:px-10 py-16 sm:py-24 text-center flex flex-col items-center justify-center">
-        {/* Eyebrow */}
+      {/* Top Floating Event Pulse Beacon */}
+      <div className="absolute top-24 lg:top-28 inset-x-0 z-20 flex justify-center px-6 pointer-events-none">
+        <div className="glass-pill px-4 py-1.5 flex items-center gap-2.5 text-[#F3EBDD] text-xs font-mono uppercase tracking-widest border border-[#C8A978]/30 shadow-lg">
+          <span className="w-2 h-2 rounded-full bg-[#B65332] pulse-beacon" />
+          <span className="text-[#C8A978] font-bold">12-MONTH CULTURAL & CREATIVE MOVEMENT</span>
+          <span className="hidden sm:inline text-white/40">·</span>
+          <span className="hidden sm:inline text-white/80">AKWA IBOM & CROSS RIVER, NIGERIA</span>
+        </div>
+      </div>
+
+      {/* Main Event Lockup: High-Impact Typography Grounded in Imagery */}
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 sm:px-10 py-20 sm:py-28 text-center flex flex-col items-center justify-center mt-12 sm:mt-8">
+        {/* Eyebrow Label */}
         <motion.div
-          initial={{ opacity: 0, y: -16 }}
+          initial={{ opacity: 0, y: -14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="mb-4 sm:mb-6"
+          transition={{ duration: 0.6 }}
+          className="mb-3 sm:mb-5"
         >
-          <p className="text-xs sm:text-sm font-mono tracking-[0.25em] text-[#C8A978] uppercase">
+          <p className="text-xs sm:text-sm font-mono tracking-[0.28em] text-[#C8A978] uppercase font-bold drop-shadow-md">
             DANCE VILLE PRESENTS
           </p>
         </motion.div>
 
-        {/* Event Headline Lockup */}
+        {/* Master Brand Heading Lockup */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 15 }}
+          initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.15 }}
           className="mb-4 sm:mb-6 flex flex-col items-center"
@@ -134,6 +196,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
                 letterSpacing: '-0.025em',
                 color: '#F3EBDD',
                 lineHeight: 0.95,
+                textShadow: '0 4px 24px rgba(0,0,0,0.6)',
               }}
             >
               Raffia
@@ -146,6 +209,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
                 letterSpacing: '-0.035em',
                 color: '#B65332',
                 lineHeight: 0.95,
+                textShadow: '0 4px 24px rgba(0,0,0,0.6)',
               }}
             >
               LEGACY
@@ -153,7 +217,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           </div>
 
           {/* Authentic Hand-Painted Brush Underline */}
-          <div className="w-full max-w-md sm:max-w-lg mt-3 sm:mt-5 overflow-visible">
+          <div className="w-full max-w-md sm:max-w-lg mt-3 sm:mt-4 overflow-visible filter drop-shadow-lg">
             <BrushStrokeUnderline
               className="w-full h-3 sm:h-4"
               color="#B65332"
@@ -166,59 +230,59 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
-          className="mb-8 max-w-2xl"
+          className="mb-7 max-w-2xl"
         >
-          <p className="text-sm sm:text-base md:text-lg font-mono tracking-widest text-[#F3EBDD]/90 uppercase font-medium">
+          <p className="text-sm sm:text-base md:text-lg font-mono tracking-widest text-[#F3EBDD] uppercase font-bold drop-shadow-sm">
             12 MONTHS · ONE LEGACY · ONE FESTIVAL
           </p>
-          <p className="text-xs sm:text-sm text-[#F3EBDD]/75 mt-2 font-sans leading-relaxed line-clamp-2">
+          <p className="text-xs sm:text-sm text-[#F3EBDD]/85 mt-2 font-sans leading-relaxed line-clamp-2 max-w-xl mx-auto drop-shadow">
             {slide.caption}
           </p>
         </motion.div>
 
-        {/* Live Countdown & Date Bar */}
+        {/* Live Countdown & Event Date Lockup */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
-          className="mb-10 w-full max-w-md bg-[#241A14]/80 backdrop-blur-md p-4 sm:p-5 border border-white/15"
+          className="mb-9 w-full max-w-md bg-[#241A14]/85 backdrop-blur-md p-4 sm:p-5 border border-white/20 shadow-2xl"
         >
-          <div className="flex items-center justify-between text-[11px] font-mono tracking-widest uppercase text-[#C8A978] pb-2.5 border-b border-white/10 mb-3">
-            <span>EVENT LAUNCHES IN</span>
+          <div className="flex items-center justify-between text-xs font-mono tracking-widest uppercase text-[#C8A978] pb-2.5 border-b border-white/10 mb-3">
+            <span>THE LEGACY PROJECT LAUNCHES IN</span>
             <strong className="text-white">29 OCTOBER 2026</strong>
           </div>
 
           <div className="grid grid-cols-4 gap-2 text-center text-white">
-            <div className="p-2 bg-white/5 border border-white/10">
+            <div className="p-2.5 bg-white/5 border border-white/10">
               <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#F3EBDD] tabular-nums">
                 {String(days).padStart(2, '0')}
               </b>
-              <small className="text-[9px] font-mono tracking-widest uppercase text-[#C8A978]">
+              <small className="text-[10px] font-mono tracking-widest uppercase text-[#C8A978]">
                 DAYS
               </small>
             </div>
-            <div className="p-2 bg-white/5 border border-white/10">
+            <div className="p-2.5 bg-white/5 border border-white/10">
               <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#F3EBDD] tabular-nums">
                 {String(hours).padStart(2, '0')}
               </b>
-              <small className="text-[9px] font-mono tracking-widest uppercase text-[#C8A978]">
+              <small className="text-[10px] font-mono tracking-widest uppercase text-[#C8A978]">
                 HOURS
               </small>
             </div>
-            <div className="p-2 bg-white/5 border border-white/10">
+            <div className="p-2.5 bg-white/5 border border-white/10">
               <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#F3EBDD] tabular-nums">
                 {String(minutes).padStart(2, '0')}
               </b>
-              <small className="text-[9px] font-mono tracking-widest uppercase text-[#C8A978]">
-                MINS
+              <small className="text-[10px] font-mono tracking-widest uppercase text-[#C8A978]">
+                MINUTES
               </small>
             </div>
-            <div className="p-2 bg-white/5 border border-white/10">
+            <div className="p-2.5 bg-white/5 border border-white/10">
               <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#B65332] tabular-nums">
                 {String(seconds).padStart(2, '0')}
               </b>
-              <small className="text-[9px] font-mono tracking-widest uppercase text-[#C8A978]">
-                SECS
+              <small className="text-[10px] font-mono tracking-widest uppercase text-[#C8A978]">
+                SECONDS
               </small>
             </div>
           </div>
@@ -233,61 +297,108 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
         >
           <button
             onClick={onExploreLegacy}
-            className="w-full sm:w-auto button bg-[#B65332] text-white hover:bg-[#B65332]/90 font-bold px-8 py-4 text-xs sm:text-sm tracking-wider cursor-pointer shadow-xl transition-all"
+            className="w-full sm:w-auto button bg-[#B65332] text-white hover:bg-[#a04627] font-bold px-8 py-4 text-xs sm:text-sm tracking-wider cursor-pointer shadow-xl transition-all flex items-center justify-center gap-2 group"
           >
             <span>EXPLORE THE LEGACY</span>
-            <ArrowRight size={17} />
+            <ArrowRight size={17} className="group-hover:translate-x-1 transition-transform" />
           </button>
 
           <button
             onClick={onShopCollection}
-            className="w-full sm:w-auto button bg-transparent border border-[#F3EBDD]/40 text-[#F3EBDD] hover:bg-[#F3EBDD] hover:text-[#11100E] font-bold px-8 py-4 text-xs sm:text-sm tracking-wider cursor-pointer transition-all"
+            className="w-full sm:w-auto button bg-transparent border-2 border-[#F3EBDD]/60 text-[#F3EBDD] hover:bg-[#F3EBDD] hover:text-[#11100E] font-bold px-8 py-4 text-xs sm:text-sm tracking-wider cursor-pointer transition-all flex items-center justify-center gap-2"
           >
             <span>SHOP THE COLLECTION</span>
             <ArrowUpRight size={17} />
           </button>
+
+          {onInspectImage && (
+            <button
+              onClick={() => onInspectImage(slide)}
+              className="p-3 bg-white/10 hover:bg-white/25 text-white/80 hover:text-white border border-white/20 transition-all cursor-pointer hidden sm:flex items-center gap-1.5 text-xs font-mono"
+              title="Inspect photography in full screen"
+            >
+              <Maximize2 size={16} />
+              <span>VIEW PHOTO</span>
+            </button>
+          )}
         </motion.div>
       </div>
 
-      {/* Subtle Slide Indicators & Controls at Bottom */}
-      <div className="absolute bottom-6 inset-x-0 z-20 max-w-5xl mx-auto px-6 flex items-center justify-between text-white/70">
-        {/* Slide Selector Indicators */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {HERO_SLIDES.map((s, idx) => (
-            <button
-              key={s.id}
-              onClick={() => setCurrentIdx(idx)}
-              className={`group flex items-center gap-2 py-1 px-2.5 transition-all cursor-pointer ${
-                currentIdx === idx
-                  ? 'border-b-2 border-[#C8A978] text-white'
-                  : 'text-white/40 hover:text-white/80'
-              }`}
-              aria-label={`Go to slide ${s.id}`}
-            >
-              <span className="font-mono text-xs">{s.id}</span>
-              <span className="hidden sm:inline text-[11px] font-mono tracking-wider">
-                {s.theme}
-              </span>
-            </button>
-          ))}
+      {/* Bottom Thumbnail Strip & Navigation Controls */}
+      <div className="absolute bottom-6 inset-x-0 z-20 max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-white/75">
+        {/* Interactive Slide Thumbnail Tabs */}
+        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none">
+          {HERO_SLIDES.map((s, idx) => {
+            const isActive = currentIdx === idx;
+            return (
+              <button
+                key={s.id}
+                onClick={() => selectSlide(idx)}
+                className={`group relative flex items-center gap-2.5 px-3 py-1.5 transition-all cursor-pointer border ${
+                  isActive
+                    ? 'bg-[#241A14]/90 border-[#C8A978] text-white shadow-lg'
+                    : 'bg-[#11100E]/70 border-white/15 text-white/50 hover:text-white hover:border-white/40'
+                }`}
+                aria-label={`View slide ${s.id}: ${s.theme}`}
+              >
+                {/* Mini Thumbnail */}
+                <div className="w-6 h-6 rounded-xs overflow-hidden shrink-0 hidden sm:block">
+                  <img
+                    src={s.image}
+                    alt={s.theme}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                <div className="text-left">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-[11px] font-bold text-[#C8A978]">
+                      {s.id}
+                    </span>
+                    <span className="text-[11px] font-mono tracking-wider uppercase font-semibold">
+                      {s.theme}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Active Slide Progress Line */}
+                {isActive && (
+                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/20 overflow-hidden">
+                    <motion.div
+                      className="h-full bg-[#B65332]"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Previous / Next Arrows */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={prevSlide}
-            className="p-2 text-white/50 hover:text-white transition-colors cursor-pointer"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="p-2 text-white/50 hover:text-white transition-colors cursor-pointer"
-            aria-label="Next slide"
-          >
-            <ChevronRight size={18} />
-          </button>
+        {/* Previous / Next Controls and Current Slide Meta */}
+        <div className="flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-1.5 text-xs font-mono text-[#C8A978]">
+            <MapPin size={13} className="text-[#B65332]" />
+            <span className="uppercase">{slide.location}</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={prevSlide}
+              className="p-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white border border-white/15 transition-colors cursor-pointer"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="p-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white border border-white/15 transition-colors cursor-pointer"
+              aria-label="Next slide"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
         </div>
       </div>
     </div>
