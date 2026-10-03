@@ -54,17 +54,20 @@ const MENUS: Record<MegaMenuTab, MenuData> = {
     ],
   },
   'EXPLORE': {
-    title: 'The Raffia Legacy Collection',
-    category: 'ARCHIVE · A LIVING RECORD OF RAFFIA',
+    title: 'Explore the Legacy',
+    category: 'STORIES · PEOPLE · RECORD · OPPORTUNITIES',
     defaultImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
-    defaultCaption: 'What we learn. What we create. What we pass on. Every year should leave something behind.',
+    defaultCaption: 'Go deeper into the stories, people, creative work and records that grow around the Raffia Legacy Project.',
     items: [
-      { label: 'Cultural Archive', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Raffia_hand_bag.jpg/1000px-Raffia_hand_bag.jpg', caption: 'Utta performances, oral histories, songs, stories and traditional techniques.' },
-      { label: 'Creative Works', image: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Woman%27s_ceremonial_overskirt%2C_Shoowa%2C_late_19th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_cut-pile_embroidery%2C_HMA.JPG', caption: 'Fashion collections, artworks, dance, music, theatre and product designs.' },
-      { label: 'Educational Resources', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'School resources, learning materials, workshops and youth training.' },
-      { label: 'Commercial Directory', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg', caption: 'New products, prototypes, brands and a directory of businesses and makers.' },
-      { label: 'Digital Record', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg', caption: 'Photography, documentaries, artist profiles, artisan stories and digital catalogues.' },
-      { label: 'Tourism Packages', image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG', caption: 'Raffia tours, cultural experiences and festival packages.' },
+      { label: 'Raffia Stories', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'Stories from the people, places, practices and possibilities connected to raffia.' },
+      { label: 'People & Makers', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'Meet the artisans, creatives, communities and people shaping the legacy.' },
+      { label: 'Journal', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Raffia_hand_bag.jpg/1000px-Raffia_hand_bag.jpg', caption: 'Project stories, reflections, updates and deeper conversations.' },
+      { label: 'Global Raffia', image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG', caption: 'Raffia across cultures, practices and creative contexts.' },
+      { label: 'Archive', image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG', caption: 'A living record of what we learn, create and pass on.' },
+      { label: 'Exhibitions', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg', caption: 'Exhibitions, creative works and curated presentations.' },
+      { label: 'Videos', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'Documentaries, conversations, performances and moving-image stories.' },
+      { label: 'Photo Stories', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Raffia_hand_bag.jpg/1000px-Raffia_hand_bag.jpg', caption: 'Visual stories documenting people, process, place and product.' },
+      { label: 'Opportunities', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg', caption: 'A space for opportunities connected to the Raffia Legacy Project.' },
     ],
   },
   'MARKETPLACE': {
@@ -141,7 +144,18 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
       return;
     }
     if (activeTab === 'EXPLORE') {
-      onNavigate({ type: 'raffia' });
+      const sectionMap: Record<string, string> = {
+        'Raffia Stories': 'raffia-stories',
+        'People & Makers': 'people-makers',
+        'Journal': 'journal',
+        'Global Raffia': 'global-raffia',
+        'Archive': 'archive',
+        'Exhibitions': 'exhibitions',
+        'Videos': 'videos',
+        'Photo Stories': 'photo-stories',
+        'Opportunities': 'opportunities',
+      };
+      onNavigate({ type: 'explore', section: sectionMap[itemLabel] });
       return;
     }
     if (activeTab === 'GET INVOLVED') {
