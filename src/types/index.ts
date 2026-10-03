@@ -113,6 +113,7 @@ export interface RaffiaTopic {
 
 export type ViewRoute =
   | { type: 'home' }
+  | { type: 'admin' }
   | { type: 'marketplace'; category?: ProductCategory; collection?: string }
   | { type: 'product'; slug: string }
   | { type: 'collections'; slug?: string }
