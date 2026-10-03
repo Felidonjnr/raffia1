@@ -19,7 +19,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   onNavigate,
   onSelectProduct,
 }) => {
-  const { addToCart, setIsCartOpen, setIsCheckoutModalOpen } = useCart();
+  const { addToCart, setIsCartOpen } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [selectedGalleryIdx, setSelectedGalleryIdx] = useState(0);
 
@@ -34,7 +34,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const handleBuyNow = () => {
     addToCart(product, quantity);
     setIsCartOpen(false);
-    setIsCheckoutModalOpen(true);
+    onNavigate({ type: 'checkout' });
   };
 
   const currentImage = product.gallery[selectedGalleryIdx] || product.image;
@@ -43,7 +43,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     <div className="min-h-screen bg-[#FAF7F2] pb-24">
       {/* Breadcrumb & Top Bar */}
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-8 pb-4">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#57524E]">
+        <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-[#57524E]">
           <button
             onClick={() => onNavigate({ type: 'marketplace' })}
             className="hover:text-[#181513] transition-colors cursor-pointer flex items-center gap-1.5"
@@ -110,7 +110,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           <div className="lg:col-span-5 space-y-8 lg:sticky lg:top-28">
             <div>
               {/* Category & Status */}
-              <div className="flex items-center justify-between text-xs font-mono uppercase tracking-widest text-[#8C7355] mb-2">
+              <div className="flex items-center justify-between text-xs uppercase tracking-widest text-[#8C7355] mb-2">
                 <span>{product.category}</span>
                 <span className="text-[#B84A28] font-medium">{product.availability}</span>
               </div>
@@ -148,7 +148,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             {/* Quantity Selector & Action CTAs */}
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <span className="text-xs uppercase font-mono tracking-wider text-[#57524E]">
+                <span className="text-xs uppercase tracking-wider text-[#57524E]">
                   Quantity
                 </span>
                 <div className="flex items-center border border-[#181513]/20 bg-[#FAF7F2]">
@@ -159,7 +159,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   >
                     <Minus className="w-3.5 h-3.5" />
                   </button>
-                  <span className="px-4 text-sm font-mono tabular-nums font-medium text-[#181513]">
+                  <span className="px-4 text-sm tabular-nums font-medium text-[#181513]">
                     {quantity}
                   </span>
                   <button
