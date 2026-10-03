@@ -40,7 +40,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const currentImage = product.gallery[selectedGalleryIdx] || product.image;
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] pb-24">
+    <div className="product-detail-page min-h-screen bg-[#FAF7F2] pb-24">
       {/* Breadcrumb & Top Bar */}
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-8 pb-4">
         <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-[#57524E]">
