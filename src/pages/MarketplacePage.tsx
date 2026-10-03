@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { ProductCategory, ViewRoute, Product } from '../types';
-import { PRODUCTS } from '../data/products';
+import { useMarketplaceData } from '../context/MarketplaceDataContext';
 import { ProductCard } from '../components/ProductCard';
 import { ProductQuickView } from '../components/ProductQuickView';
 import { ArrowLeft, Search, ArrowUpRight, ShieldCheck, Sparkles, Feather } from 'lucide-react';
@@ -31,6 +31,7 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'name'>('featured');
   const [showInStockOnly, setShowInStockOnly] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  const { products: PRODUCTS, loading: marketplaceLoading, error: marketplaceError } = useMarketplaceData();
 
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter((product) => {
