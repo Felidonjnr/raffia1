@@ -525,7 +525,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           </div>
 
           {/* 8 Value Levels from PDF Page 6 */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
             {[
               { title: 'FOR YOUNG PEOPLE', desc: 'Skills, confidence, creativity and new opportunities.' },
               { title: 'FOR ARTISANS', desc: 'Visibility, new markets, skills and better access to customers.' },
