@@ -34,7 +34,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   const [makers, setMakers] = useState<Row[]>([]);
   const [collections, setCollections] = useState<Row[]>([]);
   const [categories, setCategories] = useState<Row[]>([]);
-  const [settings, setSettings] = useState<Row>({ whatsapp_number: '', shipping_flat_rate: 15000, order_prefix: 'RL' });
+  const [settings, setSettings] = useState<Row>({ whatsapp_number: '', bank_name: '', account_name: '', account_number: '', shipping_flat_rate: 15000, order_prefix: 'RL' });
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState('');
   const [productEditor, setProductEditor] = useState<Row | null>(null);
@@ -197,6 +197,9 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     if (!client) return;
     const { error } = await client.from('site_settings').update({
       whatsapp_number: settings.whatsapp_number || '',
+      bank_name: settings.bank_name || '',
+      account_name: settings.account_name || '',
+      account_number: settings.account_number || '',
       shipping_flat_rate: Number(settings.shipping_flat_rate || 0),
       order_prefix: settings.order_prefix || 'RL'
     }).eq('id', 1);
@@ -335,7 +338,10 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             {tab==='settings' && <section className="max-w-2xl bg-white border p-6 space-y-5">
               <div><h3 className="font-editorial text-2xl">Marketplace settings</h3><p className="text-sm text-[#57524E] mt-1">These values control manual checkout without editing the website code.</p></div>
               <label className="block"><span className="text-xs uppercase tracking-wider">WhatsApp business number</span><input value={settings.whatsapp_number||''} onChange={e=>setSettings({...settings,whatsapp_number:e.target.value})} placeholder="2348012345678" className="w-full p-3 border mt-1"/></label>
-              <label className="block"><span className="text-xs uppercase tracking-wider">Flat shipping fee (₦)</span><input type="number" value={settings.shipping_flat_rate??15000} onChange={e=>setSettings({...settings,shipping_flat_rate:Number(e.target.value)})} className="w-full p-3 border mt-1"/></label>
+              <label className="block"><span className="text-xs uppercase tracking-wider">Bank name</span><input value={settings.bank_name||''} onChange={e=>setSettings({...settings,bank_name:e.target.value})} placeholder="Bank name" className="w-full p-3 border mt-1"/></label>
+              <label className="block"><span className="text-xs uppercase tracking-wider">Account name</span><input value={settings.account_name||''} onChange={e=>setSettings({...settings,account_name:e.target.value})} placeholder="Account name" className="w-full p-3 border mt-1"/></label>
+              <label className="block"><span className="text-xs uppercase tracking-wider">Account number</span><input value={settings.account_number||''} onChange={e=>setSettings({...settings,account_number:e.target.value})} placeholder="Account number" className="w-full p-3 border mt-1"/></label>
+                            <label className="block"><span className="text-xs uppercase tracking-wider">Flat shipping fee (₦)</span><input type="number" value={settings.shipping_flat_rate??15000} onChange={e=>setSettings({...settings,shipping_flat_rate:Number(e.target.value)})} className="w-full p-3 border mt-1"/></label>
               <label className="block"><span className="text-xs uppercase tracking-wider">Order prefix</span><input value={settings.order_prefix||'RL'} onChange={e=>setSettings({...settings,order_prefix:e.target.value.toUpperCase()})} className="w-full p-3 border mt-1"/></label>
               <button onClick={saveSettings} className="px-5 py-3 bg-[#181513] text-white text-xs uppercase tracking-widest flex items-center gap-2"><Save size={15}/> Save settings</button>
             </section>}
