@@ -102,6 +102,10 @@ export default function App() {
     return currentRoute.type;
   }, [currentRoute]);
 
+  if (currentRoute.type === 'admin') {
+    return <AdminDashboard onNavigate={navigateTo} />;
+  }
+
   return (
     <CartProvider>
       <MarketplaceDataProvider>
