@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { ViewRoute } from '../types';
 import { ArchivalImage } from '../components/ArchivalImage';
@@ -26,15 +26,73 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
 
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [orderReference, setOrderReference] = useState('');
+  const [paymentChannel, setPaymentChannel] = useState('');
+  const [paymentError, setPaymentError] = useState('');
+  const [isPaying, setIsPaying] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
 
   const shippingCost = items.length > 0 ? 15000 : 0;
   const grandTotal = subtotal + shippingCost;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const hashQuery = window.location.hash.split('?')[1] || '';
+    const params = new URLSearchParams(hashQuery);
+    const reference = params.get('reference') || params.get('trxref');
+    if (!reference) return;
+
+    setIsVerifying(true);
+    fetch('/api/paystack/verify?reference=' + encodeURIComponent(reference))
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok || data.status !== 'success') {
+          throw new Error(data.error || 'Payment could not be verified.');
+        }
+        setOrderReference(data.reference || reference);
+        setPaymentChannel(data.channel || 'Paystack');
+        setOrderConfirmed(true);
+        window.history.replaceState({}, '', window.location.pathname + '#/checkout');
+      })
+      .catch((error) => {
+        setPaymentError(error instanceof Error ? error.message : 'Payment verification failed.');
+      })
+      .finally(() => setIsVerifying(false));
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const ref = `RLP-ORD-${Date.now().toString().slice(-6)}`;
-    setOrderReference(ref);
-    setOrderConfirmed(true);
+    setPaymentError('');
+    setIsPaying(true);
+
+    try {
+      const response = await fetch('/api/paystack/initialize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          stateRegion: formData.stateRegion,
+          country: formData.country,
+          items: items.map(({ product, quantity }) => ({
+            id: product.id,
+            quantity,
+          })),
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.authorization_url) {
+        throw new Error(data.error || 'Unable to start payment.');
+      }
+
+      window.location.href = data.authorization_url;
+    } catch (error) {
+      setPaymentError(error instanceof Error ? error.message : 'Unable to start payment.');
+      setIsPaying(false);
+    }
   };
 
   return (
@@ -53,6 +111,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-10">
         {!orderConfirmed ? (
           <div>
+            {isVerifying && (
+              <div className="mb-6 border border-[#B84A28]/20 bg-[#B84A28]/5 px-4 py-3 text-sm text-[#57524E]" role="status">
+                Verifying your Paystack payment…
+              </div>
+            )}
             <div className="mb-10">
               <span className="text-xs  uppercase tracking-widest text-[#B84A28] block mb-2">
                 Order Reservation
@@ -207,12 +270,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         03. Payment & Settlement
                       </h3>
                       <span className="text-xs  uppercase tracking-widest text-[#B84A28] bg-[#FAF7F2] px-2 py-0.5 border border-[#181513]/10">
-                        Paystack Ready
+                        Secure Paystack Checkout
                       </span>
                     </div>
 
                     <p className="text-xs text-[#57524E] leading-relaxed">
-                      Our direct payment gateway with Paystack is currently configured for the launch. In this preview build, submitting this form registers your reservation with our team for priority fulfillment.
+                      Your order total is calculated again on the server before Paystack is opened. Your payment is completed on Paystack’s secure checkout.
                     </p>
 
                     <div className="p-4 bg-[#FAF7F2] border border-[#181513]/10 space-y-2 text-xs">
@@ -221,17 +284,28 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         <span className=" uppercase font-semibold">Secure Payment Protocol</span>
                       </div>
                       <p className="text-[#57524E]">
-                        Supports Card, Bank Transfer and USSD through the configured payment gateway when payment is enabled.
+                        Available payment channels are presented by Paystack based on your account and transaction settings.
                       </p>
                     </div>
                   </div>
 
+                  {paymentError && (
+                    <div className="border border-[#B84A28]/30 bg-[#B84A28]/5 px-4 py-3 text-sm text-[#7A2F1B]" role="alert">
+                      {paymentError}
+                    </div>
+                  )}
+
                   <button
                     type="submit"
-                    className="w-full py-4 bg-[#B84A28] text-white text-xs  uppercase tracking-widest hover:bg-[#9E3E20] transition-colors cursor-pointer shadow-md font-semibold"
+                    disabled={isPaying || isVerifying}
+                    className="w-full min-h-14 py-4 bg-[#B84A28] text-white text-sm uppercase tracking-widest hover:bg-[#9E3E20] transition-colors cursor-pointer shadow-md font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Confirm Order Reservation ({formatNaira(grandTotal)})
+                    {isPaying ? 'Opening Secure Checkout…' : `Pay ${formatNaira(grandTotal)} Securely`}
                   </button>
+
+                  <p className="text-center text-xs text-[#57524E]">
+                    You’ll be redirected to Paystack to complete payment securely.
+                  </p>
                 </div>
 
                 {/* Right Column: Order Review (5 cols) */}
@@ -318,9 +392,15 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                 <span>{formData.city}, {formData.country}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#8C7355] uppercase ">Payment Status:</span>
-                <span className="text-[#B84A28] font-medium">Reservation Staged</span>
+                <span className="text-[#8C7355] uppercase">Payment Status:</span>
+                <span className="text-[#B84A28] font-medium">Payment Confirmed</span>
               </div>
+              {paymentChannel && (
+                <div className="flex justify-between">
+                  <span className="text-[#8C7355] uppercase">Channel:</span>
+                  <span>{paymentChannel}</span>
+                </div>
+              )}
             </div>
 
             <div className="pt-4">
