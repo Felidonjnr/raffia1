@@ -51,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoute, onNavigate, onOpen
     else if (tab === 'THE PROJECT') onNavigate({ type: 'project' });
     else if (tab === 'THE FESTIVAL') onNavigate({ type: 'festival' });
     else if (tab === 'RAFFIA') onNavigate({ type: 'raffia' });
-    else if (tab === 'EXPLORE') onNavigate({ type: 'makers' });
+    else if (tab === 'EXPLORE') onNavigate({ type: 'explore' });
     else if (tab === 'GET INVOLVED') onNavigate({ type: 'get_involved', section: 'partner' });
     else onNavigate({ type: 'coming_soon', title: tab, subtitle: 'This section is being prepared for the Raffia Legacy launch.' });
   };
