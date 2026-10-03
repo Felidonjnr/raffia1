@@ -74,9 +74,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
 
       {/* 01. ABOUT THE PROJECT (PDF Page 2) */}
       <section id="about" className="project-block project-about py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-1 project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">
-          01
-        </div>
+        
         <div className="lg:col-span-6 project-copy space-y-6">
           <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">WHY RAFFIA?</p>
           <h2 className="text-3xl sm:text-5xl font-black text-[#11100E] leading-tight">
@@ -129,7 +127,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
       {/* 02. OUR VISION (PDF Page 2) */}
       <section id="vision" className="project-block project-vision py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto space-y-10">
         <div className="flex items-center gap-6">
-          <div className="project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">02</div>
+          
           <div>
             <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">OUR VISION</p>
             <h2 className="text-3xl sm:text-5xl font-black text-[#11100E]">
@@ -176,11 +174,11 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
             },
           ].map((item) => (
             <div
-              key={item.n}
+              key={item.t}
               onClick={() =>
                 setLightboxImage({
                   src: item.img,
-                  title: `${item.n}. ${item.t}`,
+                  title: item.t,
                   subtitle: item.d,
                   category: 'OUR VISION',
                 })
@@ -194,9 +192,6 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#241A14] text-white font-mono text-xs font-bold">
-                  {item.n}
-                </div>
               </div>
               <div className="p-4">
                 <h3 className="font-mono text-base font-bold text-[#11100E] mb-1">{item.t}</h3>
@@ -209,9 +204,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
 
       {/* 03. THE LEGACY YEAR (PDF Page 4) */}
       <section id="legacy-year" className="project-block project-year py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-1 project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">
-          03
-        </div>
+        
         <div className="lg:col-span-7 project-copy space-y-6">
           <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">THE LEGACY YEAR</p>
           <h2 className="text-3xl sm:text-5xl font-black text-[#11100E]">
@@ -266,9 +259,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
       {/* 04. OUR PROGRAMMES (PDF Page 4) */}
       <section id="programmes" className="project-block project-programmes py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto space-y-10">
         <div className="flex items-center gap-6">
-          <div className="project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">04</div>
+          
           <div>
-            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">04 / THE LEGACY YEAR</p>
+            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">THE LEGACY YEAR</p>
             <h2 className="text-3xl sm:text-5xl font-black text-[#11100E]">
               OUR PROGRAMMES <em className="text-[#B65332] font-serif font-normal">IN MOTION.</em>
             </h2>
@@ -315,11 +308,11 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
             },
           ].map((item) => (
             <div
-              key={item.n}
+              key={item.t}
               onClick={() =>
                 setLightboxImage({
                   src: item.img,
-                  title: `${item.n}. ${item.t}`,
+                  title: item.t,
                   subtitle: item.d,
                   category: 'OUR PROGRAMMES',
                 })
@@ -333,9 +326,6 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#241A14] text-white font-mono text-xs font-bold">
-                  {item.n}
-                </div>
               </div>
               <div className="p-5 flex-1 flex flex-col justify-between">
                 <div>
@@ -351,9 +341,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
       {/* 05. WHY THIS MATTERS (PDF Page 6) */}
       <section id="impact" className="project-block project-impact py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto space-y-8">
         <div className="flex items-center gap-6">
-          <div className="project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">05</div>
+          
           <div>
-            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">05 / VALUE CREATION</p>
+            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">VALUE CREATION</p>
             <h2 className="text-3xl sm:text-5xl font-black text-[#11100E]">
               THE LEGACY <em className="text-[#B65332] font-serif font-normal">WE WANT TO CREATE.</em>
             </h2>
@@ -366,17 +356,16 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { id: '01', title: 'FOR YOUNG PEOPLE', desc: 'Skills, confidence, creativity and new opportunities.' },
-            { id: '02', title: 'FOR ARTISANS', desc: 'Visibility, new markets, skills and better access to customers.' },
-            { id: '03', title: 'FOR FARMERS', desc: 'New conversations around the value and future of raffia.' },
-            { id: '04', title: 'FOR CREATIVES', desc: 'A platform to experiment, collaborate and reach new audiences.' },
-            { id: '05', title: 'FOR BUSINESSES', desc: 'New products, customers, partnerships and markets.' },
-            { id: '06', title: 'FOR THE COMMUNITY', desc: 'Pride, participation, opportunity and stronger connections.' },
-            { id: '07', title: 'FOR THE HOST DESTINATION', desc: 'A distinctive cultural identity and a reason for people to visit.' },
-            { id: '08', title: 'FOR THE WIDER ECONOMY', desc: 'A chance to turn indigenous knowledge and materials into sustainable creative enterprise.' },
+            { title: 'FOR YOUNG PEOPLE', desc: 'Skills, confidence, creativity and new opportunities.' },
+            { title: 'FOR ARTISANS', desc: 'Visibility, new markets, skills and better access to customers.' },
+            { title: 'FOR FARMERS', desc: 'New conversations around the value and future of raffia.' },
+            { title: 'FOR CREATIVES', desc: 'A platform to experiment, collaborate and reach new audiences.' },
+            { title: 'FOR BUSINESSES', desc: 'New products, customers, partnerships and markets.' },
+            { title: 'FOR THE COMMUNITY', desc: 'Pride, participation, opportunity and stronger connections.' },
+            { title: 'FOR THE HOST DESTINATION', desc: 'A distinctive cultural identity and a reason for people to visit.' },
+            { title: 'FOR THE WIDER ECONOMY', desc: 'A chance to turn indigenous knowledge and materials into sustainable creative enterprise.' },
           ].map((v) => (
-            <div key={v.id} className="p-5 bg-[#EAE1D1] border border-[#241A14]/15">
-              <span className="font-mono text-xs text-[#B65332] font-bold block mb-1">{v.id}</span>
+            <div key={v.title} className="p-5 bg-[#EAE1D1] border border-[#241A14]/15">
               <h4 className="font-mono text-xs font-bold text-[#11100E] mb-2">{v.title}</h4>
               <p className="text-xs text-[#73695E] font-sans leading-relaxed">{v.desc}</p>
             </div>
@@ -394,9 +383,9 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
       {/* 06. PARTNERSHIP OPPORTUNITIES (PDF Page 7 & 8) */}
       <section id="partners" className="project-block project-partners py-20 px-6 sm:px-12 border-b border-[#241A14]/15 max-w-[1560px] mx-auto space-y-8">
         <div className="flex items-center gap-6">
-          <div className="project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">06</div>
+          
           <div>
-            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">07 / PARTNERSHIPS</p>
+            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">PARTNERSHIPS</p>
             <h2 className="text-3xl sm:text-5xl font-black text-[#11100E]">
               THERE IS A PLACE <em className="text-[#B65332] font-serif font-normal">FOR YOU IN THE LEGACY.</em>
             </h2>
@@ -410,38 +399,31 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             {
-              id: '01',
               title: 'FESTIVAL SPONSORS',
               desc: 'Support the flagship Raffia Festival and connect your brand with culture, creativity, community and innovation.',
             },
             {
-              id: '02',
               title: 'PROGRAMME SPONSORS',
               desc: 'Support a specific area such as: Raffia School Programme, Young Raffia Innovators, Design Challenge, Fashion Show, Art & Design Biennale, Dance & Performance, Innovation Lab, Raffia Economy Summit, Marketplace, Youth Programmes.',
             },
             {
-              id: '03',
               title: 'LEGACY PARTNERS',
               desc: 'Support the year-round ecosystem and help us build the Raffia Academy, Lab, Market, Experiences, Research and Network.',
             },
             {
-              id: '04',
               title: 'KNOWLEDGE PARTNERS',
               desc: 'Bring expertise, research, training, technology or mentorship.',
             },
             {
-              id: '05',
               title: 'MEDIA & CREATIVE PARTNERS',
               desc: 'Help tell the story through film, photography, publishing, digital media and storytelling.',
             },
             {
-              id: '06',
               title: 'TOURISM & DESTINATION PARTNERS',
               desc: 'Help develop experiences that bring visitors into the world of raffia.',
             },
           ].map((p) => (
-            <div key={p.id} className="p-6 bg-[#EAE1D1] border border-[#241A14]/15">
-              <span className="font-mono text-xs text-[#B65332] font-bold block mb-1">{p.id}</span>
+            <div key={p.title} className="p-6 bg-[#EAE1D1] border border-[#241A14]/15">
               <h4 className="font-mono text-sm font-bold text-[#11100E] mb-2">{p.title}</h4>
               <p className="text-xs text-[#73695E] font-sans leading-relaxed">{p.desc}</p>
             </div>
@@ -455,7 +437,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
 
       {/* Closing Statement (PDF Page 9) */}
       <section className="project-close py-24 text-center bg-[#11100E] text-white">
-        <p className="text-xs font-mono text-[#C8A978] tracking-widest uppercase font-bold mb-2">09 / THE INVITATION</p>
+        <p className="text-xs font-mono text-[#C8A978] tracking-widest uppercase font-bold mb-2">THE INVITATION</p>
         <h2 className="text-3xl sm:text-5xl font-black">
           THAT IS THE LEGACY.<br />
           <em className="text-[#C8A978] font-serif font-normal text-2xl sm:text-3xl block mt-2">
