@@ -119,6 +119,7 @@ export type ViewRoute =
   | { type: 'makers' }
   | { type: 'maker_detail'; slug: string }
   | { type: 'raffia'; topicSlug?: string }
+  | { type: 'explore'; section?: string }
   | { type: 'project'; section?: 'about' | 'vision' | 'legacy-year' | 'programmes' | 'impact' | 'partners' }
   | { type: 'legacy_year' }
   | { type: 'festival' }
