@@ -11,32 +11,32 @@ interface LegacyYearPageProps {
 
 const STAGE_IMAGES: Record<string, { src: string; caption: string; location: string }> = {
   '01': {
-    src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
     caption: 'Children discover raffia, heritage, craft, Utta, music, storytelling, nature and creativity.',
     location: 'Akwa Ibom State, Nigeria',
   },
   '02': {
-    src: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG',
     caption: 'Young people ask: "What can raffia become in the future?"',
     location: 'Akwa Ibom State, Nigeria',
   },
   '03': {
-    src: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Woman%27s_ceremonial_overskirt%2C_Shoowa%2C_late_19th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_cut-pile_embroidery%2C_HMA.JPG',
     caption: 'Artisans, designers and creatives turn heritage into new products, fashion, art, performance and design.',
     location: 'Akwa Ibom State, Nigeria',
   },
   '04': {
-    src: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg',
     caption: 'Strong ideas become products, businesses, partnerships and livelihoods.',
     location: 'Akwa Ibom State, Nigeria',
   },
   '05': {
-    src: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
     caption: 'The community and the world experience the culture, creativity, products and opportunities created throughout the year.',
     location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
   '06': {
-    src: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=1200&q=80',
+    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Raffia_hand_bag.jpg/1000px-Raffia_hand_bag.jpg',
     caption: 'New students, artisans, designers and entrepreneurs enter the ecosystem. The cycle continues.',
     location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
@@ -212,7 +212,7 @@ export const LegacyYearPage: React.FC<LegacyYearPageProps> = ({ onNavigate }) =>
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {LEGACY_YEAR_STAGES.map((s, idx) => {
-              const sImg = STAGE_IMAGES[s.step]?.src || 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80';
+              const sImg = STAGE_IMAGES[s.step]?.src || 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg';
               return (
                 <div
                   key={s.step}
