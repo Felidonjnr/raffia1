@@ -20,10 +20,6 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
   const [quantity, setQuantity] = useState(1);
   const [selectedImgIdx, setSelectedImgIdx] = useState(0);
 
-  if (!product) return null;
-
-  const currentImg = product.gallery?.[selectedImgIdx] || product.image;
-
   useEffect(() => {
     setQuantity(1);
     setSelectedImgIdx(0);
@@ -42,6 +38,10 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [product, onClose]);
+
+  if (!product) return null;
+
+  const currentImg = product.gallery?.[selectedImgIdx] || product.image;
 
   const handleAdd = () => {
     addToCart(product, quantity);
