@@ -59,7 +59,6 @@ const PROJECT_CATEGORIES = [
 // 05. LEGACY YEAR - 6 Programmes from PDF Page 4
 const LEGACY_STAGES = [
   {
-    step: '01',
     title: 'DISCOVER',
     subtitle: 'Raffia School Programme',
     desc: 'Children discover raffia, heritage, craft, Utta, music, storytelling, nature and creativity.',
@@ -67,7 +66,6 @@ const LEGACY_STAGES = [
     timeframe: 'PROGRAMME 01',
   },
   {
-    step: '02',
     title: 'IMAGINE',
     subtitle: 'Young Raffia Innovators',
     desc: 'Young people ask: "What can raffia become in the future?"',
@@ -75,7 +73,6 @@ const LEGACY_STAGES = [
     timeframe: 'PROGRAMME 02',
   },
   {
-    step: '03',
     title: 'CREATE',
     subtitle: 'Raffia Design Challenge',
     desc: 'Artisans, designers and creatives turn heritage into new products, fashion, art, performance and design.',
@@ -83,7 +80,6 @@ const LEGACY_STAGES = [
     timeframe: 'PROGRAMME 03',
   },
   {
-    step: '04',
     title: 'BUILD',
     subtitle: 'Raffia Business Incubator',
     desc: 'Strong ideas become products, businesses, partnerships and livelihoods.',
@@ -91,7 +87,6 @@ const LEGACY_STAGES = [
     timeframe: 'PROGRAMME 04',
   },
   {
-    step: '05',
     title: 'CELEBRATE',
     subtitle: 'Raffia Festival',
     desc: 'The community and the world experience the culture, creativity, products and opportunities created throughout the year.',
@@ -99,7 +94,6 @@ const LEGACY_STAGES = [
     timeframe: 'PROGRAMME 05',
   },
   {
-    step: '06',
     title: 'PASS IT ON',
     subtitle: 'The Next Legacy Year',
     desc: 'New students, artisans, designers and entrepreneurs enter the ecosystem. The cycle continues.',
@@ -111,56 +105,48 @@ const LEGACY_STAGES = [
 // 08. FESTIVAL - 8 Experiences from PDF Page 3
 const FESTIVAL_EVENTS = [
   {
-    id: '01',
     title: 'RAFFIA PARADE',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
     summary: 'A colourful public celebration of culture and creativity.',
     category: 'CELEBRATION',
   },
   {
-    id: '02',
     title: 'RAFFIA ECONOMY SUMMIT',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg',
     summary: 'Conversations around business, investment, policy, innovation and opportunity.',
     category: 'BUSINESS & POLICY',
   },
   {
-    id: '03',
     title: 'INNOVATION LAB',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
     summary: 'Explore what raffia could become next.',
     category: 'INNOVATION',
   },
   {
-    id: '04',
     title: 'ART & DESIGN BIENNALE',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg',
     summary: 'New ideas, new materials and creative interpretations of raffia.',
     category: 'ART & DESIGN',
   },
   {
-    id: '05',
     title: 'FASHION SHOW',
     image: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Woman%27s_ceremonial_overskirt%2C_Shoowa%2C_late_19th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_cut-pile_embroidery%2C_HMA.JPG',
     summary: 'Where traditional techniques meet contemporary fashion.',
     category: 'FASHION',
   },
   {
-    id: '06',
     title: 'DANCE & PERFORMANCE',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg',
     summary: 'Utta, traditional performance and contemporary expression.',
     category: 'PERFORMANCE',
   },
   {
-    id: '07',
     title: 'RAFFIA MARKETPLACE',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Raffia_hand_bag.jpg/1000px-Raffia_hand_bag.jpg',
     summary: 'Buy, sell, discover and connect with makers and brands.',
     category: 'MARKETPLACE',
   },
   {
-    id: '08',
     title: 'RAFFIA VILLAGE',
     image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG',
     summary: 'Step into the world of raffia—from palm to craft.',
@@ -204,7 +190,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
 
   return (
     <div className="home-event-root bg-[#F3EBDD] text-[#11100E] overflow-hidden">
-      {/* 01. & 02. HERO */}
+      {/* & 02. HERO */}
       <InteractiveHeroGallery
         days={days}
         hours={hours}
@@ -224,7 +210,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
 
       {/* CONTINUOUS CULTURAL MARQUEE / EVENT TICKER (PDF Page 1 & 2) */}
       <div className="bg-[#241A14] text-[#F3EBDD] py-3 sm:py-4 border-y border-[#C8A978]/30 overflow-hidden relative select-none">
-        <div className="animate-marquee flex items-center gap-8 whitespace-nowrap text-xs font-mono uppercase tracking-[0.24em] font-semibold text-[#C8A978]">
+        <div className="animate-marquee flex items-center gap-8 whitespace-nowrap text-sm font-sans uppercase tracking-[0.24em] font-semibold text-[#C8A978]">
           <span>✦ DANCE VILLE PRESENTS</span>
           <span className="text-[#F3EBDD]">RAFFIA LEGACY PROJECT</span>
           <span>✦ CULTURE · CREATIVITY · ENTERPRISE · COMMUNITY</span>
@@ -245,7 +231,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </div>
 
-      {/* 03. WHY RAFFIA? (PDF Page 2) */}
+      {/* WHY RAFFIA? (PDF Page 2) */}
       <section id="why-raffia" className="py-24 sm:py-32 px-6 lg:px-12 bg-[#F3EBDD] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Image composition */}
@@ -270,21 +256,21 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#11100E]/85 via-transparent to-transparent" />
 
-                <div className="absolute top-4 right-4 p-2 bg-[#11100E]/70 hover:bg-[#B65332] text-white transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100 z-10 flex items-center gap-1.5 text-xs font-mono">
+                <div className="absolute top-4 right-4 p-2 bg-[#11100E]/70 hover:bg-[#B65332] text-white transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100 z-10 flex items-center gap-1.5 text-sm font-sans">
                   <Maximize2 size={14} />
                   <span>INSPECT</span>
                 </div>
 
                 <div className="absolute bottom-6 left-6 right-6 text-white flex items-end justify-between">
                   <div>
-                    <span className="text-xs font-mono tracking-widest text-[#C8A978] uppercase block mb-1">
+                    <span className="text-sm font-sans tracking-widest text-[#C8A978] uppercase block mb-1">
                       TRADITIONAL KNOWLEDGE IN MOTION
                     </span>
                     <p className="text-base sm:text-lg font-bold font-sans">
                       Raffia Weaving Heritage
                     </p>
                   </div>
-                  <span className="text-xs font-mono text-white/70 hidden sm:inline">
+                  <span className="text-sm font-sans text-white/70 hidden sm:inline">
                     IKOT EKPENE LGA, AKWA IBOM STATE
                   </span>
                 </div>
@@ -309,12 +295,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#B65332] text-white text-xs font-mono uppercase font-bold">
+                  <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#B65332] text-white text-sm font-sans uppercase font-bold">
                     NATURAL FIBRE
                   </div>
                 </div>
                 <div>
-                  <b className="font-mono text-xs text-[#C8A978] block">FROM PALM TO PRODUCT</b>
+                  <b className="font-sans text-xs text-[#C8A978] block">FROM PALM TO PRODUCT</b>
                   <p className="text-xs text-white/80 line-clamp-2 mt-0.5 font-sans">
                     Heritage to opportunity.
                   </p>
@@ -326,7 +312,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           {/* Copy strictly from PDF Page 2 */}
           <div className="lg:col-span-5 space-y-6">
             <MotionReveal direction="up">
-              <span className="font-mono text-xs tracking-[0.2em] text-[#B65332] uppercase font-bold block mb-2">
+              <span className="font-sans text-xs tracking-[0.2em] text-[#B65332] uppercase font-bold block mb-2">
                 THE BIG IDEA
               </span>
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.08]">
@@ -363,7 +349,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                       }`}
                     >
                       <b
-                        className={`font-mono text-xs sm:text-sm font-bold tracking-wider block ${
+                        className={`font-sans text-xs sm:text-sm font-bold tracking-wider block ${
                           isSelected ? 'text-[#C8A978]' : 'text-[#11100E]'
                         }`}
                       >
@@ -385,7 +371,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
             <MotionReveal direction="up" delay={0.35}>
               <button
                 onClick={() => scrollToSection('the-project')}
-                className="button bg-[#241A14] text-white hover:bg-[#B65332] px-7 py-4 text-xs font-mono tracking-wider uppercase font-bold cursor-pointer transition-all flex items-center gap-2 mt-4"
+                className="button bg-[#241A14] text-white hover:bg-[#B65332] px-7 py-4 text-sm font-sans tracking-wider uppercase font-bold cursor-pointer transition-all flex items-center gap-2 mt-4"
               >
                 <span>OUR VISION</span>
                 <ArrowRight size={16} />
@@ -395,13 +381,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </section>
 
-      {/* 04. THE PROJECT: OUR VISION (PDF Page 2) */}
+      {/* THE PROJECT: OUR VISION (PDF Page 2) */}
       <section id="the-project" className="py-24 sm:py-32 px-6 lg:px-12 bg-[#241A14] text-[#F3EBDD] border-b border-white/10">
         <div className="max-w-[1560px] mx-auto space-y-12">
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/15 pb-8">
             <MotionReveal direction="up">
-              <span className="font-mono text-xs tracking-widest text-[#C8A978] uppercase block mb-2 font-bold">
+              <span className="font-sans text-xs tracking-widest text-[#C8A978] uppercase block mb-2 font-bold">
                 OUR VISION
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.08]">
@@ -435,7 +421,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-mono text-xs text-[#C8A978] font-bold">
+                      <span className="font-sans text-xs text-[#C8A978] font-bold">
                         0{idx + 1}
                       </span>
                       <ArrowUpRight
@@ -448,7 +434,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white font-sans">
                       {cat.title}
                     </h3>
-                    <p className="text-xs text-[#C8A978] font-mono mt-0.5">
+                    <p className="text-xs text-[#C8A978] font-sans mt-0.5">
                       {cat.tagline}
                     </p>
                   </button>
@@ -484,7 +470,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                         category: `PILLAR 0${activeProjectIdx + 1}`,
                       })
                     }
-                    className="absolute top-6 right-6 p-2.5 bg-black/60 hover:bg-[#B65332] text-white border border-white/20 backdrop-blur-md transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-mono z-20"
+                    className="absolute top-6 right-6 p-2.5 bg-black/60 hover:bg-[#B65332] text-white border border-white/20 backdrop-blur-md transition-colors cursor-pointer flex items-center gap-1.5 text-sm font-sans z-20"
                     title="Inspect photo"
                   >
                     <Maximize2 size={15} />
@@ -492,7 +478,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                   </button>
 
                   <div className="absolute bottom-8 left-8 right-8 text-white z-10">
-                    <span className="font-mono text-xs text-[#C8A978] tracking-widest uppercase block mb-1 font-bold">
+                    <span className="font-sans text-xs text-[#C8A978] tracking-widest uppercase block mb-1 font-bold">
                       0{activeProjectIdx + 1} · {currentProjectPillar.title}
                     </span>
                     <h4 className="text-2xl sm:text-3xl font-extrabold tracking-tight font-sans">
@@ -506,13 +492,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </section>
 
-      {/* 05. LEGACY YEAR: THE 6 PROGRAMMES (PDF Page 4) */}
+      {/* LEGACY YEAR: THE 6 PROGRAMMES (PDF Page 4) */}
       <section className="py-24 sm:py-32 px-6 lg:px-12 bg-[#EAE1D1] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto space-y-12">
           {/* Header strictly from PDF Page 4 */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <MotionReveal direction="up">
-              <span className="font-mono text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
+              <span className="font-sans text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
                 THE LEGACY YEAR
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E]">
@@ -522,7 +508,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
             </MotionReveal>
             <MotionReveal direction="up" delay={0.15}>
               <p className="max-w-md text-sm sm:text-base text-[#73695E] leading-relaxed font-sans">
-                The strongest part of the Raffia Legacy Project is what happens before and after the festival. Five connected programmes create a continuous journey.
+                The strongest part of the Raffia Legacy Project is what happens before and after the festival. Six connected programmes create a continuous journey.
               </p>
             </MotionReveal>
           </div>
@@ -531,12 +517,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 relative z-10">
             {LEGACY_STAGES.map((st) => (
               <motion.div
-                key={st.step}
+                key={st.subtitle}
                 whileHover={{ y: -6 }}
                 onClick={() =>
                   setLightboxImage({
                     src: st.image,
-                    title: `${st.step}. ${st.subtitle}`,
+                    title: st.subtitle,
                     subtitle: st.desc,
                     category: `THE LEGACY YEAR`,
                   })
@@ -550,14 +536,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-[#241A14] text-white font-mono text-xs font-bold">
-                    {st.step}
-                  </div>
+                  
                 </div>
 
                 <div className="p-4 flex-1 flex flex-col justify-between">
                   <div>
-                    <b className="font-mono text-xs tracking-widest text-[#B65332] uppercase block mb-1">
+                    <b className="font-sans text-xs tracking-widest text-[#B65332] uppercase block mb-1">
                       {st.title}
                     </b>
                     <h4 className="text-base font-bold text-[#11100E] leading-snug mb-2 font-sans">
@@ -568,8 +552,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-[#241A14]/10 flex items-center justify-between text-xs font-mono text-[#B65332] font-semibold">
-                    <span>PROGRAMME {st.step}</span>
+                  <div className="mt-4 pt-3 border-t border-[#241A14]/10 flex items-center justify-between text-sm font-sans text-[#B65332] font-semibold">
+                    <span>{st.subtitle}</span>
                     <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
@@ -579,13 +563,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </section>
 
-      {/* 06. COMMUNITY & VALUE CREATION (PDF Page 3 & 6) */}
+      {/* COMMUNITY & VALUE CREATION (PDF Page 3 & 6) */}
       <section className="py-24 sm:py-32 px-6 lg:px-12 bg-[#F3EBDD] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto space-y-12">
           {/* Header strictly from PDF Page 3 & 6 */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <MotionReveal direction="up">
-              <span className="font-mono text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
+              <span className="font-sans text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
                 VALUE CREATION
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.08]">
@@ -603,19 +587,19 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           {/* 8 Value Levels from PDF Page 6 */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { id: '01', title: 'FOR YOUNG PEOPLE', desc: 'Skills, confidence, creativity and new opportunities.' },
-              { id: '02', title: 'FOR ARTISANS', desc: 'Visibility, new markets, skills and better access to customers.' },
-              { id: '03', title: 'FOR FARMERS', desc: 'New conversations around the value and future of raffia.' },
-              { id: '04', title: 'FOR CREATIVES', desc: 'A platform to experiment, collaborate and reach new audiences.' },
-              { id: '05', title: 'FOR BUSINESSES', desc: 'New products, customers, partnerships and markets.' },
-              { id: '06', title: 'FOR THE COMMUNITY', desc: 'Pride, participation, opportunity and stronger connections.' },
-              { id: '07', title: 'FOR THE HOST DESTINATION', desc: 'A distinctive cultural identity and a reason for people to visit.' },
-              { id: '08', title: 'FOR THE WIDER ECONOMY', desc: 'A chance to turn indigenous knowledge and materials into sustainable creative enterprise.' },
+              { title: 'FOR YOUNG PEOPLE', desc: 'Skills, confidence, creativity and new opportunities.' },
+              { title: 'FOR ARTISANS', desc: 'Visibility, new markets, skills and better access to customers.' },
+              { title: 'FOR FARMERS', desc: 'New conversations around the value and future of raffia.' },
+              { title: 'FOR CREATIVES', desc: 'A platform to experiment, collaborate and reach new audiences.' },
+              { title: 'FOR BUSINESSES', desc: 'New products, customers, partnerships and markets.' },
+              { title: 'FOR THE COMMUNITY', desc: 'Pride, participation, opportunity and stronger connections.' },
+              { title: 'FOR THE HOST DESTINATION', desc: 'A distinctive cultural identity and a reason for people to visit.' },
+              { title: 'FOR THE WIDER ECONOMY', desc: 'A chance to turn indigenous knowledge and materials into sustainable creative enterprise.' },
             ].map((v) => (
               <div key={v.id} className="p-5 bg-[#EAE1D1] border border-[#241A14]/15 flex flex-col justify-between">
                 <div>
-                  <span className="font-mono text-xs text-[#B65332] font-bold block mb-1">{v.id}</span>
-                  <h4 className="font-mono text-sm font-bold text-[#11100E] mb-2">{v.title}</h4>
+                  <span className="font-sans text-xs text-[#B65332] font-bold block mb-1">{v.id}</span>
+                  <h4 className="font-sans text-sm font-bold text-[#11100E] mb-2">{v.title}</h4>
                   <p className="text-xs text-[#73695E] font-sans leading-relaxed">{v.desc}</p>
                 </div>
               </div>
@@ -623,7 +607,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           </div>
 
           <div className="p-6 bg-[#241A14] text-[#F3EBDD] text-center border border-[#C8A978]/30">
-            <p className="font-mono text-xs uppercase tracking-widest text-[#C8A978] mb-1 font-bold">THE GOAL IS SIMPLE</p>
+            <p className="font-sans text-xs uppercase tracking-widest text-[#C8A978] mb-1 font-bold">THE GOAL IS SIMPLE</p>
             <p className="font-editorial text-xl sm:text-2xl font-light">
               Create value from what we already have—and open the door to what is possible.
             </p>
@@ -631,12 +615,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </section>
 
-      {/* 07. MARKETPLACE PREVIEW */}
+      {/* MARKETPLACE PREVIEW */}
       <section className="py-24 sm:py-32 px-6 lg:px-12 bg-[#EAE1D1] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <MotionReveal direction="up">
-              <span className="font-mono text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
+              <span className="font-sans text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
                 RAFFIA MARKETPLACE
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.08]">
@@ -647,7 +631,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
             <MotionReveal direction="up" delay={0.15}>
               <button
                 onClick={() => onNavigate({ type: 'marketplace' })}
-                className="button bg-[#241A14] text-white hover:bg-[#B65332] px-7 py-4 text-xs font-mono tracking-wider uppercase font-bold cursor-pointer transition-all flex items-center gap-2"
+                className="button bg-[#241A14] text-white hover:bg-[#B65332] px-7 py-4 text-sm font-sans tracking-wider uppercase font-bold cursor-pointer transition-all flex items-center gap-2"
               >
                 <span>EXPLORE MARKETPLACE</span>
                 <ArrowRight size={16} />
@@ -668,7 +652,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </section>
 
-      {/* 08. THE RAFFIA FESTIVAL (PDF Page 3) */}
+      {/* THE RAFFIA FESTIVAL (PDF Page 3) */}
       <section className="relative py-28 sm:py-36 px-6 lg:px-12 overflow-hidden bg-[#11100E] text-white">
         <div className="absolute inset-0 z-0">
           <img
@@ -684,7 +668,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           {/* Header strictly from PDF Page 3 */}
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b border-white/15 pb-12">
             <div>
-              <span className="font-mono text-xs tracking-[0.25em] text-[#C8A978] uppercase block mb-3 font-bold">
+              <span className="font-sans text-xs tracking-[0.25em] text-[#C8A978] uppercase block mb-3 font-bold">
                 THE HEART OF THE LEGACY
               </span>
               <h2 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-[0.95] text-white">
@@ -701,7 +685,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
               <div className="pt-2 flex flex-wrap gap-4">
                 <button
                   onClick={() => onNavigate({ type: 'festival' })}
-                  className="button bg-[#B65332] text-white hover:bg-white hover:text-[#11100E] font-bold px-8 py-4 text-xs font-mono tracking-wider uppercase cursor-pointer transition-all"
+                  className="button bg-[#B65332] text-white hover:bg-white hover:text-[#11100E] font-bold px-8 py-4 text-sm font-sans tracking-wider uppercase cursor-pointer transition-all"
                 >
                   <span>FESTIVAL DETAILS</span>
                   <ArrowUpRight size={16} />
@@ -712,7 +696,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
 
           {/* 8 Experiences from PDF Page 3 */}
           <div>
-            <div className="flex items-center justify-between text-xs font-mono text-[#C8A978] uppercase tracking-wider mb-6">
+            <div className="flex items-center justify-between text-sm font-sans text-[#C8A978] uppercase tracking-wider mb-6">
               <span>ONE FESTIVAL. MANY WORLDS OF RAFFIA.</span>
               <span className="text-white/50">8 EXPERIENCES</span>
             </div>
@@ -720,7 +704,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {FESTIVAL_EVENTS.map((ev, i) => (
                 <div
-                  key={ev.id}
+                  key={ev.title}
                   onClick={() =>
                     setLightboxImage({
                       src: ev.image,
@@ -738,8 +722,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500 scale-100 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#11100E] via-[#11100E]/70 to-transparent" />
-                  <div className="relative z-10 flex items-center justify-between text-xs font-mono text-[#C8A978]">
-                    <span>0{i + 1}</span>
+                  <div className="relative z-10 flex items-center justify-between text-sm font-sans text-[#C8A978]">
+                    
                     <Maximize2 size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                   <div className="relative z-10">
@@ -757,11 +741,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
       </section>
 
-      {/* 09. PARTNERSHIP OPPORTUNITIES (PDF Page 7 & 8) */}
+      {/* PARTNERSHIP OPPORTUNITIES (PDF Page 7 & 8) */}
       <section className="py-24 sm:py-32 px-6 lg:px-12 bg-[#F3EBDD] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto space-y-12">
           <div className="space-y-4 max-w-3xl">
-            <span className="font-mono text-xs tracking-widest text-[#B65332] uppercase font-bold block">
+            <span className="font-sans text-xs tracking-widest text-[#B65332] uppercase font-bold block">
               PARTNERSHIP OPPORTUNITIES
             </span>
             <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.05]">
@@ -777,40 +761,34 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                id: '01',
                 title: 'FESTIVAL SPONSORS',
                 desc: 'Support the flagship Raffia Festival and connect your brand with culture, creativity, community and innovation.',
               },
               {
-                id: '02',
                 title: 'PROGRAMME SPONSORS',
                 desc: 'Support a specific area such as the School Programme, Innovators, Design Challenge, Fashion Show, Biennale, Dance, Lab, Summit, Marketplace or Youth Programmes.',
               },
               {
-                id: '03',
                 title: 'LEGACY PARTNERS',
                 desc: 'Support the year-round ecosystem and help us build the Raffia Academy, Lab, Market, Experiences, Research and Network.',
               },
               {
-                id: '04',
                 title: 'KNOWLEDGE PARTNERS',
                 desc: 'Bring expertise, research, training, technology or mentorship.',
               },
               {
-                id: '05',
                 title: 'MEDIA & CREATIVE PARTNERS',
                 desc: 'Help tell the story through film, photography, publishing, digital media and storytelling.',
               },
               {
-                id: '06',
                 title: 'TOURISM & DESTINATION PARTNERS',
                 desc: 'Help develop experiences that bring visitors into the world of raffia.',
               },
             ].map((p) => (
-              <div key={p.id} className="p-6 bg-[#EAE1D1] border border-[#241A14]/15 flex flex-col justify-between">
+              <div key={p.title} className="p-6 bg-[#EAE1D1] border border-[#241A14]/15 flex flex-col justify-between">
                 <div>
-                  <span className="font-mono text-xs text-[#B65332] font-bold block mb-1">{p.id}</span>
-                  <h4 className="font-mono text-sm font-bold text-[#11100E] mb-2">{p.title}</h4>
+                  
+                  <h4 className="font-sans text-sm font-bold text-[#11100E] mb-2">{p.title}</h4>
                   <p className="text-xs text-[#73695E] font-sans leading-relaxed">{p.desc}</p>
                 </div>
               </div>
@@ -818,7 +796,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           </div>
 
           {/* PDF Page 8: Ways to give */}
-          <div className="p-4 bg-[#241A14] text-[#C8A978] font-mono text-xs text-center font-bold tracking-wider">
+          <div className="p-4 bg-[#241A14] text-[#C8A978] font-sans text-xs text-center font-bold tracking-wider">
             DONATE • SPONSOR AN ACTIVITY • GIVE IN-KIND • VOLUNTEER • SHARE YOUR EXPERTISE
           </div>
         </div>
@@ -837,7 +815,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-          <p className="font-mono text-xs sm:text-sm tracking-[0.25em] text-[#C8A978] uppercase font-bold">
+          <p className="font-sans text-xs sm:text-sm tracking-[0.25em] text-[#C8A978] uppercase font-bold">
             THE INVITATION
           </p>
           <div className="max-w-xl mx-auto text-sm sm:text-base text-white/80 leading-relaxed font-sans space-y-2 py-4 border-y border-white/10">
@@ -854,7 +832,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
               RAFFIA IS OUR THREAD. THE FUTURE IS WHAT WE WEAVE WITH IT.
             </span>
           </h2>
-          <div className="pt-4 flex flex-wrap justify-center gap-4 text-xs font-mono">
+          <div className="pt-4 flex flex-wrap justify-center gap-4 text-sm font-sans">
             <button
               onClick={() => onNavigate({ type: 'project' })}
               className="button bg-[#B65332] text-white hover:bg-white hover:text-[#11100E] px-8 py-4 font-bold tracking-wider uppercase cursor-pointer transition-all"
