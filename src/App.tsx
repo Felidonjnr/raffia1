@@ -5,7 +5,6 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { SearchModal } from './components/SearchModal';
-import { CheckoutModal } from './components/CheckoutModal';
 import { SEOHead } from './components/SEOHead';
 import { PageTransition } from './components/PageTransition';
 import { HomePage } from './pages/HomePage';
@@ -124,7 +123,6 @@ export default function App() {
           onNavigateToCheckout={() => navigateTo({ type: 'checkout' })}
         />
         <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} onNavigate={navigateTo} />
-        <CheckoutModal />
         <Footer onNavigate={navigateTo} />
       </div>
     </CartProvider>
