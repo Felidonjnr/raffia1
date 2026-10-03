@@ -103,7 +103,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
           <div
             onClick={() =>
               setLightboxImage({
-                src: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1800&q=85',
+                src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
                 title: 'Traditional Knowledge in Motion',
                 subtitle: 'Connecting traditional knowledge with contemporary practice.',
                 location: 'Ikot Ekpene LGA, Akwa Ibom State',
@@ -113,7 +113,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
             className="relative aspect-[4/3] w-full overflow-hidden shadow-xl border border-[#241A14]/15 group cursor-pointer"
           >
             <img
-              src="https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1200&q=85"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg"
               alt="Raffia Craft"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -149,31 +149,31 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
               n: '01',
               t: 'CULTURE',
               d: 'Stories, traditions and identity.',
-              img: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
             },
             {
               n: '02',
               t: 'CREATIVITY',
               d: 'Fashion, art, design, music and performance.',
-              img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Woman%27s_ceremonial_overskirt%2C_Shoowa%2C_late_19th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_cut-pile_embroidery%2C_HMA.JPG',
             },
             {
               n: '03',
               t: 'OPPORTUNITY',
               d: 'Skills, markets, investment and enterprise.',
-              img: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg',
             },
             {
               n: '04',
               t: 'TOURISM',
               d: 'Experiences that give people a reason to visit and stay.',
-              img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG',
             },
             {
               n: '05',
               t: 'LEGACY',
               d: 'Knowledge and opportunities passed from one generation to the next.',
-              img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
             },
           ].map((item) => (
             <div
@@ -241,7 +241,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
           <div
             onClick={() =>
               setLightboxImage({
-                src: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1800&q=85',
+                src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
                 title: 'The Raffia Festival',
                 subtitle: 'The flagship event of the entire project.',
                 category: 'FLAGSHIP EVENT',
@@ -250,7 +250,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
             className="relative aspect-[4/3] w-full overflow-hidden shadow-xl border border-[#241A14]/15 group cursor-pointer"
           >
             <img
-              src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1000&q=85"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg"
               alt="Raffia Festival"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -282,37 +282,37 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
               n: '01',
               t: 'RAFFIA SCHOOL PROGRAMME',
               d: 'Children discover raffia, heritage, craft, Utta, music, storytelling, nature and creativity.',
-              img: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
             },
             {
               n: '02',
               t: 'YOUNG RAFFIA INNOVATORS',
               d: 'Young people ask: "What can raffia become in the future?"',
-              img: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG',
             },
             {
               n: '03',
               t: 'RAFFIA DESIGN CHALLENGE',
               d: 'Artisans, designers and creatives turn heritage into new products, fashion, art, performance and design.',
-              img: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Woman%27s_ceremonial_overskirt%2C_Shoowa%2C_late_19th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_cut-pile_embroidery%2C_HMA.JPG',
             },
             {
               n: '04',
               t: 'RAFFIA BUSINESS INCUBATOR',
               d: 'Strong ideas become products, businesses, partnerships and livelihoods.',
-              img: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg',
             },
             {
               n: '05',
               t: 'RAFFIA FESTIVAL',
               d: 'The community and the world experience the culture, creativity, products and opportunities created throughout the year.',
-              img: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
             },
             {
               n: '06',
               t: 'THE NEXT LEGACY YEAR',
               d: 'New students, artisans, designers and entrepreneurs enter the ecosystem. The cycle continues.',
-              img: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80',
+              img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Raffia_hand_bag.jpg/1000px-Raffia_hand_bag.jpg',
             },
           ].map((item) => (
             <div
