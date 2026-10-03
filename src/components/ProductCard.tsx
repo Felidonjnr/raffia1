@@ -34,16 +34,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const secondaryImage = product.gallery?.[1];
 
   return (
-    <motion.div
+    <motion.article
       whileHover={{ y: -4 }}
       transition={{ duration: 0.25, ease: 'easeOut' }}
-      onClick={() => onSelect(product.slug)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="product-card group cursor-pointer flex flex-col justify-between"
+      className="product-card group flex flex-col justify-between"
     >
       {/* Image Container with Dual Image Crossfade */}
       <div className="product-card-media relative overflow-hidden aspect-[4/3] w-full bg-[#E8E1D5]">
+        <button
+          type="button"
+          onClick={() => onSelect(product.slug)}
+          className="absolute inset-0 z-[1] cursor-pointer"
+          aria-label={'View ' + product.name}
+        />
         {/* Primary Image */}
         <img
           src={product.image}
@@ -69,12 +74,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {/* Availability Badge */}
-        <div className="product-card-badge absolute top-3 left-3 text-xs font-mono tracking-wider font-semibold">
+        <div className="product-card-badge absolute top-3 left-3 text-xs tracking-wider font-semibold z-[2] pointer-events-none">
           {product.availability}
         </div>
 
         {/* Action Controls on hover */}
-        <div className="absolute bottom-3 right-3 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+        <div className="product-card-actions absolute bottom-3 right-3 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
           {onQuickView && (
             <button
               onClick={handleQuickView}
@@ -123,6 +128,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </span>
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 };
