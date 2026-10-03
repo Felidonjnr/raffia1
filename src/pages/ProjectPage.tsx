@@ -218,7 +218,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
             THE FESTIVAL <em className="text-[#B65332] font-serif font-normal">IS ONLY THE BEGINNING.</em>
           </h2>
           <p className="text-base sm:text-lg text-[#241A14] font-medium leading-relaxed font-sans">
-            The strongest part of the Raffia Legacy Project is what happens before and after the festival. Five connected programmes create a continuous journey.
+            The strongest part of the Raffia Legacy Project is what happens before and after the festival. Six connected programmes create a continuous journey.
           </p>
           <div className="year-line grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-4">
             {['DISCOVER', 'IMAGINE', 'CREATE', 'BUILD', 'CELEBRATE', 'PASS IT ON'].map((x, i) => (
@@ -353,7 +353,7 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
         <div className="flex items-center gap-6">
           <div className="project-index text-4xl sm:text-6xl font-mono font-bold text-[#B65332]">05</div>
           <div>
-            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">06 / VALUE CREATION</p>
+            <p className="eyebrow text-xs font-mono text-[#B65332] tracking-widest uppercase font-bold">05 / VALUE CREATION</p>
             <h2 className="text-3xl sm:text-5xl font-black text-[#11100E]">
               THE LEGACY <em className="text-[#B65332] font-serif font-normal">WE WANT TO CREATE.</em>
             </h2>
