@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Handshake, Heart, Gift, Users, BookOpen, Megaphone, MapPin, Camera, Palette, MessageCircle, CalendarDays, Search, GraduationCap } from 'lucide-react';
 
 const partnershipOpportunities = [
@@ -31,7 +31,15 @@ const waysToGive = [
   ['SHARE EXPERTISE','Contribute your knowledge and professional expertise.',BookOpen],
 ] as const;
 
-export const GetInvolvedPage: React.FC = () => (
+export const GetInvolvedPage: React.FC<{ initialSection?: string }> = ({ initialSection = 'partner' }) => {
+  useEffect(() => {
+    const target = document.getElementById(initialSection);
+    if (target) {
+      requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    }
+  }, [initialSection]);
+
+  return (
   <div className="bg-[#F3EBDD] text-[#11100E]">
     <section className="relative overflow-hidden bg-[#241A14] text-[#F3EBDD]">
       <div className="relative max-w-[1560px] mx-auto px-6 sm:px-12 py-24 sm:py-32 lg:py-40">
@@ -46,7 +54,7 @@ export const GetInvolvedPage: React.FC = () => (
       </div>
     </section>
 
-    <section className="py-20 sm:py-28 px-6 sm:px-12 border-b border-[#241A14]/15">
+    <section id="partner" className="scroll-mt-24 py-20 sm:py-28 px-6 sm:px-12 border-b border-[#241A14]/15">
       <div className="max-w-[1560px] mx-auto">
         <div className="max-w-3xl mb-12">
           <p className="text-sm font-bold tracking-[0.16em] uppercase text-[#B65332] mb-3">PARTNERSHIP OPPORTUNITIES</p>
@@ -67,7 +75,7 @@ export const GetInvolvedPage: React.FC = () => (
       </div>
     </section>
 
-    <section className="py-20 sm:py-28 px-6 sm:px-12 bg-[#EAE1D1] border-b border-[#241A14]/15">
+    <section id="support" className="scroll-mt-24 py-20 sm:py-28 px-6 sm:px-12 bg-[#EAE1D1] border-b border-[#241A14]/15">
       <div className="max-w-[1560px] mx-auto">
         <div className="max-w-3xl mb-12">
           <p className="text-sm font-bold tracking-[0.16em] uppercase text-[#B65332] mb-3">SPONSORSHIP & GIVING</p>
@@ -85,7 +93,7 @@ export const GetInvolvedPage: React.FC = () => (
       </div>
     </section>
 
-    <section className="py-20 sm:py-28 px-6 sm:px-12 border-b border-[#241A14]/15">
+    <section id="volunteer" className="scroll-mt-24 py-20 sm:py-28 px-6 sm:px-12 border-b border-[#241A14]/15">
       <div className="max-w-[1560px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20 items-start">
           <div>
@@ -122,6 +130,10 @@ export const GetInvolvedPage: React.FC = () => (
         <h2 className="text-3xl sm:text-5xl font-black">JOIN THE TEAM.</h2>
         <p className="mt-4 text-base sm:text-lg text-[#73695E]">Facebook & Instagram</p>
         <p className="mt-3 text-xl sm:text-2xl font-black text-[#B65332]">@raffialegacy</p>
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <a href="https://www.instagram.com/raffialegacy/" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center min-h-12 px-6 bg-[#B65332] text-white font-bold text-sm hover:bg-[#D16D48] transition-colors">OPEN INSTAGRAM</a>
+          <a href="https://www.facebook.com/raffialegacy/" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center min-h-12 px-6 border border-[#241A14]/20 font-bold text-sm hover:bg-[#241A14] hover:text-white transition-colors">OPEN FACEBOOK</a>
+        </div>
       </div>
     </section>
 
@@ -137,4 +149,5 @@ export const GetInvolvedPage: React.FC = () => (
       </div>
     </section>
   </div>
-);
+  );
+};
