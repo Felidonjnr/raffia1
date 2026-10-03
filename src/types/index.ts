@@ -123,4 +123,5 @@ export type ViewRoute =
   | { type: 'legacy_year' }
   | { type: 'festival' }
   | { type: 'checkout' }
+  | { type: 'get_involved'; section?: 'partner' | 'sponsor' | 'donate' | 'volunteer' | 'maker' | 'schools' | 'young-people' | 'creatives' | 'businesses' | 'media' }
   | { type: 'coming_soon'; title: string; subtitle: string; returnTo?: string };
