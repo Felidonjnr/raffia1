@@ -104,6 +104,7 @@ export default function App() {
 
   return (
     <CartProvider>
+      <MarketplaceDataProvider>
       <SEOHead route={currentRoute} />
       <div className="app-shell">
         <Navbar currentRoute={currentRoute} onNavigate={navigateTo} onOpenSearch={() => setIsSearchOpen(true)} />
