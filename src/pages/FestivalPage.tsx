@@ -133,7 +133,6 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
                       src: img,
                       title: `${exp.number}. ${exp.title}`,
                       subtitle: exp.description,
-                      location: 'Ikot Ekpene LGA, Akwa Ibom State',
                       category: 'RAFFIA FESTIVAL',
                     })
                   }
