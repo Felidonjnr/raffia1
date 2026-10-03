@@ -388,6 +388,28 @@ header.site-nav-scrolled {
   box-shadow: 0 12px 32px -8px rgba(17, 16, 14, 0.45);
 }
 
+/* Scrolled navigation contrast: the dark bar must never inherit dark brand/nav text. */
+.site-nav.site-nav-scrolled .brandmark-raffia,
+.site-nav.site-nav-scrolled .brandmark span.brandmark-raffia {
+  color: var(--ivory) !important;
+}
+.site-nav.site-nav-scrolled .brandmark-project,
+.site-nav.site-nav-scrolled .brandmark span.brandmark-project {
+  color: rgba(245, 240, 232, 0.82) !important;
+}
+.site-nav.site-nav-scrolled .nav-link,
+.site-nav.site-nav-scrolled .nav-action {
+  color: rgba(245, 240, 232, 0.9) !important;
+}
+.site-nav.site-nav-scrolled .nav-link:hover,
+.site-nav.site-nav-scrolled .nav-link.active,
+.site-nav.site-nav-scrolled .nav-action:hover {
+  color: #E59C6D !important;
+}
+.site-nav.site-nav-scrolled .nav-link svg {
+  color: currentColor;
+}
+
 .site-nav-inner {
   max-width: 1560px;
   height: 100%;
@@ -920,6 +942,34 @@ header.site-nav-scrolled {
 .footer-links button:hover {
   color: var(--ivory);
   transform: translateX(3px);
+}
+
+/* Footer contrast audit: keep every text layer readable against the ink background. */
+.site-footer .footer-brandmark-words .brandmark-raffia {
+  color: var(--ivory) !important;
+}
+.site-footer .footer-brandmark-words .brandmark-project {
+  color: rgba(245, 240, 232, 0.86) !important;
+}
+.site-footer .footer-links h3 {
+  color: #D9BD8B !important;
+}
+.site-footer .footer-links button {
+  color: rgba(245, 240, 232, 0.86) !important;
+}
+.site-footer .footer-links button:hover,
+.site-footer .footer-links button:focus-visible {
+  color: #FFFFFF !important;
+}
+.site-footer .footer-bottom {
+  color: rgba(245, 240, 232, 0.72) !important;
+}
+.site-footer .footer-bottom button {
+  color: #D9BD8B !important;
+}
+.site-footer .footer-bottom button:hover,
+.site-footer .footer-bottom button:focus-visible {
+  color: #FFFFFF !important;
 }
 .footer-bottom {
   display: flex;
