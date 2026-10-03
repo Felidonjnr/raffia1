@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUpRight, ArrowRight, ChevronRight, Maximize2, MapPin } from 'lucide-react';
 import { ViewRoute, Product } from '../types';
-import { PRODUCTS } from '../data/products';
+import { useMarketplaceData } from '../context/MarketplaceDataContext';
 import { MAKERS } from '../data/makers';
 import { InteractiveHeroGallery, HeroSlide } from '../components/InteractiveHeroGallery';
 import { ProductCard } from '../components/ProductCard';
