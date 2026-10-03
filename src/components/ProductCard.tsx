@@ -110,9 +110,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <span>{product.maker.region.split(',')[0]}</span>
           </div>
 
-          <h3 className="product-card-title text-lg font-bold tracking-tight mb-1.5 line-clamp-1 group-hover:text-[#B94E2E] transition-colors">
+          <button
+            type="button"
+            onClick={() => onSelect(product.slug)}
+            className="product-card-title block w-full text-left text-lg font-bold tracking-tight mb-1.5 line-clamp-1 group-hover:text-[#B94E2E] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B65332] focus-visible:ring-offset-2"
+          >
             {product.name}
-          </h3>
+          </button>
 
           <p className="product-card-desc text-xs line-clamp-2 leading-relaxed mb-4 text-[#4A4036]">
             {product.subtitle}
