@@ -38,12 +38,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] pb-28">
+    <div className="checkout-page min-h-screen bg-[#FAF7F2] pb-28">
       {/* Header */}
       <section className="pt-8 pb-8 px-6 lg:px-12 border-b border-[#181513]/10 max-w-[1440px] mx-auto">
         <button
           onClick={() => onNavigate({ type: 'marketplace' })}
-          className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-[#57524E] hover:text-[#181513] transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs  uppercase tracking-widest text-[#57524E] hover:text-[#181513] transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Return to Marketplace</span>
@@ -54,7 +54,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
         {!orderConfirmed ? (
           <div>
             <div className="mb-10">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#B84A28] block mb-2">
+              <span className="text-xs  uppercase tracking-widest text-[#B84A28] block mb-2">
                 Order Reservation
               </span>
               <h1 className="font-editorial text-4xl sm:text-5xl font-light text-[#181513]">
@@ -68,7 +68,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                 <p className="text-xs text-[#57524E]">Add items from the marketplace before proceeding.</p>
                 <button
                   onClick={() => onNavigate({ type: 'marketplace' })}
-                  className="px-6 py-3 bg-[#181513] text-[#FAF7F2] text-xs font-mono uppercase tracking-widest hover:bg-[#B84A28] transition-colors cursor-pointer"
+                  className="px-6 py-3 bg-[#181513] text-[#FAF7F2] text-xs  uppercase tracking-widest hover:bg-[#B84A28] transition-colors cursor-pointer"
                 >
                   Explore Marketplace
                 </button>
@@ -84,7 +84,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-mono uppercase tracking-wider text-[#57524E] mb-1">
+                        <label className="block text-xs  uppercase tracking-wider text-[#57524E] mb-1">
                           First Name *
                         </label>
                         <input
@@ -96,7 +96,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-mono uppercase tracking-wider text-[#57524E] mb-1">
+                        <label className="block text-xs  uppercase tracking-wider text-[#57524E] mb-1">
                           Last Name *
                         </label>
                         <input
@@ -111,7 +111,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-mono uppercase tracking-wider text-[#57524E] mb-1">
+                        <label className="block text-xs  uppercase tracking-wider text-[#57524E] mb-1">
                           Email Address *
                         </label>
                         <input
@@ -123,7 +123,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-mono uppercase tracking-wider text-[#57524E] mb-1">
+                        <label className="block text-xs  uppercase tracking-wider text-[#57524E] mb-1">
                           Phone Number *
                         </label>
                         <input
@@ -145,7 +145,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                     </h3>
 
                     <div>
-                      <label className="block text-xs font-mono uppercase tracking-wider text-[#57524E] mb-1">
+                      <label className="block text-xs  uppercase tracking-wider text-[#57524E] mb-1">
                         Street Address *
                       </label>
                       <input
@@ -159,7 +159,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-xs font-mono uppercase tracking-wider text-[#57524E] mb-1">
+                        <label className="block text-xs  uppercase tracking-wider text-[#57524E] mb-1">
                           City *
                         </label>
                         <input
@@ -171,7 +171,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-mono uppercase tracking-wider text-[#57524E] mb-1">
+                        <label className="block text-xs  uppercase tracking-wider text-[#57524E] mb-1">
                           State / Region *
                         </label>
                         <input
@@ -183,7 +183,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-mono uppercase tracking-wider text-[#57524E] mb-1">
+                        <label className="block text-xs  uppercase tracking-wider text-[#57524E] mb-1">
                           Country *
                         </label>
                         <select
@@ -206,7 +206,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                       <h3 className="font-editorial text-2xl font-medium text-[#181513]">
                         03. Payment & Settlement
                       </h3>
-                      <span className="text-xs font-mono uppercase tracking-widest text-[#B84A28] bg-[#FAF7F2] px-2 py-0.5 border border-[#181513]/10">
+                      <span className="text-xs  uppercase tracking-widest text-[#B84A28] bg-[#FAF7F2] px-2 py-0.5 border border-[#181513]/10">
                         Paystack Ready
                       </span>
                     </div>
@@ -218,17 +218,17 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                     <div className="p-4 bg-[#FAF7F2] border border-[#181513]/10 space-y-2 text-xs">
                       <div className="flex items-center gap-2 text-[#181513]">
                         <Lock className="w-3.5 h-3.5 text-[#B84A28]" />
-                        <span className="font-mono uppercase font-semibold">Secure Payment Protocol</span>
+                        <span className=" uppercase font-semibold">Secure Payment Protocol</span>
                       </div>
                       <p className="text-[#57524E]">
-                        Supports Card, Bank Transfer, Apple Pay, and USSD upon live release.
+                        Supports Card, Bank Transfer and USSD through the configured payment gateway when payment is enabled.
                       </p>
                     </div>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-4 bg-[#B84A28] text-white text-xs font-mono uppercase tracking-widest hover:bg-[#9E3E20] transition-colors cursor-pointer shadow-md font-semibold"
+                    className="w-full py-4 bg-[#B84A28] text-white text-xs  uppercase tracking-widest hover:bg-[#9E3E20] transition-colors cursor-pointer shadow-md font-semibold"
                   >
                     Confirm Order Reservation ({formatNaira(grandTotal)})
                   </button>
@@ -267,11 +267,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                   <div className="pt-4 border-t border-[#181513]/10 space-y-2 text-xs">
                     <div className="flex justify-between text-[#57524E]">
                       <span>Items Subtotal</span>
-                      <span className="font-mono tabular-nums">{formatNaira(subtotal)}</span>
+                      <span className=" tabular-nums">{formatNaira(subtotal)}</span>
                     </div>
                     <div className="flex justify-between text-[#57524E]">
                       <span>Estimated Shipping</span>
-                      <span className="font-mono tabular-nums">{formatNaira(shippingCost)}</span>
+                      <span className=" tabular-nums">{formatNaira(shippingCost)}</span>
                     </div>
                     <div className="pt-3 border-t border-[#181513]/10 flex justify-between text-base font-semibold text-[#181513]">
                       <span>Total Due</span>
@@ -296,7 +296,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
-            <span className="text-xs font-mono uppercase tracking-widest text-[#B84A28] block">
+            <span className="text-xs  uppercase tracking-widest text-[#B84A28] block">
               Reservation Confirmed · {orderReference}
             </span>
 
@@ -310,15 +310,15 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
 
             <div className="p-5 bg-[#ECE5DC] text-left text-xs space-y-2 border border-[#DDD4C5]">
               <div className="flex justify-between">
-                <span className="text-[#8C7355] uppercase font-mono">Contact:</span>
+                <span className="text-[#8C7355] uppercase ">Contact:</span>
                 <span className="font-medium">{formData.firstName} {formData.lastName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#8C7355] uppercase font-mono">Destination:</span>
+                <span className="text-[#8C7355] uppercase ">Destination:</span>
                 <span>{formData.city}, {formData.country}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#8C7355] uppercase font-mono">Payment Status:</span>
+                <span className="text-[#8C7355] uppercase ">Payment Status:</span>
                 <span className="text-[#B84A28] font-medium">Reservation Staged</span>
               </div>
             </div>
@@ -329,7 +329,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
                   clearCart();
                   onNavigate({ type: 'marketplace' });
                 }}
-                className="px-8 py-3.5 bg-[#181513] text-[#FAF7F2] text-xs font-mono uppercase tracking-widest hover:bg-[#B84A28] transition-colors cursor-pointer"
+                className="px-8 py-3.5 bg-[#181513] text-[#FAF7F2] text-xs  uppercase tracking-widest hover:bg-[#B84A28] transition-colors cursor-pointer"
               >
                 Return to Marketplace
               </button>
