@@ -33,7 +33,8 @@ const waysToGive = [
 
 export const GetInvolvedPage: React.FC<{ initialSection?: string }> = ({ initialSection = 'partner' }) => {
   useEffect(() => {
-    const target = document.getElementById(initialSection);
+    const sectionTarget = initialSection === 'sponsor' || initialSection === 'donate' ? 'support' : initialSection;
+    const target = document.getElementById(sectionTarget);
     if (target) {
       requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }));
     }
