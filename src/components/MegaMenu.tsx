@@ -145,7 +145,15 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
       return;
     }
     if (activeTab === 'GET INVOLVED') {
-      onNavigate({ type: 'get_involved', section: 'partner' });
+      const sectionMap: Record<string, 'partner' | 'sponsor' | 'donate' | 'volunteer'> = {
+        'Festival Sponsors': 'sponsor',
+        'Programme Sponsors': 'sponsor',
+        'Legacy Partners': 'partner',
+        'Knowledge Partners': 'partner',
+        'Media & Creative Partners': 'partner',
+        'Tourism & Destination Partners': 'partner',
+      };
+      onNavigate({ type: 'get_involved', section: sectionMap[itemLabel] || 'partner' });
       return;
     }
     onNavigate({
