@@ -160,6 +160,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
   const [activePillarWord, setActivePillarWord] = useState<string>('HISTORY');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
+  const { products: PRODUCTS } = useMarketplaceData();
 
   useEffect(() => {
     const timer = window.setInterval(() => setRemaining(Math.max(0, launch.getTime() - Date.now())), 1000);
