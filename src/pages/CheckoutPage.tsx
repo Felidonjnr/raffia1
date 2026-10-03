@@ -46,7 +46,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
         `Customer: ${formData.firstName} ${formData.lastName}`,
         `Phone: ${formData.phone}`,
         `Email: ${formData.email}`,
-        `Delivery: ${formData.address}, ${formData.city}, ${formData.stateRegion}, ${formData.country}`,\n        result.bank_name ? `Payment account: ${result.bank_name} · ${result.account_name} · ${result.account_number}` : '',
+        `Delivery: ${formData.address}, ${formData.city}, ${formData.stateRegion}, ${formData.country}`,
+        result.bank_name ? `Payment account: ${result.bank_name} · ${result.account_name} · ${result.account_number}` : '',
         formData.patronNotes ? `Notes: ${formData.patronNotes}` : '',
         '',
         'I will complete the payment by the agreed manual transfer method.'
