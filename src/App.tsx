@@ -28,7 +28,7 @@ function routeFromHash(hash: string): ViewRoute {
     if (slug) return { type: 'product', slug };
   }
   if (hash === '#/marketplace') return { type: 'marketplace' };
-  if (hash === '#/checkout') return { type: 'checkout' };
+  if (hash.startsWith('#/checkout')) return { type: 'checkout' };
   if (hash.startsWith('#/project')) {
     return comingSoon('The Project', 'The full Raffia Legacy Project experience is currently being prepared.');
   }
