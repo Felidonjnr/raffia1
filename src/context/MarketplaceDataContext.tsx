@@ -68,7 +68,7 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
   }, []);
 
   return (
-    <MarketplaceDataContext.Provider value={{ products, collections, makers, loading, error, refresh }}>
+    <MarketplaceDataContext.Provider value={{ products, collections, makers, categories, loading, error, refresh }}>
       {children}
     </MarketplaceDataContext.Provider>
   );
