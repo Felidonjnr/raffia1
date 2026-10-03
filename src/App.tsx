@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ViewRoute } from './types';
 import { CartProvider } from './context/CartContext';
+import { MarketplaceDataProvider } from './context/MarketplaceDataContext';
+import { AdminDashboard } from './pages/AdminDashboard';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
@@ -26,6 +28,7 @@ const comingSoon = (title: string, subtitle?: string): ViewRoute => ({
 });
 
 function routeFromHash(hash: string): ViewRoute {
+  if (hash.startsWith('#/admin')) return { type: 'admin' } as ViewRoute;
   if (hash.startsWith('#/marketplace/')) {
     const slug = hash.replace('#/marketplace/', '');
     if (slug) return { type: 'product', slug };
@@ -81,6 +84,7 @@ export default function App() {
 
     if (route.type === 'home') window.location.hash = '#/';
     else if (route.type === 'marketplace') window.location.hash = '#/marketplace';
+    else if (route.type === 'admin') window.location.hash = '#/admin';
     else if (route.type === 'product') window.location.hash = `#/marketplace/${route.slug}`;
     else if (route.type === 'checkout') window.location.hash = '#/checkout';
     else if (route.type === 'get_involved') window.location.hash = route.section ? `#/get-involved/${route.section}` : '#/get-involved';
@@ -105,6 +109,7 @@ export default function App() {
         <Navbar currentRoute={currentRoute} onNavigate={navigateTo} onOpenSearch={() => setIsSearchOpen(true)} />
         <main className="app-main">
           <PageTransition routeKey={routeKey}>
+            {currentRoute.type === 'admin' && <AdminDashboard onNavigate={navigateTo} />}
             {currentRoute.type === 'home' && (
               <HomePage
                 onNavigate={navigateTo}
@@ -144,7 +149,7 @@ export default function App() {
             {currentRoute.type === 'explore' && (
               <ExplorePage section={currentRoute.section} onNavigate={navigateTo} />
             )}
-            {currentRoute.type !== 'home' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && currentRoute.type !== 'checkout' && currentRoute.type !== 'project' && currentRoute.type !== 'get_involved' && currentRoute.type !== 'raffia' && currentRoute.type !== 'explore' && (
+            {currentRoute.type !== 'home' && currentRoute.type !== 'admin' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && currentRoute.type !== 'checkout' && currentRoute.type !== 'project' && currentRoute.type !== 'get_involved' && currentRoute.type !== 'raffia' && currentRoute.type !== 'explore' && (
               <ComingSoon
                 title={('title' in currentRoute && currentRoute.title) || 'The Project'}
                 subtitle={('subtitle' in currentRoute && currentRoute.subtitle) || 'This section is currently being prepared for the upcoming launch.'}
@@ -160,6 +165,7 @@ export default function App() {
         <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} onNavigate={navigateTo} />
         <Footer onNavigate={navigateTo} />
       </div>
+      </MarketplaceDataProvider>
     </CartProvider>
   );
 }
