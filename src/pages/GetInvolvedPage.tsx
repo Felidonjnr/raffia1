@@ -1,5 +1,5 @@
 import React from 'react';
-import { Handshake, Heart, Gift, Users, BookOpen, Megaphone, MapPin } from 'lucide-react';
+import { Handshake, Heart, Gift, Users, BookOpen, Megaphone, MapPin, Camera, Palette, MessageCircle, CalendarDays, Search, GraduationCap } from 'lucide-react';
 
 const partnershipOpportunities = [
   ['FESTIVAL SPONSORS','Support the flagship Raffia Festival and help bring the celebration to life.',Handshake],
@@ -8,6 +8,19 @@ const partnershipOpportunities = [
   ['KNOWLEDGE PARTNERS','Bring knowledge and expertise to the project.',BookOpen],
   ['MEDIA & CREATIVE PARTNERS','Help tell, document and amplify the Raffia Legacy story.',Megaphone],
   ['TOURISM & DESTINATION PARTNERS','Connect the project with tourism and destination opportunities.',MapPin],
+] as const;
+
+const volunteerSkills = [
+  ['PROJECT COORDINATION', CalendarDays],
+  ['PARTNERSHIPS & SPONSORSHIP', Handshake],
+  ['COMMUNITY ENGAGEMENT', Users],
+  ['SOCIAL MEDIA', Megaphone],
+  ['GRAPHIC DESIGN', Palette],
+  ['COMMUNICATIONS', MessageCircle],
+  ['EVENTS & LOGISTICS', CalendarDays],
+  ['RESEARCH', Search],
+  ['EDUCATION', GraduationCap],
+  ['PHOTOGRAPHY & VIDEO', Camera],
 ] as const;
 
 const waysToGive = [
@@ -69,6 +82,46 @@ export const GetInvolvedPage: React.FC = () => (
             </article>
           ))}
         </div>
+      </div>
+    </section>
+
+    <section className="py-20 sm:py-28 px-6 sm:px-12 border-b border-[#241A14]/15">
+      <div className="max-w-[1560px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20 items-start">
+          <div>
+            <p className="text-sm font-bold tracking-[0.18em] uppercase text-[#B65332] mb-5">JOIN THE TEAM</p>
+            <h2 className="text-4xl sm:text-6xl font-black leading-tight">
+              YOUR SKILL CAN HELP
+              <br />
+              <em className="font-serif font-normal text-[#B65332]">BUILD A LEGACY.</em>
+            </h2>
+            <p className="mt-6 text-base sm:text-lg text-[#73695E] leading-relaxed max-w-xl">
+              We are looking for people with skills or interest in the following areas. Join the team. Bring your passion. Help shape the future of our heritage.
+            </p>
+            <div className="mt-8 inline-flex items-center gap-3 px-5 py-3 bg-[#241A14] text-[#F3EBDD]">
+              <Users size={18} className="text-[#C8A978]" />
+              <span className="text-sm font-bold tracking-wide">VOLUNTEER</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-0 border-t border-[#241A14]/15">
+            {volunteerSkills.map(([title, Icon]) => (
+              <div key={title} className="flex items-center gap-4 py-5 border-b border-[#241A14]/15">
+                <Icon size={20} className="shrink-0 text-[#B65332]" />
+                <span className="text-sm sm:text-base font-bold leading-tight">{title}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="py-16 sm:py-20 px-6 sm:px-12 bg-[#EAE1D1] border-b border-[#241A14]/15">
+      <div className="max-w-[1100px] mx-auto text-center">
+        <p className="text-sm font-bold tracking-[0.18em] uppercase text-[#B65332] mb-4">CONTACT US</p>
+        <h2 className="text-3xl sm:text-5xl font-black">JOIN THE TEAM.</h2>
+        <p className="mt-4 text-base sm:text-lg text-[#73695E]">Facebook & Instagram</p>
+        <p className="mt-3 text-xl sm:text-2xl font-black text-[#B65332]">@raffialegacy</p>
       </div>
     </section>
 
