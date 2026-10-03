@@ -118,10 +118,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             )}
             <div className="mb-10">
               <span className="text-xs  uppercase tracking-widest text-[#B84A28] block mb-2">
-                Order Reservation
+                Secure Order Checkout
               </span>
               <h1 className="font-editorial text-4xl sm:text-5xl font-light text-[#181513]">
-                CHECKOUT & RESERVATION
+                CHECKOUT
               </h1>
             </div>
 
@@ -371,7 +371,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             </div>
 
             <span className="text-xs  uppercase tracking-widest text-[#B84A28] block">
-              Reservation Confirmed · {orderReference}
+              Order Confirmed · {orderReference}
             </span>
 
             <h2 className="font-editorial text-4xl sm:text-5xl font-light text-[#181513]">
@@ -379,7 +379,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             </h2>
 
             <p className="text-sm text-[#57524E] leading-relaxed max-w-lg mx-auto">
-              Your reservation of {totalItems} {totalItems === 1 ? 'item' : 'items'} ({formatNaira(grandTotal)}) has been received. A confirmation has been sent to {formData.email}.
+              Your payment for {totalItems} {totalItems === 1 ? 'item' : 'items'} ({formatNaira(grandTotal)}) has been confirmed. A confirmation has been sent to {formData.email}.
             </p>
 
             <div className="p-5 bg-[#ECE5DC] text-left text-xs space-y-2 border border-[#DDD4C5]">
