@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ViewRoute } from '../types';
 import { FESTIVAL_EXPERIENCES } from '../data/legacyData';
-import { ArrowLeft, Sparkles, MapPin, Check, ChevronDown, Maximize2 } from 'lucide-react';
+import { ArrowLeft, Sparkles, MapPin, ChevronDown, Maximize2 } from 'lucide-react';
 import { ImageLightbox, LightboxImage } from '../components/ImageLightbox';
 
 interface FestivalPageProps {
@@ -21,15 +21,8 @@ const EXPERIENCE_IMAGES: Record<string, string> = {
 };
 
 export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
-  const [email, setEmail] = useState('');
-  const [registered, setRegistered] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
-
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) setRegistered(true);
-  };
 
   const faqs = [
     {
@@ -108,13 +101,13 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 py-20 border-b border-[#181513]/10">
         <div className="max-w-2xl mb-14">
           <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2 font-bold">
-            03 / EXHIBITION CATALOGUE
+            THE FLAGSHIP EVENT
           </span>
           <h2 className="font-editorial text-4xl sm:text-5xl font-light text-[#181513]">
             EXPERIENCE RAFFIA IN MANY FORMS
           </h2>
           <p className="text-sm text-[#73695E] mt-2 font-sans">
-            One festival. Many worlds of raffia.
+            Eight flagship experiences from the Raffia Festival.
           </p>
         </div>
 
@@ -201,42 +194,20 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      {/* Registration / Updates */}
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-20">
-        <div className="bg-[#181513] text-[#FAF7F2] p-8 sm:p-14 text-center max-w-3xl mx-auto shadow-2xl">
+        <div className="bg-[#181513] text-[#FAF7F2] p-8 sm:p-14 text-center max-w-4xl mx-auto shadow-2xl">
           <span className="text-xs font-mono uppercase tracking-widest text-[#C8B28B] block mb-3 font-bold">
-            THE RAFFIA FESTIVAL
+            RAFFIA FESTIVAL 2027
           </span>
           <h3 className="font-editorial text-4xl sm:text-5xl font-light text-[#FAF7F2] mb-4">
-            Register for Festival Updates
+            COMING SOON
           </h3>
-          <p className="text-sm text-[#FAF7F2]/70 leading-relaxed mb-8 max-w-lg mx-auto font-sans">
-            Stay informed about the upcoming Raffia Festival schedule, programmes and exhibitions.
+          <p className="text-sm sm:text-base text-[#FAF7F2]/70 leading-relaxed max-w-2xl mx-auto font-sans">
+            The flagship celebration of the Raffia Legacy Project. Festival programme, experiences and participation details will be announced as preparations continue.
           </p>
-
-          {!registered ? (
-            <form onSubmit={handleRegister} className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@domain.com"
-                className="flex-1 px-4 py-3 bg-[#28221D] border border-[#FAF7F2]/20 text-xs text-[#FAF7F2] focus:border-[#C8B28B] focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 bg-[#C8B28B] text-[#181513] text-xs font-mono uppercase tracking-widest font-semibold hover:bg-white transition-colors cursor-pointer"
-              >
-                Register Interest
-              </button>
-            </form>
-          ) : (
-            <div className="p-4 bg-[#28221D] text-xs text-[#C8B28B] max-w-md mx-auto flex items-center justify-center gap-2">
-              <Check className="w-4 h-4" />
-              <span>Thank you. You will receive updates about the Raffia Festival.</span>
-            </div>
-          )}
+          <div className="mt-8 flex flex-wrap justify-center gap-3 text-xs sm:text-sm font-bold tracking-wide text-[#C8B28B]">
+            <span>RAFFIA PARADE</span><span>•</span><span>ECONOMY SUMMIT</span><span>•</span><span>INNOVATION LAB</span><span>•</span><span>FASHION</span><span>•</span><span>PERFORMANCE</span><span>•</span><span>MARKETPLACE</span><span>•</span><span>RAFFIA VILLAGE</span>
+          </div>
         </div>
       </section>
 
