@@ -14,6 +14,7 @@ import { CheckoutPage } from './pages/CheckoutPage';
 import { ProjectPage } from './pages/ProjectPage';
 import { LegacyYearPage } from './pages/LegacyYearPage';
 import { GetInvolvedPage } from './pages/GetInvolvedPage';
+import { RaffiaPage } from './pages/RaffiaPage';
 import { ComingSoon } from './components/ComingSoon';
 
 const comingSoon = (title: string, subtitle?: string): ViewRoute => ({
@@ -43,7 +44,8 @@ function routeFromHash(hash: string): ViewRoute {
     return comingSoon('The Legacy Year', 'The 12-month calendar and timeline are currently being prepared.');
   }
   if (hash.startsWith('#/raffia')) {
-    return comingSoon('Raffia Heritage & Culture', 'The story, culture and craft of raffia are currently being prepared.');
+    const topicSlug = hash.replace('#/raffia', '').replace(/^\//, '') || undefined;
+    return { type: 'raffia', topicSlug };
   }
   if (hash.startsWith('#/festival')) {
     return comingSoon('The Raffia Festival', 'Festival experiences and details are currently being prepared.');
@@ -76,6 +78,7 @@ export default function App() {
     else if (route.type === 'product') window.location.hash = `#/marketplace/${route.slug}`;
     else if (route.type === 'checkout') window.location.hash = '#/checkout';
     else if (route.type === 'get_involved') window.location.hash = route.section ? `#/get-involved/${route.section}` : '#/get-involved';
+    else if (route.type === 'raffia') window.location.hash = route.topicSlug ? `#/raffia/${route.topicSlug}` : '#/raffia';
     else if (route.type === 'project') window.location.hash = route.section ? `#/project/${route.section}` : '#/project';
     else if (route.type === 'coming_soon') {
       window.history.replaceState({}, '', window.location.pathname + '#/coming-soon');
@@ -125,7 +128,10 @@ export default function App() {
             {currentRoute.type === 'get_involved' && (
               <GetInvolvedPage initialSection={currentRoute.section} onNavigate={navigateTo} />
             )}
-            {currentRoute.type !== 'home' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && currentRoute.type !== 'checkout' && currentRoute.type !== 'project' && currentRoute.type !== 'get_involved' && (
+            {currentRoute.type === 'raffia' && (
+              <RaffiaPage topicSlug={currentRoute.topicSlug} onNavigate={navigateTo} />
+            )}
+            {currentRoute.type !== 'home' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && currentRoute.type !== 'checkout' && currentRoute.type !== 'project' && currentRoute.type !== 'get_involved' && currentRoute.type !== 'raffia' && (
               <ComingSoon
                 title={('title' in currentRoute && currentRoute.title) || 'The Project'}
                 subtitle={('subtitle' in currentRoute && currentRoute.subtitle) || 'This section is currently being prepared for the upcoming launch.'}
