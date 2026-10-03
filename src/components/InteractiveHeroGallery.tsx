@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import { BrushStrokeUnderline } from './RaffiaLogo';
 
 export interface HeroSlide {
