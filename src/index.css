@@ -971,6 +971,37 @@ header.site-nav-scrolled {
 .site-footer .footer-bottom button:focus-visible {
   color: #FFFFFF !important;
 }
+
+/* Dark-surface heading audit: global heading color must not override light text on dark sections. */
+.maker-banner .maker-copy h2,
+.project-year h1,
+.project-year h2,
+.project-year h3,
+.project-impact h1,
+.project-impact h2,
+.project-impact h3,
+.project-close h1,
+.project-close h2,
+.project-close h3,
+.final-festival h1,
+.final-festival h2,
+.final-festival h3,
+.final-close h1,
+.final-close h2,
+.final-close h3 {
+  color: var(--ivory) !important;
+}
+.maker-banner .maker-copy h2 em,
+.project-year h2 em,
+.project-impact h2 em,
+.project-close h2 em,
+.final-festival h2 em,
+.final-close h2 em {
+  color: #E59C6D !important;
+}
+.final-festival .eyebrow {
+  color: var(--ivory) !important;
+}
 .footer-bottom {
   display: flex;
   align-items: center;
