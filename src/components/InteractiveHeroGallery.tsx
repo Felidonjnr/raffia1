@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { BrushStrokeUnderline } from './RaffiaLogo';
 
 export interface HeroSlide {
@@ -144,17 +144,6 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(17,16,14,0.85)_100%)]" />
         </motion.div>
       </AnimatePresence>
-
-      {/* Top Floating Event Pulse Beacon */}
-      <div className="absolute top-24 lg:top-28 inset-x-0 z-20 flex justify-center px-6 pointer-events-none">
-        <div className="glass-pill px-4 py-1.5 flex items-center gap-2.5 text-[#F3EBDD] text-xs font-mono uppercase tracking-widest border border-[#C8A978]/30 shadow-lg">
-          <span className="w-2 h-2 rounded-full bg-[#B65332] pulse-beacon" />
-          <span className="text-[#C8A978] font-bold">CULTURE · CREATIVITY · ENTERPRISE · COMMUNITY</span>
-          <span className="hidden sm:inline text-white/40">·</span>
-          <span className="hidden sm:inline text-white/80">IKOT EKPENE LGA, AKWA IBOM STATE</span>
-        </div>
-      </div>
-
       {/* Main Event Lockup: High-Impact Typography Grounded in Imagery */}
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 sm:px-10 py-20 sm:py-28 text-center flex flex-col items-center justify-center mt-12 sm:mt-8">
         {/* Eyebrow Label */}
@@ -311,72 +300,22 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           )}
         </motion.div>
       </div>
-
-      {/* Bottom Thumbnail Strip & Navigation Controls */}
-      <div className="absolute bottom-6 inset-x-0 z-20 max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-white/75">
-        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto max-w-full pb-1 sm:pb-0 scrollbar-none">
-          {HERO_SLIDES.map((s, idx) => {
-            const isActive = currentIdx === idx;
-            return (
-              <button
-                key={s.id}
-                onClick={() => selectSlide(idx)}
-                className={`group relative flex items-center gap-2.5 px-3 py-1.5 transition-all cursor-pointer border ${
-                  isActive
-                    ? 'bg-[#241A14]/90 border-[#C8A978] text-white shadow-lg'
-                    : 'bg-[#11100E]/70 border-white/15 text-white/50 hover:text-white hover:border-white/40'
-                }`}
-                aria-label={`View slide ${s.id}: ${s.theme}`}
-              >
-                <div className="w-6 h-6 rounded-xs overflow-hidden shrink-0 hidden sm:block">
-                  <img
-                    src={s.image}
-                    alt={s.theme}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                <div className="text-left">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-xs font-bold text-[#C8A978]">
-                      {s.id}
-                    </span>
-                    <span className="text-xs font-mono tracking-wider uppercase font-semibold">
-                      {s.theme}
-                    </span>
-                  </div>
-                </div>
-
-                {isActive && (
-                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/20 overflow-hidden">
-                    <motion.div
-                      className="h-full bg-[#B65332]"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={prevSlide}
-            className="p-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white border border-white/15 transition-colors cursor-pointer"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="p-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white border border-white/15 transition-colors cursor-pointer"
-            aria-label="Next slide"
-          >
-            <ChevronRight size={18} />
-          </button>
-        </div>
+      {/* Simple hero navigation controls */}
+      <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2">
+        <button
+          onClick={prevSlide}
+          className="p-3 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white border border-white/20 transition-colors cursor-pointer"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft size={18} />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="p-3 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white border border-white/20 transition-colors cursor-pointer"
+          aria-label="Next slide"
+        >
+          <ChevronRight size={18} />
+        </button>
       </div>
     </div>
   );
