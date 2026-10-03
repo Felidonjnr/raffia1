@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { ArchivalImage } from './ArchivalImage';
@@ -23,6 +23,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     totalItems,
   } = useCart();
 
+  useEffect(() => {
+    if (!isCartOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsCartOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isCartOpen, setIsCartOpen]);
+
   if (!isCartOpen) return null;
 
   const handleCheckoutClick = () => {
@@ -40,7 +49,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         className="absolute inset-0 bg-[#181513]/50 backdrop-blur-xs transition-opacity duration-300"
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
         <div className="w-screen max-w-md bg-[#FAF7F2] border-l border-[#181513]/15 shadow-2xl flex flex-col justify-between">
           {/* Header */}
           <div className="px-6 py-6 border-b border-[#181513]/10 flex items-center justify-between">
@@ -85,8 +94,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               items.map(({ product, quantity }) => (
                 <div key={product.id} className="py-5 first:pt-0 last:pb-0 flex gap-4">
                   {/* Thumbnail */}
-                  <div
-                    className="w-20 h-24 shrink-0 cursor-pointer overflow-hidden border border-[#DDD4C5]"
+                  <button
+                    type="button"
+                    aria-label={'View ' + product.name}
+                    className="w-20 h-24 shrink-0 cursor-pointer overflow-hidden border border-[#DDD4C5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B84A28]"
                     onClick={() => {
                       if (onNavigateToProduct) {
                         setIsCartOpen(false);
@@ -100,7 +111,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       aspectRatio="custom"
                       className="w-full h-full object-cover"
                     />
-                  </div>
+                  </button>
 
                   {/* Details */}
                   <div className="flex-1 flex flex-col justify-between">
@@ -110,17 +121,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           <p className="text-xs font-mono uppercase tracking-widest text-[#8C7355]">
                             {product.category}
                           </p>
-                          <h4
+                          <button
+                            type="button"
                             onClick={() => {
                               if (onNavigateToProduct) {
                                 setIsCartOpen(false);
                                 onNavigateToProduct(product.slug);
                               }
                             }}
-                            className="text-sm font-medium text-[#181513] hover:text-[#B84A28] transition-colors cursor-pointer line-clamp-1 mt-0.5"
+                            className="text-left text-sm font-medium text-[#181513] hover:text-[#B84A28] transition-colors cursor-pointer line-clamp-1 mt-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B84A28]"
                           >
                             {product.name}
-                          </h4>
+                          </button>
                           <p className="text-xs text-[#57524E] mt-0.5">
                             By {product.maker.name}
                           </p>
