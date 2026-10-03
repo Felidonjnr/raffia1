@@ -218,48 +218,45 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           </p>
         </motion.div>
 
-        {/* Festival Status Bar */}
+        {/* Festival Countdown */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
-          className="mb-9 w-full max-w-md bg-[#241A14]/85 backdrop-blur-md p-4 sm:p-5 border border-white/20 shadow-2xl"
+          className="mb-9 w-full max-w-lg bg-[#241A14]/85 backdrop-blur-md p-4 sm:p-5 border border-white/20 shadow-2xl"
         >
-          <div className="flex items-center justify-between text-xs font-mono tracking-widest uppercase text-[#C8A978] pb-2.5 border-b border-white/10 mb-3">
-            <span>THE RAFFIA FESTIVAL</span>
-            <strong className="text-white">COMING SOON</strong>
+          <div className="flex items-center justify-between gap-4 text-sm font-sans tracking-[0.12em] uppercase text-[#C8A978] pb-3 border-b border-white/10 mb-3">
+            <span className="font-bold">THE RAFFIA FESTIVAL</span>
+            <strong className="text-white font-bold">COMING SOON</strong>
           </div>
 
-          <div className="grid grid-cols-4 gap-2 text-center text-white">
-            <div className="p-2.5 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#F3EBDD] tabular-nums">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3 text-center text-white">
+            <div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
+              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
                 {String(days).padStart(2, '0')}
               </b>
-              <small className="text-xs font-mono tracking-widest uppercase text-[#C8A978] font-bold block mt-0.5">
+              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
                 DAYS
               </small>
-            </div>
-            <div className="p-2.5 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#F3EBDD] tabular-nums">
+            </div><div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
+              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
                 {String(hours).padStart(2, '0')}
               </b>
-              <small className="text-xs font-mono tracking-widest uppercase text-[#C8A978] font-bold block mt-0.5">
+              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
                 HOURS
               </small>
-            </div>
-            <div className="p-2.5 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#F3EBDD] tabular-nums">
+            </div><div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
+              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
                 {String(minutes).padStart(2, '0')}
               </b>
-              <small className="text-xs font-mono tracking-widest uppercase text-[#C8A978] font-bold block mt-0.5">
+              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
                 MINUTES
               </small>
-            </div>
-            <div className="p-2.5 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl font-mono font-bold text-[#B65332] tabular-nums">
+            </div><div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
+              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#B65332] tabular-nums leading-none">
                 {String(seconds).padStart(2, '0')}
               </b>
-              <small className="text-xs font-mono tracking-widest uppercase text-[#C8A978] font-bold block mt-0.5">
+              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
                 SECONDS
               </small>
             </div>
