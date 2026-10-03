@@ -359,7 +359,7 @@ begin
     insert into public.order_items(order_id,product_id,product_name,unit_price,quantity,subtotal)
     values(v_order_id,v_product.id,v_product.name,v_product.price,v_qty,v_line);
 
-    if v_product.stock_quantity is not null and v_product.availability = 'IN STOCK' then
+    if v_product.stock_quantity is not null and v_product.availability <> 'MADE TO ORDER' then
       update public.products set stock_quantity = stock_quantity - v_qty,
         availability = case when stock_quantity - v_qty = 0 then 'LIMITED EDITION' else availability end
       where id = v_product.id;
