@@ -15,7 +15,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
     stateRegion:'', country:'Nigeria', postalCode:'', patronNotes:''
   });
   const [shippingCost, setShippingCost] = useState(15000);
-  const [order, setOrder] = useState<{order_number:string; total:number; whatsapp_number:string}|null>(null);
+  const [order, setOrder] = useState<{order_number:string; total:number; whatsapp_number:string; bank_name:string; account_name:string; account_number:string}|null>(null);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -32,7 +32,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
         customer: formData,
         items: items.map(({product,quantity}) => ({productId: product.id, quantity}))
       });
-      setOrder({ order_number: result.order_number, total: Number(result.total), whatsapp_number: result.whatsapp_number });
+      setOrder({ order_number: result.order_number, total: Number(result.total), whatsapp_number: result.whatsapp_number, bank_name: result.bank_name, account_name: result.account_name, account_number: result.account_number });
       const lines = [
         'Hello Raffia Legacy Project, I want to place an order.',
         '',
@@ -46,7 +46,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
         `Customer: ${formData.firstName} ${formData.lastName}`,
         `Phone: ${formData.phone}`,
         `Email: ${formData.email}`,
-        `Delivery: ${formData.address}, ${formData.city}, ${formData.stateRegion}, ${formData.country}`,
+        `Delivery: ${formData.address}, ${formData.city}, ${formData.stateRegion}, ${formData.country}`,\n        result.bank_name ? `Payment account: ${result.bank_name} · ${result.account_name} · ${result.account_number}` : '',
         formData.patronNotes ? `Notes: ${formData.patronNotes}` : '',
         '',
         'I will complete the payment by the agreed manual transfer method.'
@@ -74,7 +74,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             <div className="flex justify-between"><span>Payment</span><b>Manual transfer / WhatsApp</b></div>
             <div className="flex justify-between"><span>Status</span><b>Awaiting confirmation</b></div>
           </div>
-          {!order.whatsapp_number && <p className="text-sm text-[#9E3E20]">The marketplace WhatsApp number has not been configured yet. The order is still saved; the administrator can contact you from the dashboard.</p>}
+          {order.bank_name && <div className="bg-[#ECE5DC] p-4 text-left text-sm"><p className="text-xs uppercase tracking-widest text-[#8C7355] mb-2">Transfer details</p><p><b>{order.bank_name}</b></p><p>{order.account_name}</p><p className="font-semibold tracking-wider">{order.account_number}</p></div>}\n          {!order.whatsapp_number && <p className="text-sm text-[#9E3E20]">The marketplace WhatsApp number has not been configured yet. The order is still saved; the administrator can contact you from the dashboard.</p>}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {order.whatsapp_number && <button onClick={() => {
               const url = buildWhatsAppUrl(order.whatsapp_number, `Hello Raffia Legacy Project, I am following up on Order #${order.order_number}.`);
