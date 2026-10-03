@@ -29,7 +29,9 @@ function routeFromHash(hash: string): ViewRoute {
   if (hash === '#/marketplace') return { type: 'marketplace' };
   if (hash.startsWith('#/checkout')) return { type: 'checkout' };
   if (hash.startsWith('#/project')) {
-    return comingSoon('The Project', 'The full Raffia Legacy Project experience is currently being prepared.');
+    const section = hash.replace('#/project', '').replace(/^\//, '') as 'about' | 'vision' | 'legacy-year' | 'programmes' | 'impact' | 'partners' | '';
+    const validSections = ['about', 'vision', 'legacy-year', 'programmes', 'impact', 'partners'];
+    return { type: 'project', section: validSections.includes(section) ? section as any : 'about' };
   }
   if (hash.startsWith('#/legacy-year')) {
     return comingSoon('The Legacy Year', 'The 12-month calendar and timeline are currently being prepared.');
@@ -67,6 +69,7 @@ export default function App() {
     else if (route.type === 'marketplace') window.location.hash = '#/marketplace';
     else if (route.type === 'product') window.location.hash = `#/marketplace/${route.slug}`;
     else if (route.type === 'checkout') window.location.hash = '#/checkout';
+    else if (route.type === 'project') window.location.hash = route.section ? `#/project/${route.section}` : '#/project';
     else if (route.type === 'coming_soon') {
       window.history.replaceState({}, '', window.location.pathname + '#/coming-soon');
     }
@@ -109,7 +112,10 @@ export default function App() {
             {currentRoute.type === 'checkout' && (
               <CheckoutPage onNavigate={navigateTo} />
             )}
-            {currentRoute.type !== 'home' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && currentRoute.type !== 'checkout' && (
+            {currentRoute.type === 'project' && (
+              <ProjectPage initialSection={currentRoute.section || 'about'} onNavigate={navigateTo} />
+            )}
+            {currentRoute.type !== 'home' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && currentRoute.type !== 'checkout' && currentRoute.type !== 'project' && (
               <ComingSoon
                 title={('title' in currentRoute && currentRoute.title) || 'The Project'}
                 subtitle={('subtitle' in currentRoute && currentRoute.subtitle) || 'This section is currently being prepared for the upcoming launch.'}
