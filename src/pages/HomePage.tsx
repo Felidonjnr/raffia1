@@ -208,29 +208,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         }
       />
 
-      {/* CONTINUOUS CULTURAL MARQUEE / EVENT TICKER (PDF Page 1 & 2) */}
-      <div className="bg-[#241A14] text-[#F3EBDD] py-3 sm:py-4 border-y border-[#C8A978]/30 overflow-hidden relative select-none">
-        <div className="animate-marquee flex items-center gap-8 whitespace-nowrap text-sm font-sans uppercase tracking-[0.24em] font-semibold text-[#C8A978]">
-          <span>✦ DANCE VILLE PRESENTS</span>
-          <span className="text-[#F3EBDD]">RAFFIA LEGACY PROJECT</span>
-          <span>✦ CULTURE · CREATIVITY · ENTERPRISE · COMMUNITY</span>
-          <span className="text-[#F3EBDD]">FROM PALM TO PRODUCT</span>
-          <span>✦ CULTURE TO COMMERCE</span>
-          <span className="text-[#F3EBDD]">HERITAGE TO OPPORTUNITY</span>
-          <span>✦ IKOT EKPENE LGA, AKWA IBOM STATE</span>
-          <span className="text-[#F3EBDD]">THE FESTIVAL IS ONLY THE BEGINNING</span>
-          {/* Loop repeat */}
-          <span>✦ DANCE VILLE PRESENTS</span>
-          <span className="text-[#F3EBDD]">RAFFIA LEGACY PROJECT</span>
-          <span>✦ CULTURE · CREATIVITY · ENTERPRISE · COMMUNITY</span>
-          <span className="text-[#F3EBDD]">FROM PALM TO PRODUCT</span>
-          <span>✦ CULTURE TO COMMERCE</span>
-          <span className="text-[#F3EBDD]">HERITAGE TO OPPORTUNITY</span>
-          <span>✦ IKOT EKPENE LGA, AKWA IBOM STATE</span>
-          <span className="text-[#F3EBDD]">THE FESTIVAL IS ONLY THE BEGINNING</span>
-        </div>
-      </div>
-
       {/* WHY RAFFIA? (PDF Page 2) */}
       <section id="why-raffia" className="py-24 sm:py-32 px-6 lg:px-12 bg-[#F3EBDD] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
