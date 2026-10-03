@@ -11,6 +11,7 @@ import { PageTransition } from './components/PageTransition';
 import { HomePage } from './pages/HomePage';
 import { MarketplacePage } from './pages/MarketplacePage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
+import { CheckoutPage } from './pages/CheckoutPage';
 import { ProjectPage } from './pages/ProjectPage';
 import { LegacyYearPage } from './pages/LegacyYearPage';
 import { ComingSoon } from './components/ComingSoon';
@@ -27,6 +28,7 @@ function routeFromHash(hash: string): ViewRoute {
     if (slug) return { type: 'product', slug };
   }
   if (hash === '#/marketplace') return { type: 'marketplace' };
+  if (hash === '#/checkout') return { type: 'checkout' };
   if (hash.startsWith('#/project')) {
     return comingSoon('The Project', 'The full Raffia Legacy Project experience is currently being prepared.');
   }
@@ -65,6 +67,7 @@ export default function App() {
     if (route.type === 'home') window.location.hash = '#/';
     else if (route.type === 'marketplace') window.location.hash = '#/marketplace';
     else if (route.type === 'product') window.location.hash = `#/marketplace/${route.slug}`;
+    else if (route.type === 'checkout') window.location.hash = '#/checkout';
     else if (route.type === 'coming_soon') {
       window.history.replaceState({}, '', window.location.pathname + '#/coming-soon');
     }
@@ -104,7 +107,10 @@ export default function App() {
                 onSelectProduct={(slug) => navigateTo({ type: 'product', slug })}
               />
             )}
-            {currentRoute.type !== 'home' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && (
+            {currentRoute.type === 'checkout' && (
+              <CheckoutPage onNavigate={navigateTo} />
+            )}
+            {currentRoute.type !== 'home' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && currentRoute.type !== 'checkout' && (
               <ComingSoon
                 title={('title' in currentRoute && currentRoute.title) || 'The Project'}
                 subtitle={('subtitle' in currentRoute && currentRoute.subtitle) || 'This section is currently being prepared for the upcoming launch.'}
@@ -115,7 +121,7 @@ export default function App() {
         </main>
         <CartDrawer
           onNavigateToProduct={(slug) => navigateTo({ type: 'product', slug })}
-          onNavigateToCheckout={() => navigateTo(comingSoon('Checkout', 'Payment integration is currently being prepared.'))}
+          onNavigateToCheckout={() => navigateTo({ type: 'checkout' })}
         />
         <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} onNavigate={navigateTo} />
         <CheckoutModal />
