@@ -75,7 +75,7 @@ const MENUS: Record<MegaMenuTab, MenuData> = {
     items: [
       { label: 'Shop All Products', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg', caption: 'Explore products, objects and creations.' },
       { label: 'Objects & Living', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Raffia_hand_bag.jpg/1000px-Raffia_hand_bag.jpg', caption: 'Vessels, table textiles and lifestyle accents.' },
-      { label: 'Traditional Craft', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'Handcrafted traditional pieces from Ikot Ekpene LGA.' },
+      { label: 'Traditional Craft', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'Traditional raffia craft and handmade pieces.' },
       { label: 'Art & Textiles', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Woman%27s_ceremonial_overskirt%2C_Shoowa%2C_late_19th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_cut-pile_embroidery%2C_HMA.JPG/1280px-Woman%27s_ceremonial_overskirt%2C_Shoowa%2C_late_19th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_cut-pile_embroidery%2C_HMA.JPG', caption: 'Textile panels and woven expressions.' },
       { label: 'Makers & Brands', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'Connect directly with artisans, designers and creators.' },
     ],
@@ -86,7 +86,7 @@ const MENUS: Record<MegaMenuTab, MenuData> = {
     defaultImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
     defaultCaption: 'The flagship event bringing communities, artisans, farmers, designers, artists, young people, businesses, visitors and investors together.',
     items: [
-      { label: 'The Flagship Event', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'A celebration of what raffia can inspire in Ikot Ekpene LGA, Akwa Ibom State.' },
+      { label: 'The Flagship Event', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'A celebration of what raffia can inspire.' },
       { label: 'Raffia Parade', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'A colourful public celebration of culture and creativity.' },
       { label: 'Raffia Economy Summit', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg', caption: 'Conversations around business, investment, policy, innovation and opportunity.' },
       { label: 'Innovation Lab', image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg', caption: 'Explore what raffia could become next.' },
