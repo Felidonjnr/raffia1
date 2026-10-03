@@ -13,12 +13,6 @@ interface MarketplacePageProps {
   onSelectProduct: (slug: string) => void;
 }
 
-const CATEGORIES: { id: ProductCategory; label: string }[] = [
-  { id: 'ALL', label: 'All Pieces' },
-  { id: 'TRADITIONAL CRAFT', label: 'Traditional Craft' },
-  { id: 'OBJECTS & LIVING', label: 'Objects & Living' },
-  { id: 'ART & TEXTILES', label: 'Art & Textiles' },
-];
 
 export const MarketplacePage: React.FC<MarketplacePageProps> = ({
   initialCategory = 'ALL',
@@ -31,7 +25,8 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'name'>('featured');
   const [showInStockOnly, setShowInStockOnly] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
-  const { products: PRODUCTS, loading: marketplaceLoading, error: marketplaceError } = useMarketplaceData();
+  const { products: PRODUCTS, categories, loading: marketplaceLoading, error: marketplaceError } = useMarketplaceData();
+  const categoryTabs = [{ id: 'ALL' as ProductCategory, label: 'All Pieces' }, ...categories.map((category) => ({ id: category.name as ProductCategory, label: category.name }))];
 
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter((product) => {
@@ -114,7 +109,7 @@ export const MarketplacePage: React.FC<MarketplacePageProps> = ({
       <section className="market-controls">
         {/* Category Tabs */}
         <div className="market-tabs">
-          {CATEGORIES.map(({ id, label }) => (
+          {categoryTabs.map(({ id, label }) => (
             <button
               key={id}
               onClick={() => setSelectedCategory(id)}
