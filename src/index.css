@@ -2231,3 +2231,25 @@ header.site-nav-scrolled {
     font-size: clamp(2.2rem, 9vw, 3.6rem);
   }
 }
+
+
+/* Dark surface readability safeguard */
+.dark-section,
+.dark-section * { color: inherit; }
+.dark-section p,
+.dark-section span,
+.dark-section h1,
+.dark-section h2,
+.dark-section h3,
+.dark-section h4,
+.dark-section h5,
+.dark-section h6,
+.dark-section button { color: #F3EBDD; }
+.dark-section .text-white\/50 { color: rgba(243,235,221,.65); }
+.dark-section .text-white\/70 { color: rgba(243,235,221,.78); }
+.dark-section .text-white\/75 { color: rgba(243,235,221,.82); }
+.dark-section .text-white\/80 { color: rgba(243,235,221,.86); }
+.dark-section .text-white\/85 { color: rgba(243,235,221,.9); }
+.dark-section .text-\\[\\#C8A978\\] { color: #C8A978; }
+.dark-section .text-\\[\\#B65332\\] { color: #B65332; }
+.dark-section .text-black { color: #11100E; }
