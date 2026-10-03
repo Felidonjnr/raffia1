@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Collection, Maker, Product } from '../types';
 import { getMarketplaceCollections, getMarketplaceMakers, getMarketplaceProducts } from '../lib/marketplace';
+import { supabase } from '../lib/supabase';
 
 interface MarketplaceDataContextValue {
   products: Product[];
@@ -44,11 +45,21 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
   }, []);
 
   useEffect(() => {
-    // Keep public catalog clients responsive to admin changes without requiring a full page refresh.
-    const timer = window.setInterval(() => {
-      refresh();
-    }, 60000);
-    return () => window.clearInterval(timer);
+    if (!supabase) return;
+    const channel = supabase
+      .channel('marketplace-live-catalog')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'product_images' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'collections' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'makers' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, refresh)
+      .subscribe();
+
+    const timer = window.setInterval(() => refresh(), 60000);
+    return () => {
+      window.clearInterval(timer);
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   return (
