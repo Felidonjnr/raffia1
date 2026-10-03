@@ -247,42 +247,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                       Raffia Weaving Heritage
                     </p>
                   </div>
-                  <span className="text-sm font-sans text-white/70 hidden sm:inline">
-                    IKOT EKPENE LGA, AKWA IBOM STATE
-                  </span>
                 </div>
               </div>
 
-              {/* Inset Detail Card */}
-              <div
-                onClick={() =>
-                  setLightboxImage({
-                    src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
-                    title: 'From Palm to Craft',
-                    subtitle: 'Natural raffia palm fibres prepared for weaving.',
-                    category: 'MATERIAL & CRAFT',
-                  })
-                }
-                className="hidden md:flex absolute -bottom-8 -right-6 w-60 p-3 bg-[#241A14]/95 text-white border border-[#C8A978]/40 shadow-2xl backdrop-blur-md cursor-pointer flex-col gap-2 z-20 group"
-              >
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-black">
-                  <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg"
-                    alt="Raffia fibres"
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#B65332] text-white text-sm font-sans uppercase font-bold">
-                    NATURAL FIBRE
-                  </div>
-                </div>
-                <div>
-                  <b className="font-sans text-xs text-[#C8A978] block">FROM PALM TO PRODUCT</b>
-                  <p className="text-xs text-white/80 line-clamp-2 mt-0.5 font-sans">
-                    Heritage to opportunity.
-                  </p>
-                </div>
-              </div>
             </MotionReveal>
           </div>
 
