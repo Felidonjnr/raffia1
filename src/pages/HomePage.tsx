@@ -439,7 +439,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           {/* Header strictly from PDF Page 4 */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <MotionReveal direction="up">
-              <span className="font-sans text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
+              <span className="font-sans text-sm tracking-widest text-[#B65332] uppercase font-bold block mb-3">
                 THE LEGACY YEAR
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E]">
@@ -488,7 +488,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     <h4 className="text-base font-bold text-[#11100E] leading-snug mb-2 font-sans">
                       {st.subtitle}
                     </h4>
-                    <p className="text-xs text-[#73695E] leading-relaxed font-sans">
+                    <p className="text-sm text-[#73695E] leading-relaxed font-sans">
                       {st.desc}
                     </p>
                   </div>
@@ -509,7 +509,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           {/* Header strictly from PDF Page 3 & 6 */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <MotionReveal direction="up">
-              <span className="font-sans text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
+              <span className="font-sans text-sm tracking-widest text-[#B65332] uppercase font-bold block mb-3">
                 VALUE CREATION
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.08]">
@@ -559,7 +559,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
         <div className="max-w-[1560px] mx-auto space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <MotionReveal direction="up">
-              <span className="font-sans text-xs tracking-widest text-[#B65332] uppercase font-bold block mb-2">
+              <span className="font-sans text-sm tracking-widest text-[#B65332] uppercase font-bold block mb-3">
                 RAFFIA MARKETPLACE
               </span>
               <h2 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.08]">
@@ -684,7 +684,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
       <section className="py-24 sm:py-32 px-6 lg:px-12 bg-[#F3EBDD] border-b border-[#241A14]/15">
         <div className="max-w-[1560px] mx-auto space-y-12">
           <div className="space-y-4 max-w-3xl">
-            <span className="font-sans text-xs tracking-widest text-[#B65332] uppercase font-bold block">
+            <span className="font-sans text-sm tracking-widest text-[#B65332] uppercase font-bold block">
               PARTNERSHIP OPPORTUNITIES
             </span>
             <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#11100E] leading-[1.05]">
@@ -735,7 +735,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           </div>
 
           {/* PDF Page 8: Ways to give */}
-          <div className="p-4 bg-[#241A14] text-[#C8A978] font-sans text-xs text-center font-bold tracking-wider">
+          <div className="p-5 bg-[#241A14] text-[#C8A978] font-sans text-sm text-center font-bold tracking-wider">
             DONATE • SPONSOR AN ACTIVITY • GIVE IN-KIND • VOLUNTEER • SHARE YOUR EXPERTISE
           </div>
         </div>
