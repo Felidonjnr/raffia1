@@ -144,6 +144,10 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
       onNavigate({ type: 'raffia' });
       return;
     }
+    if (activeTab === 'GET INVOLVED') {
+      onNavigate({ type: 'get_involved', section: 'partner' });
+      return;
+    }
     onNavigate({
       type: 'coming_soon',
       title: itemLabel,
