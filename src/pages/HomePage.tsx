@@ -727,8 +727,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
               <div key={p.title} className="p-6 bg-[#EAE1D1] border border-[#241A14]/15 flex flex-col justify-between">
                 <div>
                   
-                  <h4 className="font-sans text-sm font-bold text-[#11100E] mb-2">{p.title}</h4>
-                  <p className="text-xs text-[#73695E] font-sans leading-relaxed">{p.desc}</p>
+                  <h4 className="font-sans text-base font-bold text-[#11100E] mb-3">{p.title}</h4>
+                  <p className="text-sm text-[#73695E] font-sans leading-relaxed">{p.desc}</p>
                 </div>
               </div>
             ))}
