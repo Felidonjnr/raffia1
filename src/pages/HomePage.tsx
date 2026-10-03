@@ -364,10 +364,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                         : 'bg-transparent border-white/10 text-white/60 hover:border-white/30 hover:text-white'
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-sans text-xs text-[#C8A978] font-bold">
-                        0{idx + 1}
-                      </span>
+                    <div className="flex items-center justify-end mb-1">
                       <ArrowUpRight
                         size={16}
                         className={`transition-all ${
@@ -411,7 +408,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                         src: currentProjectPillar.image,
                         title: currentProjectPillar.title,
                         subtitle: currentProjectPillar.tagline,
-                        category: `PILLAR 0${activeProjectIdx + 1}`,
+                        category: currentProjectPillar.title,
                       })
                     }
                     className="absolute top-6 right-6 p-2.5 bg-black/60 hover:bg-[#B65332] text-white border border-white/20 backdrop-blur-md transition-colors cursor-pointer flex items-center gap-1.5 text-sm font-sans z-20"
@@ -423,7 +420,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
 
                   <div className="absolute bottom-8 left-8 right-8 text-white z-10">
                     <span className="font-sans text-xs text-[#C8A978] tracking-widest uppercase block mb-1 font-bold">
-                      0{activeProjectIdx + 1} · {currentProjectPillar.title}
+                      {currentProjectPillar.title}
                     </span>
                     <h4 className="text-2xl sm:text-3xl font-extrabold tracking-tight font-sans">
                       {currentProjectPillar.tagline}
