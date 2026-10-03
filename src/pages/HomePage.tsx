@@ -596,9 +596,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
               { title: 'FOR THE HOST DESTINATION', desc: 'A distinctive cultural identity and a reason for people to visit.' },
               { title: 'FOR THE WIDER ECONOMY', desc: 'A chance to turn indigenous knowledge and materials into sustainable creative enterprise.' },
             ].map((v) => (
-              <div key={v.id} className="p-5 bg-[#EAE1D1] border border-[#241A14]/15 flex flex-col justify-between">
+              <div key={v.title} className="p-5 bg-[#EAE1D1] border border-[#241A14]/15 flex flex-col justify-between">
                 <div>
-                  <span className="font-sans text-xs text-[#B65332] font-bold block mb-1">{v.id}</span>
                   <h4 className="font-sans text-sm font-bold text-[#11100E] mb-2">{v.title}</h4>
                   <p className="text-xs text-[#73695E] font-sans leading-relaxed">{v.desc}</p>
                 </div>
