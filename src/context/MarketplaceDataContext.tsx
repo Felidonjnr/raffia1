@@ -1,12 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Collection, Maker, Product } from '../types';
-import { getMarketplaceCollections, getMarketplaceMakers, getMarketplaceProducts } from '../lib/marketplace';
+import { MarketplaceCategory } from '../lib/marketplace';
+import { getMarketplaceCategories, getMarketplaceCollections, getMarketplaceMakers, getMarketplaceProducts } from '../lib/marketplace';
 import { supabase } from '../lib/supabase';
 
 interface MarketplaceDataContextValue {
   products: Product[];
   collections: Collection[];
   makers: Maker[];
+  categories: MarketplaceCategory[];
   loading: boolean;
   error: string;
   refresh: () => Promise<void>;
@@ -18,6 +20,7 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
   const [products, setProducts] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [makers, setMakers] = useState<Maker[]>([]);
+  const [categories, setCategories] = useState<MarketplaceCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -25,14 +28,16 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
     setLoading(true);
     setError('');
     try {
-      const [nextProducts, nextCollections, nextMakers] = await Promise.all([
+      const [nextProducts, nextCollections, nextMakers, nextCategories] = await Promise.all([
         getMarketplaceProducts(),
         getMarketplaceCollections(),
         getMarketplaceMakers(),
+        getMarketplaceCategories(),
       ]);
       setProducts(nextProducts);
       setCollections(nextCollections);
       setMakers(nextMakers);
+      setCategories(nextCategories);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unable to load marketplace data.');
     } finally {
