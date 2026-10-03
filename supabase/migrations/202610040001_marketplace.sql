@@ -86,6 +86,9 @@ create table if not exists public.product_images (
 create table if not exists public.site_settings (
   id integer primary key default 1 check (id = 1),
   whatsapp_number text not null default '',
+  bank_name text not null default '',
+  account_name text not null default '',
+  account_number text not null default '',
   shipping_flat_rate numeric(14,2) not null default 15000 check (shipping_flat_rate >= 0),
   order_prefix text not null default 'RL',
   updated_at timestamptz not null default now()
@@ -164,6 +167,10 @@ create index if not exists products_category_idx on public.products(category_id)
 create index if not exists products_collection_idx on public.products(collection_id);
 create index if not exists products_maker_idx on public.products(maker_id);
 create index if not exists product_images_product_idx on public.product_images(product_id, sort_order);
+alter table public.site_settings add column if not exists bank_name text not null default '';
+alter table public.site_settings add column if not exists account_name text not null default '';
+alter table public.site_settings add column if not exists account_number text not null default '';
+
 create index if not exists orders_status_idx on public.orders(order_status, payment_status, created_at desc);
 create index if not exists order_items_order_idx on public.order_items(order_id);
 
