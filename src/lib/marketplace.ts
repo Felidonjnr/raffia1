@@ -73,7 +73,7 @@ export async function getMarketplaceCollections(): Promise<Collection[]> {
 
   const { data, error } = await supabase
     .from('collections')
-    .select('*, products(id), product_images(id,url,sort_order,is_primary)')
+    .select('*, products(id)')
     .eq('is_active', true)
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false });
@@ -86,7 +86,7 @@ export async function getMarketplaceCollections(): Promise<Collection[]> {
     title: row.name,
     subtitle: row.subtitle || '',
     description: row.description || '',
-    coverImage: row.cover_image || row.product_images?.[0]?.url || '',
+    coverImage: row.cover_image || '',
     aspectRatio: row.aspect_ratio || '4:3',
     curatorNotes: row.curator_notes || '',
     productIds: (row.products || []).map((p: any) => p.id),
