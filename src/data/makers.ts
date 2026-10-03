@@ -12,7 +12,7 @@ export const MAKERS: Maker[] = [
     bio: '',
     quote: '',
     heritageNotes: '',
-    image: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
     productIds: ['prod-01', 'prod-04', 'prod-07'],
   },
   {
@@ -26,7 +26,7 @@ export const MAKERS: Maker[] = [
     bio: '',
     quote: '',
     heritageNotes: '',
-    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG',
     productIds: ['prod-03', 'prod-06', 'prod-08'],
   },
   {
@@ -40,7 +40,7 @@ export const MAKERS: Maker[] = [
     bio: '',
     quote: '',
     heritageNotes: '',
-    image: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
     productIds: ['prod-02', 'prod-05'],
   },
 ];
