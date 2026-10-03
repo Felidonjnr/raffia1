@@ -482,3 +482,19 @@ drop trigger if exists order_status_history_trigger on public.orders;
 create trigger order_status_history_trigger
 after update on public.orders
 for each row execute function public.record_order_status_change();
+
+
+-- Enable Realtime for public catalog changes.
+do $$
+declare
+  tbl text;
+begin
+  foreach tbl in array array['products','product_images','collections','makers','categories'] loop
+    if not exists (
+      select 1 from pg_publication_tables
+      where pubname='supabase_realtime' and schemaname='public' and tablename=tbl
+    ) then
+      execute format('alter publication supabase_realtime add table public.%I', tbl);
+    end if;
+  end loop;
+end $$;
