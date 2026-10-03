@@ -767,7 +767,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           </div>
           <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15]">
             THAT IS THE LEGACY.<br />
-            <span className="text-[#C8A978] font-serif italic font-normal text-2xl sm:text-4xl block mt-2">
+            <span className="text-white font-serif italic font-normal text-2xl sm:text-4xl block mt-2">
               RAFFIA IS OUR THREAD. THE FUTURE IS WHAT WE WEAVE WITH IT.
             </span>
           </h2>
