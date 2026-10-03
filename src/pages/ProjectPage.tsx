@@ -106,7 +106,6 @@ export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'abou
                 src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
                 title: 'Traditional Knowledge in Motion',
                 subtitle: 'Connecting traditional knowledge with contemporary practice.',
-                location: 'Ikot Ekpene LGA, Akwa Ibom State',
                 category: 'HERITAGE ARCHIVE',
               })
             }
