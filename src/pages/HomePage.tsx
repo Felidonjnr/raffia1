@@ -25,7 +25,6 @@ const PROJECT_CATEGORIES = [
     tagline: 'Stories, traditions and identity.',
     description: 'Stories, traditions and identity.',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
-    location: 'Akwa Ibom State, Nigeria',
   },
   {
     id: 'creativity',
@@ -33,7 +32,6 @@ const PROJECT_CATEGORIES = [
     tagline: 'Fashion, art, design, music and performance.',
     description: 'Fashion, art, design, music and performance.',
     image: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Woman%27s_ceremonial_overskirt%2C_Shoowa%2C_late_19th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_cut-pile_embroidery%2C_HMA.JPG',
-    location: 'Akwa Ibom State, Nigeria',
   },
   {
     id: 'opportunity',
@@ -41,7 +39,6 @@ const PROJECT_CATEGORIES = [
     tagline: 'Skills, markets, investment and enterprise.',
     description: 'Skills, markets, investment and enterprise.',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg',
-    location: 'Akwa Ibom State, Nigeria',
   },
   {
     id: 'tourism',
@@ -49,7 +46,6 @@ const PROJECT_CATEGORIES = [
     tagline: 'Experiences that give people a reason to visit and stay.',
     description: 'Experiences that give people a reason to visit and stay.',
     image: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG',
-    location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
   {
     id: 'legacy',
@@ -57,7 +53,6 @@ const PROJECT_CATEGORIES = [
     tagline: 'Knowledge and opportunities passed from one generation to the next.',
     description: 'Knowledge and opportunities passed from one generation to the next.',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
-    location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
 ];
 
@@ -262,7 +257,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
                     title: 'Traditional Raffia Weaving',
                     subtitle: 'Connecting traditional knowledge with contemporary practice.',
-                    location: 'Ikot Ekpene LGA, Akwa Ibom State',
                     category: 'HERITAGE CRAFT',
                   })
                 }
@@ -303,7 +297,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
                     title: 'From Palm to Craft',
                     subtitle: 'Natural raffia palm fibres prepared for weaving.',
-                    location: 'Akwa Ibom State, Nigeria',
                     category: 'MATERIAL & CRAFT',
                   })
                 }
@@ -488,7 +481,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                         src: currentProjectPillar.image,
                         title: currentProjectPillar.title,
                         subtitle: currentProjectPillar.tagline,
-                        location: currentProjectPillar.location,
                         category: `PILLAR 0${activeProjectIdx + 1}`,
                       })
                     }
@@ -506,9 +498,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     <h4 className="text-2xl sm:text-3xl font-extrabold tracking-tight font-sans">
                       {currentProjectPillar.tagline}
                     </h4>
-                    <p className="text-xs font-mono text-white/70 mt-2">
-                      {currentProjectPillar.location}
-                    </p>
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -737,7 +726,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                       src: ev.image,
                       title: ev.title,
                       subtitle: ev.summary,
-                      location: 'Ikot Ekpene LGA, Akwa Ibom State',
                       category: 'RAFFIA FESTIVAL',
                     })
                   }
