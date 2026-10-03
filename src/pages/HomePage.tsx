@@ -757,7 +757,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           <p className="font-sans text-xs sm:text-sm tracking-[0.25em] text-[#C8A978] uppercase font-bold">
             THE INVITATION
           </p>
-          <div className="max-w-xl mx-auto text-sm sm:text-base text-white/80 leading-relaxed font-sans space-y-2 py-4 border-y border-white/10">
+          <div className="max-w-2xl mx-auto text-base sm:text-lg text-white/85 leading-relaxed font-sans space-y-3 py-5 border-y border-white/10">
             <p>Imagine a child discovering raffia for the first time.</p>
             <p>They learn the craft. They discover Utta. They make something.</p>
             <p>A young designer sees a new possibility. An artisan shares knowledge.</p>
