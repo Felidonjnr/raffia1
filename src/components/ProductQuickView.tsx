@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Plus, Minus, ArrowRight, ShieldCheck, MapPin } from 'lucide-react';
 import { Product } from '../types';
@@ -24,6 +24,25 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
 
   const currentImg = product.gallery?.[selectedImgIdx] || product.image;
 
+  useEffect(() => {
+    setQuantity(1);
+    setSelectedImgIdx(0);
+  }, [product?.id]);
+
+  useEffect(() => {
+    if (!product) return;
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [product, onClose]);
+
   const handleAdd = () => {
     addToCart(product, quantity);
     onClose();
@@ -32,7 +51,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 md:p-10">
+      <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6 md:p-10 overscroll-contain">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -53,7 +72,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-20 p-2 bg-[#FAF7F2]/90 hover:bg-[#FAF7F2] text-[#181513] rounded-full transition-colors cursor-pointer border border-[#181513]/10"
+            className="absolute top-4 right-4 z-20 min-h-11 min-w-11 p-2 bg-[#FAF7F2]/90 hover:bg-[#FAF7F2] text-[#181513] rounded-full transition-colors cursor-pointer border border-[#181513]/10"
             aria-label="Close preview"
           >
             <X className="w-5 h-5" />
