@@ -42,7 +42,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="cart-drawer fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop */}
       <div
         onClick={() => setIsCartOpen(false)}
