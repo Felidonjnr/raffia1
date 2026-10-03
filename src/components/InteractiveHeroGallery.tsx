@@ -152,9 +152,9 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           initial={{ opacity: 0, y: -14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-3 sm:mb-5"
+          className="mb-4 sm:mb-6"
         >
-          <p className="text-xs sm:text-sm font-mono tracking-[0.28em] text-[#C8A978] uppercase font-bold drop-shadow-md">
+          <p className="text-sm sm:text-base font-sans tracking-[0.22em] text-[#C8A978] uppercase font-bold drop-shadow-md">
             DANCE VILLE PRESENTS
           </p>
         </motion.div>
@@ -182,9 +182,9 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
             </span>
             <span
               style={{
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: 900,
-                fontSize: 'clamp(3.4rem, 10vw, 8.8rem)',
+                fontFamily: "'Poppins', sans-serif",
+                fontWeight: 800,
+                fontSize: 'clamp(3rem, 9vw, 8rem)',
                 letterSpacing: '-0.035em',
                 color: '#B65332',
                 lineHeight: 0.95,
@@ -210,10 +210,10 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           transition={{ duration: 0.7, delay: 0.3 }}
           className="mb-7 max-w-2xl"
         >
-          <p className="text-sm sm:text-base md:text-lg font-mono tracking-widest text-[#F3EBDD] uppercase font-bold drop-shadow-sm">
+          <p className="text-base sm:text-lg md:text-xl font-sans tracking-[0.16em] text-[#F3EBDD] uppercase font-bold drop-shadow-sm">
             A YEAR-ROUND CELEBRATION OF RAFFIA
           </p>
-          <p className="text-xs sm:text-sm text-[#F3EBDD]/90 mt-2 font-sans leading-relaxed max-w-xl mx-auto drop-shadow">
+          <p className="text-sm sm:text-base text-[#F3EBDD]/90 mt-3 font-sans leading-relaxed max-w-xl mx-auto drop-shadow">
             A year-round of activities celebrating raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.
           </p>
         </motion.div>
