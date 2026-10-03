@@ -13,6 +13,7 @@ import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { ProjectPage } from './pages/ProjectPage';
 import { LegacyYearPage } from './pages/LegacyYearPage';
+import { GetInvolvedPage } from './pages/GetInvolvedPage';
 import { ComingSoon } from './components/ComingSoon';
 
 const comingSoon = (title: string, subtitle?: string): ViewRoute => ({
@@ -32,6 +33,11 @@ function routeFromHash(hash: string): ViewRoute {
     const section = hash.replace('#/project', '').replace(/^\//, '') as 'about' | 'vision' | 'legacy-year' | 'programmes' | 'impact' | 'partners' | '';
     const validSections = ['about', 'vision', 'legacy-year', 'programmes', 'impact', 'partners'];
     return { type: 'project', section: validSections.includes(section) ? section as any : 'about' };
+  }
+  if (hash.startsWith('#/get-involved')) {
+    const section = hash.replace('#/get-involved', '').replace(/^\//, '') as any;
+    const validSections = ['partner','sponsor','donate','volunteer','maker','schools','young-people','creatives','businesses','media'];
+    return { type: 'get_involved', section: validSections.includes(section) ? section : 'partner' };
   }
   if (hash.startsWith('#/legacy-year')) {
     return comingSoon('The Legacy Year', 'The 12-month calendar and timeline are currently being prepared.');
@@ -69,6 +75,7 @@ export default function App() {
     else if (route.type === 'marketplace') window.location.hash = '#/marketplace';
     else if (route.type === 'product') window.location.hash = `#/marketplace/${route.slug}`;
     else if (route.type === 'checkout') window.location.hash = '#/checkout';
+    else if (route.type === 'get_involved') window.location.hash = route.section ? `#/get-involved/${route.section}` : '#/get-involved';
     else if (route.type === 'project') window.location.hash = route.section ? `#/project/${route.section}` : '#/project';
     else if (route.type === 'coming_soon') {
       window.history.replaceState({}, '', window.location.pathname + '#/coming-soon');
@@ -115,7 +122,10 @@ export default function App() {
             {currentRoute.type === 'project' && (
               <ProjectPage initialSection={currentRoute.section || 'about'} onNavigate={navigateTo} />
             )}
-            {currentRoute.type !== 'home' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && currentRoute.type !== 'checkout' && currentRoute.type !== 'project' && (
+            {currentRoute.type === 'get_involved' && (
+              <GetInvolvedPage initialSection={currentRoute.section} onNavigate={navigateTo} />
+            )}
+            {currentRoute.type !== 'home' && currentRoute.type !== 'marketplace' && currentRoute.type !== 'product' && currentRoute.type !== 'checkout' && currentRoute.type !== 'project' && currentRoute.type !== 'get_involved' && (
               <ComingSoon
                 title={('title' in currentRoute && currentRoute.title) || 'The Project'}
                 subtitle={('subtitle' in currentRoute && currentRoute.subtitle) || 'This section is currently being prepared for the upcoming launch.'}
