@@ -9,36 +9,30 @@ interface LegacyYearPageProps {
   onNavigate: (route: ViewRoute) => void;
 }
 
-const STAGE_IMAGES: Record<string, { src: string; caption: string; location: string }> = {
+const STAGE_IMAGES: Record<string, { src: string; caption: string }> = {
   '01': {
     src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
     caption: 'Children discover raffia, heritage, craft, Utta, music, storytelling, nature and creativity.',
-    location: 'Akwa Ibom State, Nigeria',
   },
   '02': {
     src: 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG',
     caption: 'Young people ask: "What can raffia become in the future?"',
-    location: 'Akwa Ibom State, Nigeria',
   },
   '03': {
     src: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Woman%27s_ceremonial_overskirt%2C_Shoowa%2C_late_19th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_cut-pile_embroidery%2C_HMA.JPG',
     caption: 'Artisans, designers and creatives turn heritage into new products, fashion, art, performance and design.',
-    location: 'Akwa Ibom State, Nigeria',
   },
   '04': {
     src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg',
     caption: 'Strong ideas become products, businesses, partnerships and livelihoods.',
-    location: 'Akwa Ibom State, Nigeria',
   },
   '05': {
     src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg',
     caption: 'The community and the world experience the culture, creativity, products and opportunities created throughout the year.',
-    location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
   '06': {
     src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Raffia_hand_bag.jpg/1000px-Raffia_hand_bag.jpg',
     caption: 'New students, artisans, designers and entrepreneurs enter the ecosystem. The cycle continues.',
-    location: 'Ikot Ekpene LGA, Akwa Ibom State',
   },
 };
 
@@ -74,7 +68,7 @@ export const LegacyYearPage: React.FC<LegacyYearPageProps> = ({ onNavigate }) =>
           </div>
           <div className="lg:col-span-4">
             <p className="text-sm text-[#57524E] leading-relaxed max-w-md font-sans">
-              The strongest part of the Raffia Legacy Project is what happens before and after the festival. Five connected programmes create a continuous journey.
+              The strongest part of the Raffia Legacy Project is what happens before and after the festival. Six connected programmes create a continuous journey.
             </p>
           </div>
         </div>
@@ -130,7 +124,6 @@ export const LegacyYearPage: React.FC<LegacyYearPageProps> = ({ onNavigate }) =>
                         src: activeImageData.src,
                         title: `${activeStage.step}. ${activeStage.program}`,
                         subtitle: activeImageData.caption,
-                        location: activeImageData.location,
                         category: `THE LEGACY YEAR`,
                       })
                     }
@@ -141,9 +134,6 @@ export const LegacyYearPage: React.FC<LegacyYearPageProps> = ({ onNavigate }) =>
                   </button>
                   <div className="absolute bottom-4 left-4 right-4 text-white text-xs font-sans">
                     <p className="font-semibold">{activeImageData.caption}</p>
-                    <span className="text-xs font-mono text-[#C8B28B] uppercase block mt-0.5">
-                      {activeImageData.location}
-                    </span>
                   </div>
                 </motion.div>
               </AnimatePresence>
