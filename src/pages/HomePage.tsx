@@ -592,7 +592,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
       </section>
 
       {/* THE RAFFIA FESTIVAL (PDF Page 3) */}
-      <section className="relative py-28 sm:py-36 px-6 lg:px-12 overflow-hidden bg-[#11100E] text-white">
+      <section className="relative py-28 sm:py-36 px-6 lg:px-12 overflow-hidden bg-[#11100E] text-white dark-section">
         <div className="absolute inset-0 z-0">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Raffia_Basket_Making.jpg/1280px-Raffia_Basket_Making.jpg"
@@ -742,7 +742,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
       </section>
 
       {/* 10. THE INVITATION & CLOSING (PDF Page 9) */}
-      <section className="relative py-32 sm:py-44 px-6 text-center overflow-hidden bg-[#11100E] text-white">
+      <section className="relative py-32 sm:py-44 px-6 text-center overflow-hidden bg-[#11100E] text-white dark-section">
         <div className="absolute inset-0 z-0">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Raffia_hand_bag.jpg/1000px-Raffia_hand_bag.jpg"
