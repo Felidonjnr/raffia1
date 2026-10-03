@@ -2,6 +2,7 @@ import { Product, Collection, Maker, ProductCategory } from '../types';
 import { supabase, supabaseConfigured } from './supabase';
 
 export type DbProduct = any;
+export type MarketplaceCategory = { id: string; name: string; slug: string };
 
 const fallbackModules = {
   products: () => import('../data/products'),
@@ -46,6 +47,19 @@ function mapProduct(row: any): Product {
     isNewArrival: Boolean(row.is_new),
     featuredObject: Boolean(row.is_featured),
   };
+}
+
+
+export async function getMarketplaceCategories(): Promise<MarketplaceCategory[]> {
+  if (!supabaseConfigured || !supabase) return [];
+  const { data, error } = await supabase
+    .from('categories')
+    .select('id,name,slug')
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true })
+    .order('name', { ascending: true });
+  if (error || !data) return [];
+  return data;
 }
 
 export async function getMarketplaceProducts(): Promise<Product[]> {
