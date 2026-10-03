@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, X, ArrowRight, Package, Users, BookOpen, Sparkles } from 'lucide-react';
-import { PRODUCTS } from '../data/products';
-import { MAKERS } from '../data/makers';
+import { useMarketplaceData } from '../context/MarketplaceDataContext';
 import { RAFFIA_TOPICS } from '../data/raffiaKnowledge';
 import { FESTIVAL_EXPERIENCES } from '../data/legacyData';
 import { ViewRoute } from '../types';
@@ -20,6 +19,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 }) => {
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const { products: PRODUCTS, makers: MAKERS } = useMarketplaceData();
 
   useEffect(() => {
     if (isOpen) {
