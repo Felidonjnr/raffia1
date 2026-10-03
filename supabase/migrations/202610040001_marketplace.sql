@@ -382,6 +382,9 @@ $$;
 
 grant execute on function public.create_manual_order(jsonb,jsonb) to anon, authenticated;
 
+grant select on public.categories, public.collections, public.makers, public.products, public.product_images, public.site_settings to anon, authenticated;
+grant select, insert, update, delete on public.categories, public.collections, public.makers, public.products, public.product_images, public.site_settings, public.profiles, public.customers, public.orders, public.order_items, public.order_status_history to authenticated;
+
 -- Public catalog reads.
 alter table public.categories enable row level security;
 alter table public.collections enable row level security;
