@@ -669,7 +669,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     <h3 className="text-lg font-bold text-white group-hover:text-[#C8A978] transition-colors font-sans">
                       {ev.title}
                     </h3>
-                    <p className="text-xs text-white/70 line-clamp-2 mt-1 font-sans leading-relaxed">
+                    <p className="text-sm text-white/75 line-clamp-3 mt-2 font-sans leading-relaxed">
                       {ev.summary}
                     </p>
                   </div>
