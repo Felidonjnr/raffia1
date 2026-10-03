@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Product, ViewRoute } from '../types';
-import { PRODUCTS } from '../data/products';
-import { MAKERS } from '../data/makers';
+import { useMarketplaceData } from '../context/MarketplaceDataContext';
 import { ArchivalImage } from '../components/ArchivalImage';
 import { ProductCard } from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
@@ -20,12 +19,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   onSelectProduct,
 }) => {
   const { addToCart, setIsCartOpen } = useCart();
+  const { products: PRODUCTS, makers: MAKERS, loading } = useMarketplaceData();
   const [quantity, setQuantity] = useState(1);
   const [selectedGalleryIdx, setSelectedGalleryIdx] = useState(0);
 
-  const product = PRODUCTS.find((p) => p.slug === slug) || PRODUCTS[0];
-  const makerProfile = MAKERS.find((m) => m.id === product.maker.id);
-  const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
+  const product = PRODUCTS.find((p) => p.slug === slug);
+  const makerProfile = product ? MAKERS.find((m) => m.id === product.maker.id) : undefined;
+  const relatedProducts = product ? PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3) : [];
 
   const handleAddToBag = () => {
     addToCart(product, quantity);
@@ -37,7 +37,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
     onNavigate({ type: 'checkout' });
   };
 
-  const currentImage = product.gallery[selectedGalleryIdx] || product.image;
+  const currentImage = product?.gallery[selectedGalleryIdx] || product?.image || '';
+
+  if (loading) return <div className="min-h-screen bg-[#FAF7F2] grid place-items-center text-[#57524E]">Loading creation…</div>;
+  if (!product) return <div className="min-h-screen bg-[#FAF7F2] grid place-items-center p-6"><div className="text-center"><h1 className="font-editorial text-4xl mb-3">Creation not found</h1><button onClick={()=>onNavigate({type:'marketplace'})} className="px-5 py-3 bg-[#181513] text-white text-xs uppercase tracking-widest">Return to Marketplace</button></div></div>;
 
   return (
     <div className="product-detail-page min-h-screen bg-[#FAF7F2] pb-24">
