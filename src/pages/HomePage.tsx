@@ -455,7 +455,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
           </div>
 
           {/* 6 Programmes Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 relative z-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 relative z-10">
             {LEGACY_STAGES.map((st) => (
               <motion.div
                 key={st.subtitle}
@@ -493,9 +493,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-[#241A14]/10 flex items-center justify-between text-sm font-sans text-[#B65332] font-semibold">
-                    <span>{st.subtitle}</span>
-                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  <div className="mt-5 pt-3 border-t border-[#241A14]/10 flex items-center justify-end text-sm font-sans text-[#B65332] font-semibold">
+                    <span className="flex items-center gap-1">EXPLORE <ChevronRight size={15} className="group-hover:translate-x-1 transition-transform" /></span>
                   </div>
                 </div>
               </motion.div>
