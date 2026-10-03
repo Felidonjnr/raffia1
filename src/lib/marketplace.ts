@@ -176,5 +176,5 @@ export async function createManualOrder(payload: {
   });
 
   if (error) throw error;
-  return data as { order_id: string; order_number: string; subtotal: number; shipping_fee: number; total: number; whatsapp_number: string };
+  return data as { order_id: string; order_number: string; subtotal: number; shipping_fee: number; total: number; whatsapp_number: string; bank_name: string; account_name: string; account_number: string };
 }
