@@ -13,6 +13,7 @@ import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { ProjectPage } from './pages/ProjectPage';
 import { LegacyYearPage } from './pages/LegacyYearPage';
+import { FestivalPage } from './pages/FestivalPage';
 import { GetInvolvedPage } from './pages/GetInvolvedPage';
 import { RaffiaPage } from './pages/RaffiaPage';
 import { ComingSoon } from './components/ComingSoon';
@@ -127,6 +128,9 @@ export default function App() {
             )}
             {currentRoute.type === 'get_involved' && (
               <GetInvolvedPage initialSection={currentRoute.section} onNavigate={navigateTo} />
+            )}
+            {currentRoute.type === 'festival' && (
+              <FestivalPage onNavigate={navigateTo} />
             )}
             {currentRoute.type === 'raffia' && (
               <RaffiaPage topicSlug={currentRoute.topicSlug} onNavigate={navigateTo} />
