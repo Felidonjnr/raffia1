@@ -2,8 +2,10 @@ import React from 'react';
 import { ArrowRight, ArrowUpRight, Handshake, Heart, Users, GraduationCap, Palette, BriefcaseBusiness, Megaphone } from 'lucide-react';
 import { ViewRoute } from '../types';
 
+type GetInvolvedSection = 'partner' | 'sponsor' | 'donate' | 'volunteer' | 'maker' | 'schools' | 'young-people' | 'creatives' | 'businesses' | 'media';
+
 interface GetInvolvedPageProps {
-  initialSection?: ViewRoute extends { type: 'get_involved'; section?: infer S } ? S : never;
+  initialSection?: GetInvolvedSection;
   onNavigate: (route: ViewRoute) => void;
 }
 
