@@ -300,6 +300,9 @@ declare
   v_customer_id uuid;
   v_prefix text;
   v_whatsapp text;
+  v_bank_name text;
+  v_account_name text;
+  v_account_number text;
   item jsonb;
   v_product public.products%rowtype;
   v_qty integer;
@@ -329,8 +332,8 @@ begin
     v_subtotal := v_subtotal + v_line;
   end loop;
 
-  select shipping_flat_rate, order_prefix, whatsapp_number
-    into v_shipping, v_prefix, v_whatsapp
+  select shipping_flat_rate, order_prefix, whatsapp_number, bank_name, account_name, account_number
+    into v_shipping, v_prefix, v_whatsapp, v_bank_name, v_account_name, v_account_number
   from public.site_settings where id = 1;
   v_shipping := coalesce(v_shipping, 15000);
   v_prefix := coalesce(nullif(v_prefix,''),'RL');
@@ -382,7 +385,10 @@ begin
     'subtotal',v_subtotal,
     'shipping_fee',v_shipping,
     'total',v_total,
-    'whatsapp_number',coalesce(v_whatsapp,'')
+    'whatsapp_number',coalesce(v_whatsapp,''),
+    'bank_name',coalesce(v_bank_name,''),
+    'account_name',coalesce(v_account_name,''),
+    'account_number',coalesce(v_account_number,'')
   );
 end;
 $$;
