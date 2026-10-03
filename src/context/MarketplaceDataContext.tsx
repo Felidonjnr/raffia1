@@ -37,7 +37,7 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
       setProducts(nextProducts);
       setCollections(nextCollections);
       setMakers(nextMakers);
-      setCategories(nextCategories.length ? nextCategories : Array.from(new Set(nextProducts.map((p) => p.category))).filter((name) => name !== 'ALL').map((name, index) => ({ id: name, name, slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), } as MarketplaceCategory)));
+      setCategories(nextCategories.length ? nextCategories : Array.from(new Set(nextProducts.map((p) => p.category))).filter((name) => name !== 'ALL').map((name) => ({ id: name, name, slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), } as MarketplaceCategory)));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unable to load marketplace data.');
     } finally {
