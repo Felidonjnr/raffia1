@@ -136,16 +136,16 @@ export async function getMarketplaceMakers(): Promise<Maker[]> {
 
 export async function getMarketplaceSettings() {
   if (!supabaseConfigured || !supabase) {
-    return { whatsapp_number: import.meta.env.VITE_WHATSAPP_NUMBER || '', shipping_flat_rate: 15000 };
+    return { whatsapp_number: import.meta.env.VITE_WHATSAPP_NUMBER || '', bank_name: '', account_name: '', account_number: '', shipping_flat_rate: 15000 };
   }
 
   const { data } = await supabase
     .from('site_settings')
-    .select('whatsapp_number,shipping_flat_rate')
+    .select('whatsapp_number,bank_name,account_name,account_number,shipping_flat_rate')
     .eq('id', 1)
     .maybeSingle();
 
-  return data || { whatsapp_number: import.meta.env.VITE_WHATSAPP_NUMBER || '', shipping_flat_rate: 15000 };
+  return data || { whatsapp_number: import.meta.env.VITE_WHATSAPP_NUMBER || '', bank_name: '', account_name: '', account_number: '', shipping_flat_rate: 15000 };
 }
 
 export function buildWhatsAppUrl(number: string, message: string) {
