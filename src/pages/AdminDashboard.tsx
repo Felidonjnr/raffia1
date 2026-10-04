@@ -11,20 +11,20 @@ import {
 } from '../lib/supabase';
 import { ViewRoute } from '../types';
 import {
-  LayoutDashboard, Package, ShoppingBag, Users, Layers3, Tags, Settings,
+  LayoutDashboard, Package, ShoppingBag, Tags, Settings,
   LogOut, Plus, Pencil, Trash2, Save, X, Upload, RefreshCw, ExternalLink,
   CheckCircle2, AlertCircle, Database, Copy, Check, ShieldCheck, ArrowLeft,
   Search, MessageCircle
 } from 'lucide-react';
 import { formatNaira } from '../utils/format';
 
-type Tab = 'overview' | 'products' | 'orders' | 'makers' | 'collections' | 'categories' | 'settings' | 'database';
+type Tab = 'overview' | 'products' | 'orders' | 'categories' | 'settings' | 'database';
 type Row = Record<string, any>;
 
 const blankProduct: Row = {
   id: '', slug: '', name: '', short_description: '', description: '', price: 0, currency: 'NGN',
-  category_id: '', collection_id: '', maker_id: '', availability: 'IN STOCK', lead_time: '',
-  materials: '', origin: '', dimensions: '', care: '', cover_image: '', is_featured: false,
+  category_id: '', availability: 'IN STOCK', lead_time: '',
+  cover_image: '', is_featured: false,
   is_new: false, stock_quantity: 10, is_active: true, gallery: ''
 };
 
@@ -196,14 +196,8 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       price: Number(productEditor.price || 0),
       currency: 'NGN',
       category_id: productEditor.category_id || null,
-      collection_id: productEditor.collection_id || null,
-      maker_id: productEditor.maker_id || null,
       availability: productEditor.availability,
       lead_time: productEditor.lead_time || '',
-      materials: String(productEditor.materials || '').split(',').map((x: string) => x.trim()).filter(Boolean),
-      origin: productEditor.origin || '',
-      dimensions: productEditor.dimensions || '',
-      care: productEditor.care || '',
       cover_image: productEditor.cover_image || '',
       is_featured: Boolean(productEditor.is_featured),
       is_new: Boolean(productEditor.is_new),
@@ -642,8 +636,6 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             { id: 'overview', label: 'Overview', icon: LayoutDashboard },
             { id: 'products', label: 'Products', icon: Package, badge: products.length },
             { id: 'orders', label: 'Orders', icon: ShoppingBag, badge: orders.length },
-            { id: 'makers', label: 'Artisans & Makers', icon: Users, badge: makers.length },
-            { id: 'collections', label: 'Collections', icon: Layers3, badge: collections.length },
             { id: 'categories', label: 'Categories', icon: Tags, badge: categories.length },
             { id: 'settings', label: 'Settings', icon: Settings },
             { id: 'database', label: 'Database & SQL', icon: Database },
@@ -989,34 +981,6 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             </div>
           )}
 
-          {tab === 'makers' && (
-            <ReferenceManager
-              title="Artisans & Makers"
-              rows={makers}
-              type="maker"
-              onEdit={(r) => setReferenceEditor({ type: 'maker', row: { ...r } })}
-              onDelete={(id, name) => setItemToDelete({ type: 'maker', id, name })}
-              onAdd={() => setReferenceEditor({
-                type: 'maker',
-                row: { name: '', slug: '', title: '', location: '', discipline: '', speciality: '', bio: '', quote: '', heritage_notes: '', image: '', is_active: true }
-              })}
-            />
-          )}
-
-          {tab === 'collections' && (
-            <ReferenceManager
-              title="Curated Collections"
-              rows={collections}
-              type="collection"
-              onEdit={(r) => setReferenceEditor({ type: 'collection', row: { ...r } })}
-              onDelete={(id, name) => setItemToDelete({ type: 'collection', id, name })}
-              onAdd={() => setReferenceEditor({
-                type: 'collection',
-                row: { name: '', slug: '', subtitle: '', description: '', cover_image: '', aspect_ratio: '4:3', curator_notes: '', sort_order: 0, is_active: true }
-              })}
-            />
-          )}
-
           {tab === 'categories' && (
             <ReferenceManager
               title="Categories"
@@ -1216,8 +1180,6 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           product={productEditor}
           setProduct={setProductEditor}
           categories={categories}
-          collections={collections}
-          makers={makers}
           onSave={saveProduct}
           onUpload={uploadImage}
           onClose={() => setProductEditor(null)}
@@ -1290,8 +1252,6 @@ const ProductEditor: React.FC<any> = ({
   product,
   setProduct,
   categories,
-  collections,
-  makers,
   onSave,
   onUpload,
   onClose,
@@ -1328,47 +1288,19 @@ const ProductEditor: React.FC<any> = ({
           {field('stock_quantity', 'Stock Quantity', 'number')}
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4">
-          <label>
-            <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Category</span>
-            <select
-              value={product.category_id || ''}
-              onChange={(e) => setProduct({ ...product, category_id: e.target.value })}
-              className="w-full p-3 border mt-1 bg-white font-sans text-sm"
-            >
-              <option value="">Uncategorised</option>
-              {categories.map((x: any) => (
-                <option key={x.id} value={x.id}>{x.name}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Collection</span>
-            <select
-              value={product.collection_id || ''}
-              onChange={(e) => setProduct({ ...product, collection_id: e.target.value })}
-              className="w-full p-3 border mt-1 bg-white font-sans text-sm"
-            >
-              <option value="">No collection</option>
-              {collections.map((x: any) => (
-                <option key={x.id} value={x.id}>{x.name}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Maker</span>
-            <select
-              value={product.maker_id || ''}
-              onChange={(e) => setProduct({ ...product, maker_id: e.target.value })}
-              className="w-full p-3 border mt-1 bg-white font-sans text-sm"
-            >
-              <option value="">No maker</option>
-              {makers.map((x: any) => (
-                <option key={x.id} value={x.id}>{x.name}</option>
-              ))}
-            </select>
-          </label>
-        </div>
+        <label>
+          <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Category</span>
+          <select
+            value={product.category_id || ''}
+            onChange={(e) => setProduct({ ...product, category_id: e.target.value })}
+            className="w-full p-3 border mt-1 bg-white font-sans text-sm"
+          >
+            <option value="">Uncategorised</option>
+            {categories.map((x: any) => (
+              <option key={x.id} value={x.id}>{x.name}</option>
+            ))}
+          </select>
+        </label>
 
         <div className="grid md:grid-cols-2 gap-4">
           <label>
@@ -1397,13 +1329,6 @@ const ProductEditor: React.FC<any> = ({
             className="w-full p-3 border mt-1 bg-white font-sans text-sm"
           />
         </label>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          {field('materials', 'Materials (comma-separated)')}
-          {field('origin', 'Origin (e.g. Ikot Ekpene LGA, Akwa Ibom State)')}
-          {field('dimensions', 'Dimensions')}
-          {field('care', 'Care Instructions')}
-        </div>
 
         <label className="block">
           <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Cover Image URL</span>
