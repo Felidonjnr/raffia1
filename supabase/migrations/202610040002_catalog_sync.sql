@@ -120,15 +120,6 @@ and p.slug in (
 );
 
 insert into public.product_images(product_id,url,alt_text,sort_order,is_primary)
-select p.id, v.url, p.name, v.sort_order, v.sort_order=0
-from public.products p
-cross join lateral (
-  values
-  ('https://upload.wikimedia.org/wikipedia.org/commons/thumb/7/70/Kongo_Basket.jpg/1280px-Kongo_Basket.jpg',0)
-) as v(url,sort_order)
-where false;
-
-insert into public.product_images(product_id,url,alt_text,sort_order,is_primary)
 select p.id, p.cover_image, p.name, 0, true
 from public.products p
 where p.slug in (
