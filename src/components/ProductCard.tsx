@@ -98,7 +98,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <div className="pt-5">
         <div className="mb-2 flex items-center justify-between gap-4 text-sm font-bold uppercase tracking-[0.12em] text-[#8C7355]">
           <span>{product.category}</span>
-          {product.new && <span className="text-[#A94C2E]">NEW</span>}
+          {(product.newArrival || product.isNewArrival) && <span className="text-[#A94C2E]">NEW</span>}
         </div>
 
         <button
