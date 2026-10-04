@@ -2,18 +2,18 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { ViewRoute } from '../types';
 import {
-  LayoutDashboard, Package, ShoppingBag, Users, Layers3, Tags, Settings,
+  LayoutDashboard, Package, ShoppingBag, Tags, Settings,
   LogOut, Plus, Pencil, Trash2, Save, X, Upload, RefreshCw, ExternalLink
 } from 'lucide-react';
 import { formatNaira } from '../utils/format';
 
-type Tab = 'overview' | 'products' | 'orders' | 'makers' | 'collections' | 'categories' | 'settings';
+type Tab = 'overview' | 'products' | 'orders' | 'categories' | 'settings';
 type Row = Record<string, any>;
 
 const blankProduct: Row = {
   id: '', slug: '', name: '', short_description: '', description: '', price: 0, currency: 'NGN',
-  category_id: '', collection_id: '', maker_id: '', availability: 'IN STOCK', lead_time: '',
-  materials: '', origin: '', dimensions: '', care: '', cover_image: '', is_featured: false,
+  category_id: '', availability: 'IN STOCK', lead_time: '',
+  cover_image: '', is_featured: false,
   is_new: false, stock_quantity: 10, is_active: true, gallery: ''
 };
 
@@ -31,8 +31,6 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   const [tab, setTab] = useState<Tab>('overview');
   const [products, setProducts] = useState<Row[]>([]);
   const [orders, setOrders] = useState<Row[]>([]);
-  const [makers, setMakers] = useState<Row[]>([]);
-  const [collections, setCollections] = useState<Row[]>([]);
   const [categories, setCategories] = useState<Row[]>([]);
   const [settings, setSettings] = useState<Row>({ whatsapp_number: '', bank_name: '', account_name: '', account_number: '', shipping_flat_rate: 15000, order_prefix: 'RL' });
   const [loading, setLoading] = useState(false);
@@ -40,7 +38,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   const [productEditor, setProductEditor] = useState<Row | null>(null);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [orderItems, setOrderItems] = useState<Row[]>([]);
-  const [referenceEditor, setReferenceEditor] = useState<{ type: 'maker'|'collection'|'category'; row: Row } | null>(null);
+  const [referenceEditor, setReferenceEditor] = useState<{ type: 'category'; row: Row } | null>(null);
 
   const client = supabase;
 
@@ -68,18 +66,14 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   const loadAll = async () => {
     if (!client || !isAdmin) return;
     setLoading(true);
-    const [p, o, m, c, cat, s] = await Promise.all([
-      client.from('products').select('*,categories(id,name),collections(id,name),makers(id,name)').order('created_at', { ascending: false }),
+    const [p, o, cat, s] = await Promise.all([
+      client.from('products').select('*,categories(id,name)').order('created_at', { ascending: false }),
       client.from('orders').select('*').order('created_at', { ascending: false }),
-      client.from('makers').select('*').order('name'),
-      client.from('collections').select('*').order('sort_order').order('name'),
       client.from('categories').select('*').order('sort_order').order('name'),
       client.from('site_settings').select('*').eq('id', 1).maybeSingle(),
     ]);
     if (!p.error) setProducts(p.data || []);
     if (!o.error) setOrders(o.data || []);
-    if (!m.error) setMakers(m.data || []);
-    if (!c.error) setCollections(c.data || []);
     if (!cat.error) setCategories(cat.data || []);
     if (!s.error && s.data) setSettings(s.data);
     setLoading(false);
@@ -123,14 +117,8 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       price: Number(productEditor.price || 0),
       currency: 'NGN',
       category_id: productEditor.category_id || null,
-      collection_id: productEditor.collection_id || null,
-      maker_id: productEditor.maker_id || null,
       availability: productEditor.availability,
       lead_time: productEditor.lead_time || '',
-      materials: String(productEditor.materials || '').split(',').map((x: string) => x.trim()).filter(Boolean),
-      origin: productEditor.origin || '',
-      dimensions: productEditor.dimensions || '',
-      care: productEditor.care || '',
       cover_image: productEditor.cover_image || '',
       is_featured: Boolean(productEditor.is_featured),
       is_new: Boolean(productEditor.is_new),
@@ -209,11 +197,10 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
 
   const saveReference = async () => {
     if (!client || !referenceEditor) return;
-    const { type, row } = referenceEditor;
-    const table = type === 'maker' ? 'makers' : type === 'collection' ? 'collections' : 'categories';
+    const { row } = referenceEditor;
+    const table = 'categories';
     const payload = { ...row };
     delete payload.id; delete payload.created_at; delete payload.updated_at;
-    if (type === 'maker') delete payload.productIds;
     if (row.id) {
       const { error } = await client.from(table).update(payload).eq('id', row.id);
       setNotice(error ? error.message : 'Saved.');
@@ -225,9 +212,9 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     await loadAll();
   };
 
-  const deleteReference = async (type: 'maker'|'collection'|'category', id: string) => {
+  const deleteReference = async (type: 'category', id: string) => {
     if (!client || !window.confirm('Delete this record? Products will not be deleted.')) return;
-    const table = type === 'maker' ? 'makers' : type === 'collection' ? 'collections' : 'categories';
+    const table = 'categories';
     const { error } = await client.from(table).delete().eq('id', id);
     setNotice(error ? error.message : 'Deleted.');
     await loadAll();
@@ -265,7 +252,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
 
   const nav = [
     ['overview','Overview',LayoutDashboard],['products','Products',Package],['orders','Orders',ShoppingBag],
-    ['makers','Makers',Users],['collections','Collections',Layers3],['categories','Categories',Tags],['settings','Settings',Settings]
+    ['categories','Categories',Tags],['settings','Settings',Settings]
   ] as const;
 
   return (
@@ -342,7 +329,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                       <span className="text-xs font-bold uppercase tracking-wide border border-[#181513]/15 px-2.5 py-2">{p.availability}</span>
                     </div>
                     <div className="grid grid-cols-2 gap-2 mt-5">
-                      <button onClick={async()=>{const {data}=await client.from('product_images').select('url,sort_order').eq('product_id',p.id).order('sort_order');setProductEditor({...p,materials:(p.materials||[]).join(', '),gallery:(data||[]).slice(1).map((x:any)=>x.url).join('\n')})}} className="py-3 border border-[#181513]/20 font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#ECE5DC]"><Pencil size={16}/> Edit</button>
+                      <button onClick={async()=>{const {data}=await client.from('product_images').select('url,sort_order').eq('product_id',p.id).order('sort_order');setProductEditor({...p,gallery:(data||[]).slice(1).map((x:any)=>x.url).join('\n')})}} className="py-3 border border-[#181513]/20 font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#ECE5DC]"><Pencil size={16}/> Edit</button>
                       <button onClick={()=>deleteProduct(p.id)} className="py-3 border border-[#B84A28]/30 text-[#9E3E20] font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#B84A28]/5"><Trash2 size={16}/> Delete</button>
                     </div>
                   </div>
@@ -359,8 +346,6 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               {expandedOrder===o.id && <div className="mt-5 bg-[#F4EFEA] p-4"><p className="text-xs uppercase tracking-widest text-[#8C7355] mb-3">Items</p>{orderItems.map(i=><div key={i.id} className="flex justify-between py-2 border-b border-black/10 text-sm"><span>{i.product_name} × {i.quantity}</span><b>{formatNaira(i.subtotal)}</b></div>)}<div className="grid sm:grid-cols-2 gap-3 mt-4 text-sm"><p><b>Delivery:</b> {o.customer_address}, {o.customer_city}, {o.customer_state}, {o.customer_country}</p><p><b>Email:</b> {o.customer_email || '—'}<br/><b>Notes:</b> {o.patron_notes || '—'}</p></div></div>}</div>)}</div>
             </section>}
 
-            {tab==='makers' && <ReferenceManager title="Makers" rows={makers} type="maker" onEdit={r=>setReferenceEditor({type:'maker',row:{...r}})} onDelete={id=>deleteReference('maker',id)} onAdd={()=>setReferenceEditor({type:'maker',row:{name:'',slug:'',title:'',location:'',discipline:'',speciality:'',bio:'',quote:'',heritage_notes:'',image:'',is_active:true}})} />}
-            {tab==='collections' && <ReferenceManager title="Collections" rows={collections} type="collection" onEdit={r=>setReferenceEditor({type:'collection',row:{...r}})} onDelete={id=>deleteReference('collection',id)} onAdd={()=>setReferenceEditor({type:'collection',row:{name:'',slug:'',subtitle:'',description:'',cover_image:'',aspect_ratio:'4:3',curator_notes:'',sort_order:0,is_active:true}})} />}
             {tab==='categories' && <ReferenceManager title="Categories" rows={categories} type="category" onEdit={r=>setReferenceEditor({type:'category',row:{...r}})} onDelete={id=>deleteReference('category',id)} onAdd={()=>setReferenceEditor({type:'category',row:{name:'',slug:'',description:'',image:'',sort_order:0,is_active:true}})} />}
 
             {tab==='settings' && <section className="max-w-2xl bg-white border p-6 space-y-5">
@@ -377,7 +362,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
         </main>
       </div>
 
-      {productEditor && <ProductEditor product={productEditor} setProduct={setProductEditor} categories={categories} collections={collections} makers={makers} onSave={saveProduct} onUpload={uploadImage} onClose={()=>setProductEditor(null)} />}
+      {productEditor && <ProductEditor product={productEditor} setProduct={setProductEditor} categories={categories} onSave={saveProduct} onUpload={uploadImage} onClose={()=>setProductEditor(null)} />}
       {referenceEditor && <ReferenceEditor editor={referenceEditor} setEditor={setReferenceEditor} onSave={saveReference} onClose={()=>setReferenceEditor(null)} />}
     </div>
   );
@@ -390,7 +375,7 @@ const ReferenceManager: React.FC<{title:string;rows:Row[];type:string;onEdit:(r:
   </section>
 );
 
-const ProductEditor: React.FC<any> = ({product,setProduct,categories,collections,makers,onSave,onUpload,onClose}) => {
+const ProductEditor: React.FC<any> = ({product,setProduct,categories,onSave,onUpload,onClose}) => {
   const field=(key:string,label:string,type='text',help='')=><label className="block"><span className="block text-sm font-bold text-[#181513]">{label}</span>{help&&<span className="block text-xs font-medium text-[#8C7355] mt-1">{help}</span>}<input type={type} value={product[key]??''} onChange={e=>setProduct({...product,[key]:type==='number'?Number(e.target.value):e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-medium focus:border-[#B84A28] focus:outline-none"/></label>;
 
   return <div className="fixed inset-0 z-50 bg-[#181513]/75 p-2 sm:p-6 overflow-y-auto">
@@ -431,25 +416,13 @@ const ProductEditor: React.FC<any> = ({product,setProduct,categories,collections
 
         <section className="border-t-2 border-[#181513]/10 pt-8">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">03 · Classification</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">Where does this product belong?</h3>
-          <div className="grid md:grid-cols-3 gap-5">
-            <label><span className="block text-sm font-bold">Category</span><select value={product.category_id||''} onChange={e=>setProduct({...product,category_id:e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-semibold"><option value="">Uncategorised</option>{categories.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
-            <label><span className="block text-sm font-bold">Collection</span><select value={product.collection_id||''} onChange={e=>setProduct({...product,collection_id:e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-semibold"><option value="">No collection</option>{collections.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
-            <label><span className="block text-sm font-bold">Maker</span><select value={product.maker_id||''} onChange={e=>setProduct({...product,maker_id:e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-semibold"><option value="">No maker</option>{makers.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+          <div className="max-w-md">
+            <label><span className="block text-sm font-bold">Category</span><select value={product.category_id||''} onChange={e=>setProduct({...product,category_id:e.target.value})} className="w-full min-h-[56px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-semibold"><option value="">Uncategorised</option>{categories.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
           </div>
         </section>
 
         <section className="border-t-2 border-[#181513]/10 pt-8">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">04 · Craft details</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">Tell the complete story</h3>
-          <div className="grid md:grid-cols-2 gap-5">
-            {field('materials','Materials','text','Separate multiple materials with commas.')}
-            {field('origin','Origin')}
-            {field('dimensions','Dimensions')}
-            {field('care','Care instructions')}
-          </div>
-        </section>
-
-        <section className="border-t-2 border-[#181513]/10 pt-8">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">05 · Visibility</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">How should it appear?</h3>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">04 · Visibility</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">How should it appear?</h3>
           <div className="grid sm:grid-cols-3 gap-3">
             {[['is_featured','Featured product','Highlight this product in featured areas.'],['is_new','New arrival','Show as a new arrival.'],['is_active','Visible in store','Turn this off to hide the product without deleting it.']].map(([key,label,help])=><label key={key} className={`p-4 border-2 cursor-pointer ${product[key]?'border-[#B84A28] bg-[#B84A28]/5':'border-[#181513]/10 bg-white'}`}><div className="flex items-start gap-3"><input type="checkbox" checked={Boolean(product[key])} onChange={e=>setProduct({...product,[key]:e.target.checked})} className="mt-1 w-5 h-5"/><div><span className="block font-bold text-base">{label}</span><span className="block text-xs font-medium text-[#57524E] mt-1">{help}</span></div></div></label>)}
           </div>
