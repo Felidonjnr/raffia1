@@ -545,3 +545,18 @@ begin
     end if;
   end loop;
 end $$;
+
+-- Bulk production catalog seed
+-- Four products prepared from the latest supplier batch.
+-- Cloudinary URLs intentionally left blank for later update.
+insert into public.products
+(slug,name,short_description,description,price,currency,category_id,availability,stock_quantity,cover_image,is_featured,is_new,is_active)
+select v.slug,v.name,v.short_description,v.description,v.price,'NGN',c.id,'IN STOCK',null,v.cover_image,v.is_featured,v.is_new,true
+from (values
+('multicolour-patterned-raffia-shoulder-bag','Multicolour Patterned Raffia Shoulder Bag','Raffia shoulder bag','',15000,'',true,true),
+('brown-striped-raffia-handbag-set','Brown Striped Raffia Handbag Set','Raffia handbag set','',45000,'',true,true),
+('purple-dark-striped-raffia-handbags','Purple & Dark Striped Raffia Handbags','Raffia handbags','',20000,'',false,true),
+('red-plaid-raffia-handbags','Red & Plaid Raffia Handbags','Raffia handbags','',30000,'',false,true)
+) as v(slug,name,short_description,description,price,cover_image,is_featured,is_new)
+join public.categories c on c.slug='fashion-accessories'
+where not exists (select 1 from public.products p where p.slug=v.slug);
