@@ -391,24 +391,77 @@ const ReferenceManager: React.FC<{title:string;rows:Row[];type:string;onEdit:(r:
 );
 
 const ProductEditor: React.FC<any> = ({product,setProduct,categories,collections,makers,onSave,onUpload,onClose}) => {
-  const field=(key:string,label:string,type='text')=><label className="block"><span className="text-xs uppercase tracking-wider text-[#57524E]">{label}</span><input type={type} value={product[key]??''} onChange={e=>setProduct({...product,[key]:type==='number'?Number(e.target.value):e.target.value})} className="w-full p-3 border mt-1 bg-white"/></label>;
-  return <div className="fixed inset-0 z-50 bg-[#181513]/70 p-3 sm:p-8 overflow-y-auto"><form onSubmit={onSave} className="max-w-5xl mx-auto bg-[#FAF7F2] p-5 sm:p-8 space-y-6">
-    <div className="flex justify-between items-center"><div><p className="text-xs uppercase tracking-widest text-[#B84A28]">Catalog editor</p><h2 className="font-editorial text-3xl">{product.id?'Edit product':'Add product'}</h2></div><button type="button" onClick={onClose}><X/></button></div>
-    <div className="grid md:grid-cols-2 gap-4">{field('name','Name *')}{field('slug','Slug *')}{field('price','Price (₦) *','number')}{field('stock_quantity','Stock quantity','number')}</div>
-    <div className="grid md:grid-cols-3 gap-4">
-      <label><span className="text-xs uppercase tracking-wider">Category</span><select value={product.category_id||''} onChange={e=>setProduct({...product,category_id:e.target.value})} className="w-full p-3 border mt-1"><option value="">Uncategorised</option>{categories.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
-      <label><span className="text-xs uppercase tracking-wider">Collection</span><select value={product.collection_id||''} onChange={e=>setProduct({...product,collection_id:e.target.value})} className="w-full p-3 border mt-1"><option value="">No collection</option>{collections.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
-      <label><span className="text-xs uppercase tracking-wider">Maker</span><select value={product.maker_id||''} onChange={e=>setProduct({...product,maker_id:e.target.value})} className="w-full p-3 border mt-1"><option value="">No maker</option>{makers.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
-    </div>
-    <div className="grid md:grid-cols-2 gap-4"><label><span className="text-xs uppercase tracking-wider">Availability</span><select value={product.availability} onChange={e=>setProduct({...product,availability:e.target.value})} className="w-full p-3 border mt-1">{availabilityOptions.map(x=><option key={x}>{x}</option>)}</select></label>{field('lead_time','Lead time')}</div>
-    {field('short_description','Short description')}
-    <label className="block"><span className="text-xs uppercase tracking-wider">Description</span><textarea value={product.description||''} onChange={e=>setProduct({...product,description:e.target.value})} rows={5} className="w-full p-3 border mt-1"/></label>
-    <div className="grid md:grid-cols-2 gap-4">{field('materials','Materials (comma separated)')}{field('origin','Origin')}{field('dimensions','Dimensions')}{field('care','Care')}</div>
-    <label className="block"><span className="text-xs uppercase tracking-wider">Cover image URL</span><div className="flex gap-2 mt-1"><input value={product.cover_image||''} onChange={e=>setProduct({...product,cover_image:e.target.value})} className="w-full p-3 border"/><label className="shrink-0 px-4 py-3 border cursor-pointer"><Upload size={16}/><input type="file" accept="image/*" className="hidden" onChange={e=>e.target.files?.[0]&&onUpload(e.target.files[0],(url:string)=>setProduct({...product,cover_image:url}))}/></label></div></label>
-    <label className="block"><span className="text-xs uppercase tracking-wider">Additional gallery URLs — one per line</span><textarea value={product.gallery||''} onChange={e=>setProduct({...product,gallery:e.target.value})} rows={3} className="w-full p-3 border mt-1"/></label>
-    <div className="flex flex-wrap gap-5 text-sm"><label><input type="checkbox" checked={Boolean(product.is_featured)} onChange={e=>setProduct({...product,is_featured:e.target.checked})}/> Featured</label><label><input type="checkbox" checked={Boolean(product.is_new)} onChange={e=>setProduct({...product,is_new:e.target.checked})}/> New arrival</label><label><input type="checkbox" checked={Boolean(product.is_active)} onChange={e=>setProduct({...product,is_active:e.target.checked})}/> Visible in store</label></div>
-    <div className="flex justify-end gap-3 pt-4 border-t"><button type="button" onClick={onClose} className="px-5 py-3 border text-xs uppercase tracking-widest">Cancel</button><button className="px-5 py-3 bg-[#181513] text-white text-xs uppercase tracking-widest flex items-center gap-2"><Save size={15}/> Save product</button></div>
-  </form></div>;
+  const field=(key:string,label:string,type='text',help='')=><label className="block"><span className="block text-sm font-bold text-[#181513]">{label}</span>{help&&<span className="block text-xs font-medium text-[#8C7355] mt-1">{help}</span>}<input type={type} value={product[key]??''} onChange={e=>setProduct({...product,[key]:type==='number'?Number(e.target.value):e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-medium focus:border-[#B84A28] focus:outline-none"/></label>;
+
+  return <div className="fixed inset-0 z-50 bg-[#181513]/75 p-2 sm:p-6 overflow-y-auto">
+    <form onSubmit={onSave} className="max-w-6xl mx-auto bg-[#FAF7F2] shadow-2xl">
+      <div className="sticky top-0 z-10 bg-[#181513] text-white px-5 sm:px-8 py-5 flex items-center justify-between">
+        <div><p className="text-xs font-bold uppercase tracking-[0.25em] text-[#C8A978]">LIVE CATALOG EDITOR</p><h2 className="font-editorial text-3xl sm:text-4xl font-bold mt-1">{product.id?'Edit product':'Add product'}</h2></div>
+        <button type="button" onClick={onClose} className="p-2 hover:bg-white/10" aria-label="Close editor"><X size={28}/></button>
+      </div>
+
+      <div className="p-5 sm:p-8 space-y-8">
+        <section className="grid lg:grid-cols-[1.1fr_.9fr] gap-8">
+          <div className="space-y-5">
+            <div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">01 · Identity</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1">What is this product?</h3></div>
+            {field('name','Product name *','text','The name customers see everywhere.')}
+            {field('slug','URL slug *','text','Example: woven-raffia-tote-bag')}
+            {field('short_description','Short description','text','One clear sentence for cards and search.')}
+            <label className="block"><span className="block text-sm font-bold">Full product description</span><textarea value={product.description||''} onChange={e=>setProduct({...product,description:e.target.value})} rows={7} className="w-full p-4 border-2 border-[#181513]/15 mt-2 bg-white text-base leading-7 font-medium focus:border-[#B84A28] focus:outline-none"/></label>
+          </div>
+
+          <div className="space-y-4">
+            <div className="aspect-square max-h-[440px] bg-[#ECE5DC] overflow-hidden border-2 border-[#181513]/10">
+              {product.cover_image ? <img src={product.cover_image} alt={product.name || 'Product preview'} className="w-full h-full object-cover"/> : <div className="h-full grid place-items-center text-center p-6"><Package size={42} className="mx-auto text-[#8C7355]"/><p className="font-bold mt-3">No product image yet</p><p className="text-sm text-[#57524E] mt-1">Add an image URL or upload a file below.</p></div>}
+            </div>
+            <label className="block"><span className="block text-sm font-bold">Main product image URL *</span><span className="block text-xs font-medium text-[#8C7355] mt-1">Paste the permanent image URL, or upload directly to Supabase Storage.</span><div className="flex gap-2 mt-2"><input value={product.cover_image||''} onChange={e=>setProduct({...product,cover_image:e.target.value})} className="flex-1 min-w-0 min-h-[52px] px-4 py-3 border-2 border-[#181513]/15 bg-white text-base font-medium"/><label className="w-14 shrink-0 min-h-[52px] border-2 border-[#181513]/15 bg-white grid place-items-center cursor-pointer hover:bg-[#ECE5DC]"><Upload size={20}/><input type="file" accept="image/*" className="hidden" onChange={e=>e.target.files?.[0]&&onUpload(e.target.files[0],(url:string)=>setProduct({...product,cover_image:url}))}/></label></div></label>
+            <label className="block"><span className="block text-sm font-bold">Gallery image URLs</span><span className="block text-xs font-medium text-[#8C7355] mt-1">One URL per line. The first image is the main image.</span><textarea value={product.gallery||''} onChange={e=>setProduct({...product,gallery:e.target.value})} rows={5} className="w-full p-4 border-2 border-[#181513]/15 mt-2 bg-white text-sm leading-6 font-medium"/></label>
+          </div>
+        </section>
+
+        <section className="border-t-2 border-[#181513]/10 pt-8">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">02 · Commerce</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">Price, stock & availability</h3>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {field('price','Price (₦) *','number','Current selling price.')}
+            {field('stock_quantity','Stock quantity','number','Leave empty for unlimited / made-to-order.')}
+            <label><span className="block text-sm font-bold">Availability</span><select value={product.availability||''} onChange={e=>setProduct({...product,availability:e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-bold focus:border-[#B84A28] focus:outline-none">{availabilityOptions.map(x=><option key={x}>{x}</option>)}</select></label>
+            {field('lead_time','Lead time','text','Example: Ships within 5–7 working days.')}
+          </div>
+        </section>
+
+        <section className="border-t-2 border-[#181513]/10 pt-8">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">03 · Classification</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">Where does this product belong?</h3>
+          <div className="grid md:grid-cols-3 gap-5">
+            <label><span className="block text-sm font-bold">Category</span><select value={product.category_id||''} onChange={e=>setProduct({...product,category_id:e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-semibold"><option value="">Uncategorised</option>{categories.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+            <label><span className="block text-sm font-bold">Collection</span><select value={product.collection_id||''} onChange={e=>setProduct({...product,collection_id:e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-semibold"><option value="">No collection</option>{collections.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+            <label><span className="block text-sm font-bold">Maker</span><select value={product.maker_id||''} onChange={e=>setProduct({...product,maker_id:e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-semibold"><option value="">No maker</option>{makers.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
+          </div>
+        </section>
+
+        <section className="border-t-2 border-[#181513]/10 pt-8">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">04 · Craft details</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">Tell the complete story</h3>
+          <div className="grid md:grid-cols-2 gap-5">
+            {field('materials','Materials','text','Separate multiple materials with commas.')}
+            {field('origin','Origin')}
+            {field('dimensions','Dimensions')}
+            {field('care','Care instructions')}
+          </div>
+        </section>
+
+        <section className="border-t-2 border-[#181513]/10 pt-8">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">05 · Visibility</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">How should it appear?</h3>
+          <div className="grid sm:grid-cols-3 gap-3">
+            {[['is_featured','Featured product','Highlight this product in featured areas.'],['is_new','New arrival','Show as a new arrival.'],['is_active','Visible in store','Turn this off to hide the product without deleting it.']].map(([key,label,help])=><label key={key} className={`p-4 border-2 cursor-pointer ${product[key]?'border-[#B84A28] bg-[#B84A28]/5':'border-[#181513]/10 bg-white'}`}><div className="flex items-start gap-3"><input type="checkbox" checked={Boolean(product[key])} onChange={e=>setProduct({...product,[key]:e.target.checked})} className="mt-1 w-5 h-5"/><div><span className="block font-bold text-base">{label}</span><span className="block text-xs font-medium text-[#57524E] mt-1">{help}</span></div></div></label>)}
+          </div>
+        </section>
+      </div>
+
+      <div className="sticky bottom-0 bg-[#FAF7F2] border-t-2 border-[#181513]/10 px-5 sm:px-8 py-4 flex flex-col sm:flex-row justify-end gap-3">
+        <button type="button" onClick={onClose} className="px-6 py-4 border-2 border-[#181513]/20 font-bold text-base">Cancel</button>
+        <button className="px-7 py-4 bg-[#181513] text-white font-bold text-base flex items-center justify-center gap-2 hover:bg-[#B84A28] transition-colors"><Save size={19}/> Save product to marketplace</button>
+      </div>
+    </form>
+  </div>;
 };
 
 const ReferenceEditor: React.FC<any> = ({editor,setEditor,onSave,onClose}) => {
