@@ -4,7 +4,7 @@ import { useMarketplaceData } from '../context/MarketplaceDataContext';
 import { ArchivalImage } from '../components/ArchivalImage';
 import { ProductCard } from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
-import { ArrowLeft, Plus, Minus, ShieldCheck, Truck, Sparkles, MapPin } from 'lucide-react';
+import { ArrowLeft, Plus, Minus, ShieldCheck, Truck, Sparkles } from 'lucide-react';
 import { formatNaira } from '../utils/format';
 
 interface ProductDetailPageProps {
@@ -19,12 +19,12 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   onSelectProduct,
 }) => {
   const { addToCart, setIsCartOpen } = useCart();
-  const { products: PRODUCTS, makers: MAKERS, loading } = useMarketplaceData();
+  const { products: PRODUCTS, loading } = useMarketplaceData();
   const [quantity, setQuantity] = useState(1);
   const [selectedGalleryIdx, setSelectedGalleryIdx] = useState(0);
 
   const product = PRODUCTS.find((p) => p.slug === slug);
-  const makerProfile = product ? MAKERS.find((m) => m.id === product.maker.id) : undefined;
+  const makerProfile = undefined;
   const relatedProducts = product ? PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3) : [];
 
   const handleAddToBag = () => {
@@ -105,7 +105,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             {/* Product details footnote */}
             <div className="pt-4 border-t border-[#181513]/10 flex items-center justify-between text-xs font-mono uppercase text-[#8C7355]">
               <span>Raffia Heritage Craft</span>
-              <span>Origin: {product.origin}</span>
+              <span>Raffia Legacy Collection</span>
             </div>
           </div>
 
@@ -260,7 +260,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                 About {product.maker.name}
               </h2>
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#8C7355] mb-6">
-                <MapPin className="w-3.5 h-3.5 text-[#B84A28]" />
                 <span>{product.maker.region}</span>
               </div>
               <p className="text-sm text-[#57524E] leading-relaxed mb-6 font-normal">
@@ -282,8 +281,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   {makerProfile?.bio ||
                     'Artisans, designers and creatives turning heritage into new products, fashion, art, performance and design.'}
                 </p>
-                <div className="pt-4 border-t border-[#181513]/10 flex items-center justify-between text-xs text-[#181513]">
-                  <span className="font-mono text-xs text-[#8C7355]">{product.materials.join(' · ')}</span>
+                <div className="pt-4 border-t border-[#181513]/10 text-xs text-[#181513]">
                   <span className="font-medium text-[#B84A28]">Authentic Nigerian Raffia</span>
                 </div>
               </div>
