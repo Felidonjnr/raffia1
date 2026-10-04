@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Plus, Minus, ArrowRight, ShieldCheck, MapPin } from 'lucide-react';
+import { X, Plus, Minus, ArrowRight } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
 import { formatNaira } from '../utils/format';
@@ -67,7 +67,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 20 }}
           transition={{ type: 'spring', damping: 25, stiffness: 280 }}
-          className="relative w-full max-w-4xl bg-[#FAF7F2] border border-[#181513]/15 shadow-2xl overflow-hidden z-10 grid grid-cols-1 md:grid-cols-2"
+          className="relative w-full max-w-5xl bg-[#FAF7F2] border border-[#181513]/15 shadow-2xl overflow-hidden z-10 grid grid-cols-1 md:grid-cols-2"
         >
           {/* Close button */}
           <button
@@ -79,7 +79,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
           </button>
 
           {/* Left: Imagery Gallery */}
-          <div className="bg-[#ECE5DC] p-6 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#181513]/10">
+          <div className="bg-[#E4D9CA] p-6 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#181513]/10">
             <div className="relative aspect-[4/3] w-full overflow-hidden border border-[#181513]/10 bg-[#E3DBD0]">
               <img
                 src={currentImg}
@@ -121,15 +121,15 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
           {/* Right: Details & Purchase */}
           <div className="p-6 sm:p-8 flex flex-col justify-between">
             <div>
-              <div className="text-xs font-mono text-[#8C7355] uppercase tracking-wider mb-2">
+              <div className="text-sm font-bold text-[#8C7355] uppercase tracking-[0.14em] mb-3">
                 <span>{product.category}</span>
               </div>
 
-              <h2 className="font-editorial text-2xl sm:text-3xl font-bold tracking-tight text-[#181513] mb-2 leading-snug">
+              <h2 className="font-editorial text-3xl sm:text-4xl font-bold tracking-tight text-[#181513] mb-2 leading-snug">
                 {product.name}
               </h2>
 
-              <p className="text-xl font-bold text-[#181513] font-mono mb-4">
+              <p className="text-2xl font-black text-[#181513] mb-4">
                 {formatNaira(product.price)}
               </p>
 
