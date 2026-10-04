@@ -50,6 +50,11 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
   const [productEditor, setProductEditor] = useState<Row | null>(null);
+  const [productSearch, setProductSearch] = useState('');
+  const [productVisibility, setProductVisibility] = useState<'ALL' | 'VISIBLE' | 'HIDDEN'>('ALL');
+  const [orderSearch, setOrderSearch] = useState('');
+  const [orderPaymentFilter, setOrderPaymentFilter] = useState('ALL');
+  const [orderStatusFilter, setOrderStatusFilter] = useState('ALL');
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [orderItems, setOrderItems] = useState<Row[]>([]);
   const [referenceEditor, setReferenceEditor] = useState<{ type: 'maker' | 'collection' | 'category'; row: Row } | null>(null);
@@ -161,6 +166,29 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     pending: orders.filter((o) => o.payment_status !== 'PAID').length,
     revenue: orders.filter((o) => o.payment_status === 'PAID').reduce((sum, o) => sum + Number(o.total || 0), 0),
   }), [products, orders]);
+
+  const filteredProducts = useMemo(() => {
+    const query = productSearch.trim().toLowerCase();
+    return products.filter((p) => {
+      const matchesQuery = !query || [p.name, p.slug, p.categories?.name].some((value) => String(value || '').toLowerCase().includes(query));
+      const matchesVisibility =
+        productVisibility === 'ALL' ||
+        (productVisibility === 'VISIBLE' && p.is_active) ||
+        (productVisibility === 'HIDDEN' && !p.is_active);
+      return matchesQuery && matchesVisibility;
+    });
+  }, [products, productSearch, productVisibility]);
+
+  const filteredOrders = useMemo(() => {
+    const query = orderSearch.trim().toLowerCase();
+    return orders.filter((o) => {
+      const matchesQuery = !query || [o.order_number, o.customer_name, o.customer_phone, o.customer_email]
+        .some((value) => String(value || '').toLowerCase().includes(query));
+      const matchesPayment = orderPaymentFilter === 'ALL' || o.payment_status === orderPaymentFilter;
+      const matchesStatus = orderStatusFilter === 'ALL' || o.order_status === orderStatusFilter;
+      return matchesQuery && matchesPayment && matchesStatus;
+    });
+  }, [orders, orderSearch, orderPaymentFilter, orderStatusFilter]);
 
   const signIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -810,6 +838,26 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                 </button>
               </div>
 
+              <div className="bg-white border border-[#181513]/10 p-4 grid sm:grid-cols-[1fr_auto_auto] gap-3 shadow-xs">
+                <label className="relative block">
+                  <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8C7355]" />
+                  <input
+                    value={productSearch}
+                    onChange={(e) => setProductSearch(e.target.value)}
+                    placeholder="Search products, slugs or categories…"
+                    className="w-full border border-[#181513]/15 pl-9 pr-3 py-2.5 text-sm font-sans outline-none focus:border-[#B84A28]"
+                  />
+                </label>
+                <select value={productVisibility} onChange={(e) => setProductVisibility(e.target.value as typeof productVisibility)} className="border border-[#181513]/15 px-3 py-2.5 text-xs font-mono uppercase bg-white">
+                  <option value="ALL">All Products</option>
+                  <option value="VISIBLE">Visible</option>
+                  <option value="HIDDEN">Hidden</option>
+                </select>
+                <button type="button" onClick={() => { setProductSearch(''); setProductVisibility('ALL'); }} className="border border-[#181513]/15 px-4 py-2.5 text-xs font-mono uppercase tracking-wider cursor-pointer hover:bg-[#FAF7F2]">
+                  Reset
+                </button>
+              </div>
+
               <div className="bg-white border border-[#181513]/10 overflow-x-auto shadow-xs">
                 <table className="w-full text-left text-xs font-sans">
                   <thead className="bg-[#FAF7F2] border-b border-[#181513]/10 font-mono uppercase text-[#8C7355] text-[11px]">
@@ -823,7 +871,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#181513]/10">
-                    {products.map((p) => (
+                    {filteredProducts.map((p) => (
                       <tr key={p.id} className="hover:bg-[#FAF7F2]/50">
                         <td className="p-3">
                           <div className="flex items-center gap-3">
@@ -892,8 +940,40 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                   No orders have been submitted yet.
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {orders.map((o) => (
+                <>
+                  <div className="bg-white border border-[#181513]/10 p-4 grid lg:grid-cols-[1fr_auto_auto_auto] gap-3 shadow-xs">
+                    <label className="relative block">
+                      <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8C7355]" />
+                      <input
+                        value={orderSearch}
+                        onChange={(e) => setOrderSearch(e.target.value)}
+                        placeholder="Search order number, customer or phone…"
+                        className="w-full border border-[#181513]/15 pl-9 pr-3 py-2.5 text-sm font-sans outline-none focus:border-[#B84A28]"
+                      />
+                    </label>
+                    <select value={orderPaymentFilter} onChange={(e) => setOrderPaymentFilter(e.target.value)} className="border border-[#181513]/15 px-3 py-2.5 text-xs font-mono uppercase bg-white">
+                      <option value="ALL">All Payments</option>
+                      <option>PENDING</option>
+                      <option>AWAITING_CONFIRMATION</option>
+                      <option>PAID</option>
+                      <option>FAILED</option>
+                      <option>REFUNDED</option>
+                    </select>
+                    <select value={orderStatusFilter} onChange={(e) => setOrderStatusFilter(e.target.value)} className="border border-[#181513]/15 px-3 py-2.5 text-xs font-mono uppercase bg-white">
+                      <option value="ALL">All Statuses</option>
+                      <option>NEW</option>
+                      <option>PROCESSING</option>
+                      <option>READY_FOR_DELIVERY</option>
+                      <option>SHIPPED</option>
+                      <option>DELIVERED</option>
+                      <option>CANCELLED</option>
+                    </select>
+                    <button type="button" onClick={() => { setOrderSearch(''); setOrderPaymentFilter('ALL'); setOrderStatusFilter('ALL'); }} className="border border-[#181513]/15 px-4 py-2.5 text-xs font-mono uppercase tracking-wider cursor-pointer hover:bg-[#FAF7F2]">
+                      Reset
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {filteredOrders.map((o) => (
                     <div key={o.id} className="bg-white border border-[#181513]/10 p-5 shadow-xs space-y-4">
                       <div className="flex flex-wrap items-center justify-between gap-4">
                         <div>
