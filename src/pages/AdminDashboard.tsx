@@ -33,7 +33,6 @@ const availabilityOptions = ['IN STOCK', 'MADE TO ORDER', 'LIMITED EDITION', 'AR
 export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }> = ({ onNavigate }) => {
   const [sessionUser, setSessionUser] = useState<any>(null);
   const [role, setRole] = useState('');
-  const [loginMode, setLoginMode] = useState(true);
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authError, setAuthError] = useState('');
@@ -125,7 +124,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     });
   }, [sessionUser]);
 
-  const isAdmin = role === 'admin' || role === 'editor' || Boolean(sessionUser);
+  const isAdmin = role === 'admin' || role === 'editor';
 
   const loadAll = async () => {
     if (!client) return;
@@ -167,14 +166,9 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     e.preventDefault();
     if (!client) return;
     setAuthError('');
-    const result = loginMode
-      ? await client.auth.signInWithPassword({ email: authEmail, password: authPassword })
-      : await client.auth.signUp({ email: authEmail, password: authPassword });
+    const result = await client.auth.signInWithPassword({ email: authEmail, password: authPassword });
     if (result.error) {
       setAuthError(result.error.message);
-    } else if (!loginMode) {
-      setNotice({ type: 'success', text: 'Account created and signed in successfully.' });
-      setRole('admin');
     }
   };
 
@@ -488,6 +482,29 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   }
 
   // Not signed in to Supabase Auth
+  if (sessionUser && !isAdmin) {
+    return (
+      <div className="min-h-screen bg-[#FAF7F2] p-6 lg:p-12 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white border border-[#181513]/15 p-8 sm:p-10 shadow-xl text-center space-y-5">
+          <div className="mx-auto w-14 h-14 rounded-full bg-[#B84A28]/10 text-[#B84A28] grid place-items-center">
+            <ShieldCheck size={26} />
+          </div>
+          <div>
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28]">Restricted Area</span>
+            <h1 className="font-editorial text-3xl text-[#181513] mt-2">Access not approved</h1>
+            <p className="text-sm text-[#57524E] leading-relaxed mt-3">
+              Your account is signed in, but it has not been assigned an admin or editor role. Ask the site administrator to approve your account.
+            </p>
+          </div>
+          <div className="flex gap-3 justify-center">
+            <button type="button" onClick={() => onNavigate({ type: 'home' })} className="px-5 py-3 border border-[#181513]/20 text-xs font-mono uppercase tracking-wider cursor-pointer">Return to Storefront</button>
+            <button type="button" onClick={signOut} className="px-5 py-3 bg-[#181513] text-white text-xs font-mono uppercase tracking-wider cursor-pointer">Sign Out</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!sessionUser) {
     return (
       <div className="min-h-screen bg-[#FAF7F2] p-6 lg:p-12 flex items-center justify-center">
@@ -554,17 +571,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               type="submit"
               className="w-full py-3.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-mono uppercase tracking-widest font-bold transition-colors cursor-pointer"
             >
-              {loginMode ? 'Sign In to Dashboard' : 'Create Admin Account'}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setLoginMode(!loginMode);
-                setAuthError('');
-              }}
-              className="w-full py-2.5 border border-[#181513]/20 hover:border-[#181513] text-[#181513] text-xs font-mono uppercase tracking-widest transition-colors cursor-pointer"
-            >
-              {loginMode ? 'Need an account? Register' : 'Existing user? Sign In'}
+              Sign In to Dashboard
             </button>
           </form>
 
