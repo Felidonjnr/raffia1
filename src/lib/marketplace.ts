@@ -24,7 +24,7 @@ function mapProduct(row: any): Product {
     subtitle: row.short_description || row.subtitle || '',
     price: Number(row.price),
     currency: row.currency || 'NGN',
-    category: (row.categories?.name || row.category || 'TRADITIONAL CRAFT') as ProductCategory,
+    category: String(row.categories?.name || row.category || 'TRADITIONAL CRAFT').toUpperCase() as ProductCategory,
     collection: row.collections?.slug || row.collection_slug || '',
     maker: {
       id: maker.id || row.maker_id || '',
