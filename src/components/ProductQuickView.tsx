@@ -113,8 +113,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
               </div>
             )}
 
-            <div className="mt-4 pt-3 border-t border-[#181513]/10 flex items-center justify-between text-xs font-mono text-[#8C7355] uppercase">
-              <span>{product.origin}</span>
+            <div className="mt-4 pt-3 border-t border-[#181513]/10 flex items-center justify-end text-xs font-mono text-[#8C7355] uppercase">
               <span>{product.availability}</span>
             </div>
           </div>
@@ -122,10 +121,8 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
           {/* Right: Details & Purchase */}
           <div className="p-6 sm:p-8 flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-2 text-xs font-mono text-[#8C7355] uppercase tracking-wider mb-2">
+              <div className="text-xs font-mono text-[#8C7355] uppercase tracking-wider mb-2">
                 <span>{product.category}</span>
-                <span>·</span>
-                <span className="text-[#B84A28] font-medium">{product.maker.name}</span>
               </div>
 
               <h2 className="font-editorial text-2xl sm:text-3xl font-bold tracking-tight text-[#181513] mb-2 leading-snug">
@@ -140,22 +137,6 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
                 {product.description}
               </p>
 
-              {/* Material tags */}
-              <div className="space-y-2 mb-6">
-                <p className="text-xs font-mono uppercase text-[#8C7355] tracking-wider">
-                  Materials & Craft
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {product.materials.map((m) => (
-                    <span
-                      key={m}
-                      className="text-xs font-sans px-2.5 py-1 bg-[#ECE5DC] text-[#2E251F]"
-                    >
-                      {m}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
 
             {/* Actions */}
@@ -194,7 +175,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({
                 }}
                 className="w-full flex items-center justify-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#57524E] hover:text-[#181513] transition-colors py-1 cursor-pointer"
               >
-                <span>VIEW COMPLETE SPECIFICATIONS</span>
+                <span>VIEW PRODUCT DETAILS</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
