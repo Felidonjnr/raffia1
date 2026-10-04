@@ -4,7 +4,7 @@ import { useMarketplaceData } from '../context/MarketplaceDataContext';
 import { ArchivalImage } from '../components/ArchivalImage';
 import { ProductCard } from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
-import { ArrowLeft, Plus, Minus, ShieldCheck, Truck, Sparkles, MapPin } from 'lucide-react';
+import { ArrowLeft, Plus, Minus, ShieldCheck, Truck, Sparkles } from 'lucide-react';
 import { formatNaira } from '../utils/format';
 
 interface ProductDetailPageProps {
@@ -19,12 +19,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   onSelectProduct,
 }) => {
   const { addToCart, setIsCartOpen } = useCart();
-  const { products: PRODUCTS, makers: MAKERS, loading } = useMarketplaceData();
+  const { products: PRODUCTS, loading } = useMarketplaceData();
   const [quantity, setQuantity] = useState(1);
   const [selectedGalleryIdx, setSelectedGalleryIdx] = useState(0);
 
   const product = PRODUCTS.find((p) => p.slug === slug);
-  const makerProfile = product ? MAKERS.find((m) => m.id === product.maker.id) : undefined;
   const relatedProducts = product ? PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3) : [];
 
   const handleAddToBag = () => {
@@ -107,7 +106,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             {/* Product details footnote */}
             <div className="pt-4 border-t border-[#181513]/10 flex items-center justify-between text-xs font-mono uppercase text-[#8C7355]">
               <span>Raffia Heritage Craft</span>
-              <span>Origin: {product.origin}</span>
+              <span>Raffia Legacy Collection</span>
             </div>
           </div>
 
@@ -129,15 +128,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               <p className="text-sm text-[#57524E] leading-relaxed mb-4">
                 {product.subtitle}
               </p>
-
-              {/* Maker link */}
-              <div className="inline-flex items-center gap-1.5 text-xs text-[#181513] font-medium mb-6">
-                <span>Handcrafted by</span>
-                <span className="font-editorial text-base italic underline underline-offset-2 text-[#B84A28]">
-                  {product.maker.name}
-                </span>
-                <span className="text-[#8C7355]">· {product.maker.region}</span>
-              </div>
 
               {/* Price */}
               <div className="py-4 border-y border-[#181513]/10 flex items-baseline justify-between">
@@ -198,42 +188,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
               </div>
             </div>
 
-            {/* Specifications Definition List */}
-            <div className="space-y-3 pt-6 border-t border-[#181513]/10 text-xs">
-              <div>
-                <span className="font-mono uppercase tracking-wider text-[#8C7355] block mb-1">
-                  Description
-                </span>
-                <p className="text-[#57524E] leading-relaxed font-normal">
-                  {product.description}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 pt-3 border-t border-[#181513]/5">
-                <div>
-                  <span className="font-mono uppercase tracking-wider text-[#8C7355] block mb-1">
-                    Materials
-                  </span>
-                  <ul className="text-[#181513] space-y-0.5">
-                    {product.materials.map((mat, i) => (
-                      <li key={i}>· {mat}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <span className="font-mono uppercase tracking-wider text-[#8C7355] block mb-1">
-                    Dimensions
-                  </span>
-                  <p className="text-[#181513]">{product.dimensions}</p>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-[#181513]/5">
-                <span className="font-mono uppercase tracking-wider text-[#8C7355] block mb-1">
-                  Conservation & Care
-                </span>
-                <p className="text-[#57524E] leading-relaxed">{product.care}</p>
-              </div>
+            <div className="pt-6 border-t border-[#181513]/10 text-sm">
+              <span className="font-mono uppercase tracking-wider text-[#8C7355] block mb-2">Description</span>
+              <p className="text-[#57524E] leading-relaxed font-normal">{product.description}</p>
             </div>
 
             {/* Trust Assurance Strip */}
@@ -249,50 +206,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           </div>
         </div>
       </div>
-
-      {/* About The Maker Section */}
-      <section className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-24">
-        <div className="border-t border-[#181513]/10 pt-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-5">
-              <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">
-                Maker Profile
-              </span>
-              <h2 className="font-editorial text-3xl sm:text-4xl font-normal text-[#181513] mb-4">
-                About {product.maker.name}
-              </h2>
-              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#8C7355] mb-6">
-                <MapPin className="w-3.5 h-3.5 text-[#B84A28]" />
-                <span>{product.maker.region}</span>
-              </div>
-              <p className="text-sm text-[#57524E] leading-relaxed mb-6 font-normal">
-                {product.maker.story || 'Artisans and designers creating hand-woven raffia objects and craft.'}
-              </p>
-              {makerProfile?.quote ? (
-                <blockquote className="border-l-2 border-[#B84A28] pl-4 py-1 italic font-editorial text-lg text-[#181513] mb-6">
-                  &ldquo;{makerProfile.quote}&rdquo;
-                </blockquote>
-              ) : null}
-            </div>
-
-            <div className="lg:col-span-7">
-              <div className="bg-[#ECE5DC] p-8 border border-[#181513]/10 space-y-4">
-                <p className="font-mono text-xs uppercase tracking-widest text-[#8C7355]">
-                  Craft & Origin
-                </p>
-                <p className="text-sm text-[#57524E] leading-relaxed">
-                  {makerProfile?.bio ||
-                    'Artisans, designers and creatives turning heritage into new products, fashion, art, performance and design.'}
-                </p>
-                <div className="pt-4 border-t border-[#181513]/10 flex items-center justify-between text-xs text-[#181513]">
-                  <span className="font-mono text-xs text-[#8C7355]">{product.materials.join(' · ')}</span>
-                  <span className="font-medium text-[#B84A28]">Authentic Nigerian Raffia</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Related Products Section */}
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-24">
