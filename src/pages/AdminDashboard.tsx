@@ -272,9 +272,9 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     <div className="min-h-screen bg-[#F4EFEA] text-[#181513]">
       <div className="min-h-screen flex">
         <aside className="w-64 bg-[#181513] text-[#FAF7F2] p-5 hidden lg:flex flex-col">
-          <div className="mb-10">
+          <div className="mb-10 pb-6 border-b border-white/10">
             <p className="text-xs uppercase tracking-[0.25em] text-[#C8A978]">RAFFIA LEGACY</p>
-            <h1 className="font-editorial text-2xl mt-1">Marketplace Admin</h1>
+            <h1 className="font-editorial text-3xl font-bold mt-1">Marketplace Admin</h1>
           </div>
           <nav className="space-y-1 flex-1">
             {nav.map(([id,label,Icon]) => <button key={id} onClick={()=>setTab(id)} className={`w-full flex items-center gap-3 px-3 py-3 text-sm text-left ${tab===id?'bg-[#B84A28] text-white':'text-[#F3EBDD]/75 hover:bg-white/10'}`}><Icon size={17}/>{label}</button>)}
@@ -285,8 +285,8 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
         <main className="flex-1 min-w-0">
           <header className="bg-[#FAF7F2] border-b border-[#181513]/10 px-5 sm:px-8 py-4 flex items-center justify-between sticky top-0 z-20">
             <div>
-              <p className="text-xs uppercase tracking-widest text-[#B84A28]">CONTROL ROOM</p>
-              <h2 className="font-editorial text-2xl">{nav.find(n=>n[0]===tab)?.[1]}</h2>
+              <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#B84A28]">CONTROL ROOM</p>
+              <h2 className="font-editorial text-3xl sm:text-4xl font-bold">{nav.find(n=>n[0]===tab)?.[1]}</h2>
             </div>
             <div className="flex gap-2">
               <button onClick={()=>onNavigate({type:'marketplace'})} className="px-3 py-2 border text-xs uppercase tracking-wider flex items-center gap-2"><ExternalLink size={14}/> View store</button>
@@ -298,14 +298,14 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             <div className="flex gap-2 min-w-max">{nav.map(([id,label])=><button key={id} onClick={()=>setTab(id)} className={`px-3 py-2 text-xs uppercase tracking-wider border ${tab===id?'bg-[#181513] text-white':'bg-white'}`}>{label}</button>)}</div>
           </div>
 
-          <div className="p-5 sm:p-8 max-w-[1600px] mx-auto">
-            {notice && <div className="mb-5 bg-[#E8F1E5] border border-[#6A8B5E]/20 p-3 text-sm flex justify-between"><span>{notice}</span><button onClick={()=>setNotice('')}><X size={16}/></button></div>}
+          <div className="p-5 sm:p-8 xl:p-10 max-w-[1700px] mx-auto">
+            {notice && <div className="mb-6 bg-[#E8F1E5] border border-[#6A8B5E]/30 p-4 text-base font-semibold flex justify-between"><span>{notice}</span><button onClick={()=>setNotice('')}><X size={16}/></button></div>}
 
             {tab==='overview' && <section className="space-y-8">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
                 {[
                   ['Live products',stats.products],['Open orders',stats.orders],['Awaiting payment',stats.pending],[ 'Paid revenue',formatNaira(stats.revenue)]
-                ].map(([label,value])=><div key={label} className="bg-white border p-5"><p className="text-xs uppercase tracking-wider text-[#8C7355]">{label}</p><p className="font-editorial text-3xl mt-2">{value}</p></div>)}
+                ].map(([label,value])=><div key={label} className="bg-white border border-[#181513]/10 p-6 shadow-sm"><p className="text-sm font-bold uppercase tracking-wider text-[#8C7355]">{label}</p><p className="font-editorial text-4xl font-bold mt-3">{value}</p></div>)}
               </div>
               <div className="bg-white border p-6">
                 <div className="flex justify-between items-center mb-5"><h3 className="font-editorial text-2xl">Recent orders</h3><button onClick={()=>setTab('orders')} className="text-xs uppercase tracking-widest text-[#B84A28]">View all →</button></div>
@@ -313,14 +313,42 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               </div>
             </section>}
 
-            {tab==='products' && <section>
-              <div className="flex justify-between items-center mb-5"><div><p className="text-sm text-[#57524E]">{products.length} catalog records</p></div><button onClick={()=>setProductEditor({...blankProduct})} className="px-4 py-3 bg-[#181513] text-white text-xs uppercase tracking-widest flex items-center gap-2"><Plus size={15}/> Add product</button></div>
-              <div className="bg-white border overflow-x-auto">
-                <table className="w-full text-sm min-w-[900px]"><thead className="bg-[#ECE5DC] text-xs uppercase tracking-wider"><tr><th className="p-3 text-left">Product</th><th className="p-3 text-left">Category</th><th className="p-3 text-left">Price</th><th className="p-3 text-left">Stock</th><th className="p-3 text-left">Status</th><th className="p-3"></th></tr></thead><tbody className="divide-y">{products.map(p=><tr key={p.id}><td className="p-3"><b>{p.name}</b><div className="text-xs text-[#8C7355]">{p.slug}</div></td><td className="p-3">{p.categories?.name || '—'}</td><td className="p-3">{formatNaira(p.price)}</td><td className="p-3">{p.stock_quantity ?? '∞'}</td><td className="p-3">{p.is_active ? p.availability : 'HIDDEN'}</td><td className="p-3 text-right"><button onClick={async()=>{const {data}=await client.from('product_images').select('url,sort_order').eq('product_id',p.id).order('sort_order');setProductEditor({...p,materials:(p.materials||[]).join(', '),gallery:(data||[]).slice(1).map((x:any)=>x.url).join('\n')})}} className="p-2"><Pencil size={15}/></button><button onClick={()=>deleteProduct(p.id)} className="p-2 text-[#9E3E20]"><Trash2 size={15}/></button></td></tr>)}</tbody></table>
+            {tab==='products' && <section className="space-y-6">
+              <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-5">
+                <div>
+                  <p className="text-sm font-semibold text-[#8C7355]">{products.length} catalog records</p>
+                  <h3 className="font-editorial text-4xl sm:text-5xl font-bold mt-1">PRODUCT CATALOG</h3>
+                  <p className="text-base text-[#57524E] mt-2 max-w-2xl">Everything on this screen is live. Change a product here and the storefront database updates immediately.</p>
+                </div>
+                <button onClick={()=>setProductEditor({...blankProduct})} className="px-6 py-4 bg-[#181513] text-white text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#B84A28] transition-colors"><Plus size={19}/> Add product</button>
               </div>
-            </section>}
 
-            {tab==='orders' && <section className="bg-white border">
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                {products.map(p=><article key={p.id} className="bg-white border border-[#181513]/10 overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
+                  <div className="aspect-[4/3] bg-[#ECE5DC] relative overflow-hidden">
+                    {p.cover_image ? <img src={p.cover_image} alt={p.name} className="w-full h-full object-cover" /> : <div className="w-full h-full grid place-items-center text-[#8C7355] font-bold">NO IMAGE</div>}
+                    <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+                      {p.is_new && <span className="bg-[#B84A28] text-white px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">NEW</span>}
+                      {p.is_featured && <span className="bg-[#181513] text-white px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">FEATURED</span>}
+                    </div>
+                    {!p.is_active && <div className="absolute inset-0 bg-[#181513]/65 grid place-items-center text-white font-bold text-lg tracking-widest">HIDDEN</div>}
+                  </div>
+                  <div className="p-5">
+                    <p className="text-xs font-bold uppercase tracking-wider text-[#B84A28] mb-1">{p.categories?.name || 'UNCATEGORISED'}</p>
+                    <h4 className="text-xl font-bold leading-tight">{p.name}</h4>
+                    <p className="text-sm text-[#57524E] mt-2 line-clamp-2">{p.short_description || 'No short description yet.'}</p>
+                    <div className="flex items-end justify-between mt-5 gap-3">
+                      <div><p className="text-2xl font-bold">{formatNaira(p.price)}</p><p className="text-sm font-semibold text-[#8C7355] mt-1">Stock: {p.stock_quantity ?? 'Unlimited'}</p></div>
+                      <span className="text-xs font-bold uppercase tracking-wide border border-[#181513]/15 px-2.5 py-2">{p.availability}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mt-5">
+                      <button onClick={async()=>{const {data}=await client.from('product_images').select('url,sort_order').eq('product_id',p.id).order('sort_order');setProductEditor({...p,materials:(p.materials||[]).join(', '),gallery:(data||[]).slice(1).map((x:any)=>x.url).join('\n')})}} className="py-3 border border-[#181513]/20 font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#ECE5DC]"><Pencil size={16}/> Edit</button>
+                      <button onClick={()=>deleteProduct(p.id)} className="py-3 border border-[#B84A28]/30 text-[#9E3E20] font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#B84A28]/5"><Trash2 size={16}/> Delete</button>
+                    </div>
+                  </div>
+                </article>)}
+              </div>
+            </section>            {tab==='orders' && <section className="bg-white border">
               <div className="p-5 border-b"><p className="text-sm text-[#57524E]">Manual WhatsApp orders appear here immediately after checkout.</p></div>
               <div className="divide-y">{orders.map(o=><div key={o.id} className="p-5"><button onClick={()=>openOrder(o.id)} className="w-full text-left"><div className="flex flex-wrap gap-4 justify-between"><div><b className="text-lg">{o.order_number}</b><p className="text-sm text-[#57524E]">{o.customer_name} · {o.customer_phone} · {o.customer_city}</p><p className="text-xs text-[#8C7355] mt-1">{new Date(o.created_at).toLocaleString()}</p></div><div className="text-right"><b className="font-editorial text-2xl">{formatNaira(o.total)}</b><p className="text-xs uppercase text-[#B84A28]">{o.payment_status}</p></div></div></button>
               <div className="mt-4 flex flex-wrap gap-2">
