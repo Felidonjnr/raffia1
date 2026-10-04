@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { ViewRoute } from '../types';
 import { Handshake, Heart, Gift, Users, BookOpen, Megaphone, MapPin, Camera, Palette, MessageCircle, CalendarDays, Search, GraduationCap } from 'lucide-react';
 
 const partnershipOpportunities = [
@@ -31,7 +32,7 @@ const waysToGive = [
   ['SHARE EXPERTISE','Contribute your knowledge and professional expertise.',BookOpen],
 ] as const;
 
-export const GetInvolvedPage: React.FC<{ initialSection?: string }> = ({ initialSection = 'partner' }) => {
+export const GetInvolvedPage: React.FC<{ initialSection?: string; onNavigate?: (route: ViewRoute) => void }> = ({ initialSection = 'partner' }) => {
   useEffect(() => {
     const sectionTarget = initialSection === 'sponsor' || initialSection === 'donate' ? 'support' : initialSection;
     const target = document.getElementById(sectionTarget);

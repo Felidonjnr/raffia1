@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUpRight, ArrowRight, ChevronRight, Maximize2, MapPin } from 'lucide-react';
 import { ViewRoute, Product } from '../types';
 import { useMarketplaceData } from '../context/MarketplaceDataContext';
-import { MAKERS } from '../data/makers';
 import { InteractiveHeroGallery, HeroSlide } from '../components/InteractiveHeroGallery';
 import { ProductCard } from '../components/ProductCard';
 import { ProductQuickView } from '../components/ProductQuickView';
@@ -155,7 +154,7 @@ const FESTIVAL_EVENTS = [
 ];
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct }) => {
-  const [remaining, setRemaining] = useState(launch.getTime() - Date.now());
+  const [remaining, setRemaining] = useState(() => Math.max(0, launch.getTime() - Date.now()));
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const [activePillarWord, setActivePillarWord] = useState<string>('HISTORY');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);

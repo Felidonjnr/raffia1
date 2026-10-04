@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ViewRoute } from '../types';
-import { COLLECTIONS } from '../data/collections';
-import { PRODUCTS } from '../data/products';
+import { useMarketplaceData } from '../context/MarketplaceDataContext';
 import { ArchivalImage } from '../components/ArchivalImage';
 import { ProductCard } from '../components/ProductCard';
 import { ArrowLeft, ArrowRight, Bookmark } from 'lucide-react';
@@ -17,14 +16,18 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
   onNavigate,
   onSelectProduct,
 }) => {
+  const { collections: COLLECTIONS, products: PRODUCTS } = useMarketplaceData();
   const [selectedSlug, setSelectedSlug] = useState<string | null>(initialSlug || null);
 
   const activeCollection = selectedSlug
-    ? COLLECTIONS.find((c) => c.slug === selectedSlug) || null
+    ? COLLECTIONS.find((c) => c.slug === selectedSlug || c.id === selectedSlug) || null
     : null;
 
   const collectionProducts = activeCollection
-    ? PRODUCTS.filter((p) => activeCollection.productIds.includes(p.id))
+    ? PRODUCTS.filter((p) =>
+        (activeCollection.productIds && activeCollection.productIds.includes(p.id)) ||
+        p.collection === activeCollection.slug
+      )
     : [];
 
   return (

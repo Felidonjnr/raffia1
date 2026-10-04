@@ -1,7 +1,6 @@
 import React from 'react';
 import { ViewRoute } from '../types';
-import { MAKERS } from '../data/makers';
-import { PRODUCTS } from '../data/products';
+import { useMarketplaceData } from '../context/MarketplaceDataContext';
 import { ArchivalImage } from '../components/ArchivalImage';
 import { ProductCard } from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
@@ -19,8 +18,11 @@ export const MakerDetailPage: React.FC<MakerDetailPageProps> = ({
   onSelectProduct,
 }) => {
   const { openInquiry } = useCart();
-  const maker = MAKERS.find((m) => m.slug === slug) || MAKERS[0];
-  const makerProducts = PRODUCTS.filter((p) => maker.productIds.includes(p.id));
+  const { makers: MAKERS, products: PRODUCTS } = useMarketplaceData();
+  const maker = MAKERS.find((m) => m.slug === slug || m.id === slug) || MAKERS[0];
+  const makerProducts = maker
+    ? PRODUCTS.filter((p) => (maker.productIds || []).includes(p.id) || p.maker.id === maker.id || p.maker.slug === maker.slug)
+    : [];
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] pb-24">

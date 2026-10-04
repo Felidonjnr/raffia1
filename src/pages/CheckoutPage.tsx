@@ -75,7 +75,19 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({ onNavigate }) => {
             <div className="flex justify-between"><span>Payment</span><b>Manual transfer / WhatsApp</b></div>
             <div className="flex justify-between"><span>Status</span><b>Awaiting confirmation</b></div>
           </div>
-          {order.bank_name && <div className="bg-[#ECE5DC] p-4 text-left text-sm"><p className="text-xs uppercase tracking-widest text-[#8C7355] mb-2">Transfer details</p><p><b>{order.bank_name}</b></p><p>{order.account_name}</p><p className="font-semibold tracking-wider">{order.account_number}</p></div>}\n          {!order.whatsapp_number && <p className="text-sm text-[#9E3E20]">The marketplace WhatsApp number has not been configured yet. The order is still saved; the administrator can contact you from the dashboard.</p>}
+          {order.bank_name && (
+            <div className="bg-[#ECE5DC] p-4 text-left text-sm">
+              <p className="text-xs uppercase tracking-widest text-[#8C7355] mb-2">Transfer details</p>
+              <p><b>{order.bank_name}</b></p>
+              <p>{order.account_name}</p>
+              <p className="font-semibold tracking-wider">{order.account_number}</p>
+            </div>
+          )}
+          {!order.whatsapp_number && (
+            <p className="text-sm text-[#9E3E20]">
+              The marketplace WhatsApp number has not been configured yet. The order is still saved; the administrator can contact you from the dashboard.
+            </p>
+          )}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {order.whatsapp_number && <button onClick={() => {
               const url = buildWhatsAppUrl(order.whatsapp_number, `Hello Raffia Legacy Project, I am following up on Order #${order.order_number}.`);

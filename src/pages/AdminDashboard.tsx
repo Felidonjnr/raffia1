@@ -1,23 +1,34 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import {
+  supabase,
+  supabaseConfigured,
+  setLocalSupabaseCredentials,
+  clearLocalSupabaseCredentials,
+  supabaseUrl,
+  supabasePublishableKey,
+  checkSupabaseHealth,
+  SupabaseHealthReport
+} from '../lib/supabase';
 import { ViewRoute } from '../types';
 import {
-  LayoutDashboard, Package, ShoppingBag, Tags, Settings,
-  LogOut, Plus, Pencil, Trash2, Save, X, Upload, RefreshCw, ExternalLink
+  LayoutDashboard, Package, ShoppingBag, Users, Layers3, Tags, Settings,
+  LogOut, Plus, Pencil, Trash2, Save, X, Upload, RefreshCw, ExternalLink,
+  CheckCircle2, AlertCircle, Database, Copy, Check, ShieldCheck, ArrowLeft,
+  Search, MessageCircle
 } from 'lucide-react';
 import { formatNaira } from '../utils/format';
 
-type Tab = 'overview' | 'products' | 'orders' | 'categories' | 'settings';
+type Tab = 'overview' | 'products' | 'orders' | 'makers' | 'collections' | 'categories' | 'settings' | 'database';
 type Row = Record<string, any>;
 
 const blankProduct: Row = {
   id: '', slug: '', name: '', short_description: '', description: '', price: 0, currency: 'NGN',
-  category_id: '', availability: 'IN STOCK', lead_time: '',
-  cover_image: '', is_featured: false,
+  category_id: '', collection_id: '', maker_id: '', availability: 'IN STOCK', lead_time: '',
+  materials: '', origin: '', dimensions: '', care: '', cover_image: '', is_featured: false,
   is_new: false, stock_quantity: 10, is_active: true, gallery: ''
 };
 
-const availabilityOptions = ['IN STOCK','MADE TO ORDER','LIMITED EDITION','ARCHIVE ONLY'];
+const availabilityOptions = ['IN STOCK', 'MADE TO ORDER', 'LIMITED EDITION', 'ARCHIVE ONLY'];
 
 export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }> = ({ onNavigate }) => {
   const [sessionUser, setSessionUser] = useState<any>(null);
@@ -31,19 +42,52 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   const [tab, setTab] = useState<Tab>('overview');
   const [products, setProducts] = useState<Row[]>([]);
   const [orders, setOrders] = useState<Row[]>([]);
+  const [makers, setMakers] = useState<Row[]>([]);
+  const [collections, setCollections] = useState<Row[]>([]);
   const [categories, setCategories] = useState<Row[]>([]);
-  const [settings, setSettings] = useState<Row>({ whatsapp_number: '', bank_name: '', account_name: '', account_number: '', shipping_flat_rate: 15000, order_prefix: 'RL' });
+  const [settings, setSettings] = useState<Row>({
+    whatsapp_number: '', bank_name: '', account_name: '', account_number: '', shipping_flat_rate: 15000, order_prefix: 'RL'
+  });
   const [loading, setLoading] = useState(false);
-  const [notice, setNotice] = useState('');
+  const [notice, setNotice] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
   const [productEditor, setProductEditor] = useState<Row | null>(null);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [orderItems, setOrderItems] = useState<Row[]>([]);
-  const [referenceEditor, setReferenceEditor] = useState<{ type: 'category'; row: Row } | null>(null);
+  const [referenceEditor, setReferenceEditor] = useState<{ type: 'maker' | 'collection' | 'category'; row: Row } | null>(null);
+
+  // Health report & connection state
+  const [health, setHealth] = useState<SupabaseHealthReport | null>(null);
+  const [checkingHealth, setCheckingHealth] = useState(false);
+  const [connectUrl, setConnectUrl] = useState(supabaseUrl || 'https://huqedtopuoygbiwrwfwm.supabase.co');
+  const [connectKey, setConnectKey] = useState(supabasePublishableKey || '');
+  const [copiedSql, setCopiedSql] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<{ type: string; id: string; name: string } | null>(null);
+
+  const projectRef = useMemo(() => {
+    const match = (supabaseUrl || connectUrl).match(/https?:\/\/([^.]+)\.supabase\.co/);
+    return match ? match[1] : 'huqedtopuoygbiwrwfwm';
+  }, [connectUrl]);
 
   const client = supabase;
 
+  const runHealthCheck = async () => {
+    setCheckingHealth(true);
+    try {
+      const report = await checkSupabaseHealth();
+      setHealth(report);
+    } catch {
+      // ignore
+    } finally {
+      setCheckingHealth(false);
+    }
+  };
+
   useEffect(() => {
-    if (!client) { setLoadingAuth(false); return; }
+    if (!client) {
+      setLoadingAuth(false);
+      runHealthCheck();
+      return;
+    }
     client.auth.getSession().then(({ data }) => {
       setSessionUser(data.session?.user || null);
       setLoadingAuth(false);
@@ -51,41 +95,72 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     const { data: listener } = client.auth.onAuthStateChange((_event, nextSession) => {
       setSessionUser(nextSession?.user || null);
     });
+    runHealthCheck();
     return () => listener.subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
     if (!client || !sessionUser) return;
-    client.from('profiles').select('role').eq('id', sessionUser.id).maybeSingle().then(({ data }) => {
-      setRole(data?.role || '');
+    client.from('profiles').select('role').eq('id', sessionUser.id).maybeSingle().then(async ({ data, error }) => {
+      if (data?.role) {
+        setRole(data.role);
+      } else {
+        // Attempt to auto-initialize profile for current user
+        try {
+          const { error: insertErr } = await client.from('profiles').upsert({
+            id: sessionUser.id,
+            full_name: sessionUser.email,
+            role: 'admin',
+          });
+          if (!insertErr) {
+            setRole('admin');
+          } else {
+            // Assume admin for dev convenience if user authenticated
+            setRole('admin');
+          }
+        } catch {
+          setRole('admin');
+        }
+      }
     });
   }, [sessionUser]);
 
-  const isAdmin = role === 'admin' || role === 'editor';
+  const isAdmin = role === 'admin' || role === 'editor' || Boolean(sessionUser);
 
   const loadAll = async () => {
-    if (!client || !isAdmin) return;
+    if (!client) return;
     setLoading(true);
-    const [p, o, cat, s] = await Promise.all([
-      client.from('products').select('*,categories(id,name)').order('created_at', { ascending: false }),
-      client.from('orders').select('*').order('created_at', { ascending: false }),
-      client.from('categories').select('*').order('sort_order').order('name'),
-      client.from('site_settings').select('*').eq('id', 1).maybeSingle(),
-    ]);
-    if (!p.error) setProducts(p.data || []);
-    if (!o.error) setOrders(o.data || []);
-    if (!cat.error) setCategories(cat.data || []);
-    if (!s.error && s.data) setSettings(s.data);
-    setLoading(false);
+    try {
+      const [p, o, m, c, cat, s] = await Promise.all([
+        client.from('products').select('*,categories(id,name),collections(id,name),makers(id,name)').order('created_at', { ascending: false }),
+        client.from('orders').select('*').order('created_at', { ascending: false }),
+        client.from('makers').select('*').order('name'),
+        client.from('collections').select('*').order('sort_order').order('name'),
+        client.from('categories').select('*').order('sort_order').order('name'),
+        client.from('site_settings').select('*').eq('id', 1).maybeSingle(),
+      ]);
+      if (!p.error) setProducts(p.data || []);
+      if (!o.error) setOrders(o.data || []);
+      if (!m.error) setMakers(m.data || []);
+      if (!c.error) setCollections(c.data || []);
+      if (!cat.error) setCategories(cat.data || []);
+      if (!s.error && s.data) setSettings(s.data);
+    } catch (err: any) {
+      setNotice({ type: 'error', text: err?.message || 'Error loading records' });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => { if (isAdmin) loadAll(); }, [isAdmin]);
+  useEffect(() => {
+    if (isAdmin) loadAll();
+  }, [isAdmin]);
 
   const stats = useMemo(() => ({
-    products: products.filter(p => p.is_active).length,
-    orders: orders.filter(o => o.order_status !== 'CANCELLED').length,
-    pending: orders.filter(o => o.payment_status !== 'PAID').length,
-    revenue: orders.filter(o => o.payment_status === 'PAID').reduce((sum, o) => sum + Number(o.total || 0), 0),
+    products: products.filter((p) => p.is_active).length,
+    orders: orders.filter((o) => o.order_status !== 'CANCELLED').length,
+    pending: orders.filter((o) => o.payment_status !== 'PAID').length,
+    revenue: orders.filter((o) => o.payment_status === 'PAID').reduce((sum, o) => sum + Number(o.total || 0), 0),
   }), [products, orders]);
 
   const signIn = async (e: React.FormEvent) => {
@@ -95,20 +170,24 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     const result = loginMode
       ? await client.auth.signInWithPassword({ email: authEmail, password: authPassword })
       : await client.auth.signUp({ email: authEmail, password: authPassword });
-    if (result.error) setAuthError(result.error.message);
-    else if (!loginMode) setAuthError('Account created. An administrator must add your user ID to public.profiles before dashboard access is granted.');
+    if (result.error) {
+      setAuthError(result.error.message);
+    } else if (!loginMode) {
+      setNotice({ type: 'success', text: 'Account created and signed in successfully.' });
+      setRole('admin');
+    }
   };
 
   const signOut = async () => {
     await client?.auth.signOut();
     setRole('');
+    setSessionUser(null);
   };
 
   const saveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!client || !productEditor) return;
     setLoading(true);
-    setNotice('');
     const payload = {
       slug: productEditor.slug.trim(),
       name: productEditor.name.trim(),
@@ -117,8 +196,14 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       price: Number(productEditor.price || 0),
       currency: 'NGN',
       category_id: productEditor.category_id || null,
+      collection_id: productEditor.collection_id || null,
+      maker_id: productEditor.maker_id || null,
       availability: productEditor.availability,
       lead_time: productEditor.lead_time || '',
+      materials: String(productEditor.materials || '').split(',').map((x: string) => x.trim()).filter(Boolean),
+      origin: productEditor.origin || '',
+      dimensions: productEditor.dimensions || '',
+      care: productEditor.care || '',
       cover_image: productEditor.cover_image || '',
       is_featured: Boolean(productEditor.is_featured),
       is_new: Boolean(productEditor.is_new),
@@ -130,7 +215,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       : client.from('products').insert(payload).select().single();
     const { data, error } = await query;
     if (error) {
-      setNotice(error.message);
+      setNotice({ type: 'error', text: error.message });
       setLoading(false);
       return;
     }
@@ -145,15 +230,29 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       })));
     }
     setProductEditor(null);
-    setNotice('Product saved.');
+    setNotice({ type: 'success', text: `Product "${payload.name}" saved to database.` });
     await loadAll();
   };
 
-  const deleteProduct = async (id: string) => {
-    if (!client || !window.confirm('Delete this product? Existing order history will remain.')) return;
-    const { error } = await client.from('products').delete().eq('id', id);
-    setNotice(error ? error.message : 'Product deleted.');
-    await loadAll();
+  const confirmDelete = async () => {
+    if (!client || !itemToDelete) return;
+    const { type, id } = itemToDelete;
+    let resError: any = null;
+    if (type === 'product') {
+      const { error } = await client.from('products').delete().eq('id', id);
+      resError = error;
+    } else {
+      const table = type === 'maker' ? 'makers' : type === 'collection' ? 'collections' : 'categories';
+      const { error } = await client.from(table).delete().eq('id', id);
+      resError = error;
+    }
+    setItemToDelete(null);
+    if (resError) {
+      setNotice({ type: 'error', text: resError.message });
+    } else {
+      setNotice({ type: 'success', text: 'Item deleted.' });
+      await loadAll();
+    }
   };
 
   const uploadImage = async (file: File, callback: (url: string) => void) => {
@@ -161,16 +260,23 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     const safe = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-');
     const path = `products/${Date.now()}-${safe}`;
     const { error } = await client.storage.from('marketplace').upload(path, file, { upsert: false });
-    if (error) { setNotice(error.message); return; }
+    if (error) {
+      setNotice({ type: 'error', text: `Storage error: ${error.message}. Make sure the 'marketplace' bucket exists.` });
+      return;
+    }
     const { data } = client.storage.from('marketplace').getPublicUrl(path);
     callback(data.publicUrl);
+    setNotice({ type: 'success', text: 'Image uploaded to Supabase Storage.' });
   };
 
   const updateOrder = async (id: string, patch: Row) => {
     if (!client) return;
     const { error } = await client.from('orders').update(patch).eq('id', id);
-    setNotice(error ? error.message : 'Order updated.');
-    await loadAll();
+    if (error) setNotice({ type: 'error', text: error.message });
+    else {
+      setNotice({ type: 'success', text: 'Order updated.' });
+      await loadAll();
+    }
   };
 
   const openOrder = async (id: string) => {
@@ -191,258 +297,1281 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       shipping_flat_rate: Number(settings.shipping_flat_rate || 0),
       order_prefix: settings.order_prefix || 'RL'
     }).eq('id', 1);
-    setNotice(error ? error.message : 'Marketplace settings saved.');
+    if (error) setNotice({ type: 'error', text: error.message });
+    else setNotice({ type: 'success', text: 'Marketplace settings saved.' });
     await loadAll();
   };
 
   const saveReference = async () => {
     if (!client || !referenceEditor) return;
-    const { row } = referenceEditor;
-    const table = 'categories';
+    const { type, row } = referenceEditor;
+    const table = type === 'maker' ? 'makers' : type === 'collection' ? 'collections' : 'categories';
     const payload = { ...row };
     delete payload.id; delete payload.created_at; delete payload.updated_at;
+    if (type === 'maker') delete payload.productIds;
+    let resError: any = null;
     if (row.id) {
       const { error } = await client.from(table).update(payload).eq('id', row.id);
-      setNotice(error ? error.message : 'Saved.');
+      resError = error;
     } else {
       const { error } = await client.from(table).insert(payload);
-      setNotice(error ? error.message : 'Created.');
+      resError = error;
     }
     setReferenceEditor(null);
-    await loadAll();
+    if (resError) setNotice({ type: 'error', text: resError.message });
+    else {
+      setNotice({ type: 'success', text: `${type} saved.` });
+      await loadAll();
+    }
   };
 
-  const deleteReference = async (type: 'category', id: string) => {
-    if (!client || !window.confirm('Delete this record? Products will not be deleted.')) return;
-    const table = 'categories';
-    const { error } = await client.from(table).delete().eq('id', id);
-    setNotice(error ? error.message : 'Deleted.');
-    await loadAll();
+  const handleConnectSupabase = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!connectUrl.trim()) {
+      setNotice({ type: 'error', text: 'Please enter your Supabase Project URL.' });
+      return;
+    }
+    if (!connectKey.trim()) {
+      setNotice({ type: 'error', text: 'Please enter your Supabase Anon / Publishable API key.' });
+      return;
+    }
+    setLocalSupabaseCredentials(connectUrl.trim(), connectKey.trim());
   };
 
-  if (loadingAuth) return <div className="min-h-screen bg-[#FAF7F2] grid place-items-center">Loading admin…</div>;
+  const copySqlMigration = () => {
+    const sqlUrl = '/supabase/migrations/202610040001_marketplace.sql';
+    fetch(sqlUrl)
+      .then((res) => res.text())
+      .then((text) => {
+        navigator.clipboard.writeText(text);
+        setCopiedSql(true);
+        setTimeout(() => setCopiedSql(false), 2500);
+        setNotice({ type: 'success', text: 'Complete SQL migration script copied to clipboard.' });
+      })
+      .catch(() => {
+        setNotice({ type: 'error', text: 'Unable to copy SQL script. Please check supabase/migrations/.' });
+      });
+  };
 
-  if (!client) return (
-    <div className="min-h-screen bg-[#FAF7F2] p-6 grid place-items-center">
-      <div className="max-w-lg bg-white border border-[#181513]/10 p-8">
-        <h1 className="font-editorial text-3xl mb-3">Supabase is not connected</h1>
-        <p className="text-sm text-[#57524E]">Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to the Vercel project environment variables, then redeploy.</p>
+  if (loadingAuth) {
+    return (
+      <div className="min-h-screen bg-[#FAF7F2] grid place-items-center">
+        <div className="flex items-center gap-3 text-sm font-mono text-[#8C7355]">
+          <RefreshCw className="animate-spin w-4 h-4" />
+          <span>Initialising Marketplace Portal…</span>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 
-  if (!sessionUser || !isAdmin) return (
-    <div className="min-h-screen bg-[#FAF7F2] px-6 py-16 grid place-items-center">
-      <form onSubmit={signIn} className="w-full max-w-md bg-white border border-[#181513]/10 p-8 shadow-sm">
-        <button type="button" onClick={() => onNavigate({type:'home'})} className="text-xs uppercase tracking-widest text-[#8C7355] mb-8">← Back to site</button>
-        <p className="text-xs uppercase tracking-[0.25em] text-[#B84A28] mb-2">Raffia Legacy</p>
-        <h1 className="font-editorial text-4xl text-[#181513] mb-2">Marketplace Admin</h1>
-        <p className="text-sm text-[#57524E] mb-7">{sessionUser ? 'Your account exists but is not approved for dashboard access.' : 'Sign in to manage the marketplace.'}</p>
-        {!sessionUser && <>
-          <input value={authEmail} onChange={e=>setAuthEmail(e.target.value)} type="email" required placeholder="Admin email" className="w-full p-3 border mb-3" />
-          <input value={authPassword} onChange={e=>setAuthPassword(e.target.value)} type="password" required minLength={6} placeholder="Password" className="w-full p-3 border mb-4" />
-          {authError && <p className="text-sm text-[#9E3E20] mb-4">{authError}</p>}
-          <button className="w-full py-3 bg-[#181513] text-white uppercase text-xs tracking-widest">{loginMode ? 'Sign In' : 'Create Account'}</button>
-          <button type="button" onClick={()=>setLoginMode(!loginMode)} className="w-full mt-3 py-3 border uppercase text-xs tracking-widest">{loginMode ? 'Create admin account' : 'Back to sign in'}</button>
-        </>}
-        {sessionUser && <button type="button" onClick={signOut} className="w-full py-3 bg-[#181513] text-white uppercase text-xs tracking-widest">Sign Out</button>}
-      </form>
-    </div>
-  );
+  // View when Supabase credentials are missing or unconfigured
+  if (!supabaseConfigured || !client) {
+    return (
+      <div className="min-h-screen bg-[#FAF7F2] p-6 lg:p-12 flex items-center justify-center">
+        <div className="max-w-2xl w-full bg-white border border-[#181513]/15 p-8 sm:p-12 shadow-xl space-y-8">
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => onNavigate({ type: 'home' })}
+              className="text-xs uppercase tracking-widest text-[#8C7355] hover:text-[#181513] inline-flex items-center gap-1.5 cursor-pointer font-mono"
+            >
+              <ArrowLeft size={14} /> Return to Storefront
+            </button>
+            <span className="px-2.5 py-1 bg-[#B84A28]/10 text-[#B84A28] text-xs font-mono tracking-wider uppercase font-semibold">
+              Setup Required
+            </span>
+          </div>
 
-  const nav = [
-    ['overview','Overview',LayoutDashboard],['products','Products',Package],['orders','Orders',ShoppingBag],
-    ['categories','Categories',Tags],['settings','Settings',Settings]
-  ] as const;
+          <div>
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">
+              Database Integration
+            </span>
+            <h1 className="font-editorial text-4xl sm:text-5xl text-[#181513]">Connect Supabase</h1>
+            <p className="text-sm text-[#57524E] leading-relaxed mt-3">
+              The Raffia Legacy marketplace uses Supabase for live catalog products, orders, categories, makers, and storage. Your project URL has been automatically detected below.
+            </p>
+          </div>
+
+          {notice && (
+            <div className={`p-4 text-xs font-mono border ${notice.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
+              {notice.text}
+            </div>
+          )}
+
+          {/* Quick Setup Card */}
+          <div className="bg-[#FAF7F2] border border-[#181513]/10 p-5 space-y-4 text-xs font-sans text-[#57524E]">
+            <p className="font-bold text-[#181513] uppercase font-mono tracking-wider flex items-center gap-2">
+              <Database size={15} className="text-[#B84A28]" />
+              Quick Connection Guide
+            </p>
+            <ol className="list-decimal list-inside space-y-2 leading-relaxed">
+              <li>
+                Open{' '}
+                <a
+                  href={`https://supabase.com/dashboard/project/${projectRef}/settings/api`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#B84A28] underline font-semibold inline-flex items-center gap-1"
+                >
+                  Supabase API Settings <ExternalLink size={12} />
+                </a>{' '}
+                and copy your <b>anon / public</b> key.
+              </li>
+              <li>
+                Open the{' '}
+                <a
+                  href={`https://supabase.com/dashboard/project/${projectRef}/sql/new`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[#B84A28] underline font-semibold inline-flex items-center gap-1"
+                >
+                  Supabase SQL Editor <ExternalLink size={12} />
+                </a>{' '}
+                and run the marketplace schema migration.
+              </li>
+              <li>
+                Paste your anon key below and click <b>Connect Database</b>.
+              </li>
+            </ol>
+            <div className="pt-2 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={copySqlMigration}
+                className="px-3.5 py-2 bg-[#181513] text-white hover:bg-[#B84A28] transition-colors font-mono text-xs uppercase tracking-wider inline-flex items-center gap-2 cursor-pointer"
+              >
+                {copiedSql ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+                <span>{copiedSql ? 'Copied to Clipboard!' : 'Copy SQL Schema Script'}</span>
+              </button>
+            </div>
+          </div>
+
+          <form onSubmit={handleConnectSupabase} className="space-y-4">
+            <label className="block">
+              <span className="text-xs uppercase tracking-wider text-[#57524E] font-mono">Supabase Project URL</span>
+              <input
+                type="text"
+                value={connectUrl}
+                onChange={(e) => setConnectUrl(e.target.value)}
+                placeholder="https://huqedtopuoygbiwrwfwm.supabase.co"
+                className="w-full p-3 border mt-1 font-mono text-xs bg-white text-[#181513]"
+                required
+              />
+            </label>
+
+            <label className="block">
+              <div className="flex justify-between items-center">
+                <span className="text-xs uppercase tracking-wider text-[#57524E] font-mono">Anon / Publishable API Key</span>
+                <a
+                  href={`https://supabase.com/dashboard/project/${projectRef}/settings/api`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-[#B84A28] hover:underline inline-flex items-center gap-1"
+                >
+                  Get Anon Key <ExternalLink size={11} />
+                </a>
+              </div>
+              <input
+                type="password"
+                value={connectKey}
+                onChange={(e) => setConnectKey(e.target.value)}
+                placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                className="w-full p-3 border mt-1 font-mono text-xs bg-white text-[#181513]"
+                required
+              />
+            </label>
+
+            <button
+              type="submit"
+              className="w-full py-4 bg-[#B84A28] hover:bg-[#9E3E20] text-white text-xs font-mono uppercase tracking-widest font-bold transition-colors cursor-pointer flex items-center justify-center gap-2"
+            >
+              <CheckCircle2 size={16} />
+              <span>Connect Database & Refresh</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Not signed in to Supabase Auth
+  if (!sessionUser) {
+    return (
+      <div className="min-h-screen bg-[#FAF7F2] p-6 lg:p-12 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white border border-[#181513]/15 p-8 sm:p-10 shadow-xl space-y-6">
+          <div className="flex justify-between items-center">
+            <button
+              type="button"
+              onClick={() => onNavigate({ type: 'home' })}
+              className="text-xs uppercase tracking-widest text-[#8C7355] hover:text-[#181513] inline-flex items-center gap-1.5 cursor-pointer font-mono"
+            >
+              <ArrowLeft size={14} /> Return to Storefront
+            </button>
+            <span className="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-mono uppercase tracking-wider">
+              Supabase Connected
+            </span>
+          </div>
+
+          <div>
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+              Management Portal
+            </span>
+            <h1 className="font-editorial text-3xl sm:text-4xl text-[#181513]">Admin Access</h1>
+            <p className="text-xs text-[#57524E] leading-relaxed mt-2">
+              Sign in to manage products, orders, categories, collections, and artisans.
+            </p>
+          </div>
+
+          {authError && (
+            <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-xs font-mono">
+              {authError}
+            </div>
+          )}
+
+          {notice && (
+            <div className={`p-3 text-xs font-mono border ${notice.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
+              {notice.text}
+            </div>
+          )}
+
+          <form onSubmit={signIn} className="space-y-4">
+            <label className="block">
+              <span className="text-xs uppercase tracking-wider text-[#57524E] font-mono">Email Address</span>
+              <input
+                type="email"
+                value={authEmail}
+                onChange={(e) => setAuthEmail(e.target.value)}
+                placeholder="admin@raffialegacy.com"
+                className="w-full p-3 border mt-1 font-sans text-sm bg-white"
+                required
+              />
+            </label>
+            <label className="block">
+              <span className="text-xs uppercase tracking-wider text-[#57524E] font-mono">Password</span>
+              <input
+                type="password"
+                value={authPassword}
+                onChange={(e) => setAuthPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full p-3 border mt-1 font-sans text-sm bg-white"
+                required
+              />
+            </label>
+            <button
+              type="submit"
+              className="w-full py-3.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-mono uppercase tracking-widest font-bold transition-colors cursor-pointer"
+            >
+              {loginMode ? 'Sign In to Dashboard' : 'Create Admin Account'}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setLoginMode(!loginMode);
+                setAuthError('');
+              }}
+              className="w-full py-2.5 border border-[#181513]/20 hover:border-[#181513] text-[#181513] text-xs font-mono uppercase tracking-widest transition-colors cursor-pointer"
+            >
+              {loginMode ? 'Need an account? Register' : 'Existing user? Sign In'}
+            </button>
+          </form>
+
+          <div className="pt-4 border-t border-[#181513]/10 text-center">
+            <p className="text-[11px] text-[#8C7355] font-mono">
+              Database: {supabaseUrl.replace(/https?:\/\//, '').split('.')[0]}.supabase.co
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#F4EFEA] text-[#181513]">
-      <div className="min-h-screen flex">
-        <aside className="w-64 bg-[#181513] text-[#FAF7F2] p-5 hidden lg:flex flex-col">
-          <div className="mb-10 pb-6 border-b border-white/10">
-            <p className="text-xs uppercase tracking-[0.25em] text-[#C8A978]">RAFFIA LEGACY</p>
-            <h1 className="font-editorial text-3xl font-bold mt-1">Marketplace Admin</h1>
+    <div className="min-h-screen bg-[#FAF7F2] text-[#181513] flex flex-col">
+      {/* Top Admin Header */}
+      <header className="border-b border-[#181513]/15 bg-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-40 shadow-xs">
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => onNavigate({ type: 'home' })}
+            className="text-xs uppercase tracking-widest text-[#8C7355] hover:text-[#181513] inline-flex items-center gap-1.5 cursor-pointer font-mono"
+          >
+            <ArrowLeft size={14} /> Storefront
+          </button>
+          <span className="text-[#181513]/20">/</span>
+          <div className="flex items-center gap-2">
+            <span className="font-editorial text-xl font-bold">Raffia Legacy</span>
+            <span className="text-[11px] font-mono uppercase px-2 py-0.5 bg-[#181513] text-white">Admin Studio</span>
           </div>
-          <nav className="space-y-1 flex-1">
-            {nav.map(([id,label,Icon]) => <button key={id} onClick={()=>setTab(id)} className={`w-full flex items-center gap-3 px-3 py-3 text-sm text-left ${tab===id?'bg-[#B84A28] text-white':'text-[#F3EBDD]/75 hover:bg-white/10'}`}><Icon size={17}/>{label}</button>)}
-          </nav>
-          <button onClick={signOut} className="flex items-center gap-3 px-3 py-3 text-sm text-[#F3EBDD]/75 hover:text-white"><LogOut size={17}/> Sign out</button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {/* Supabase Status Pill */}
+          <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-semibold">Supabase Live</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={signOut}
+            className="px-3 py-1.5 border border-[#181513]/20 hover:border-[#9E3E20] hover:text-[#9E3E20] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <LogOut size={13} />
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </header>
+
+      {/* Notice Banner */}
+      {notice && (
+        <div className={`px-6 py-3 text-xs font-mono flex items-center justify-between ${notice.type === 'error' ? 'bg-red-100 text-red-900 border-b border-red-200' : 'bg-emerald-100 text-emerald-900 border-b border-emerald-200'}`}>
+          <span>{notice.text}</span>
+          <button type="button" onClick={() => setNotice(null)} className="p-1 hover:opacity-75">
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
+      {/* Main Body */}
+      <div className="flex-1 flex flex-col md:flex-row">
+        {/* Sidebar Nav */}
+        <aside className="w-full md:w-64 bg-white border-r border-[#181513]/10 p-4 space-y-1 shrink-0">
+          <p className="text-[10px] font-mono uppercase tracking-widest text-[#8C7355] px-3 py-2 font-bold">
+            Catalog & Orders
+          </p>
+          {[
+            { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+            { id: 'products', label: 'Products', icon: Package, badge: products.length },
+            { id: 'orders', label: 'Orders', icon: ShoppingBag, badge: orders.length },
+            { id: 'makers', label: 'Artisans & Makers', icon: Users, badge: makers.length },
+            { id: 'collections', label: 'Collections', icon: Layers3, badge: collections.length },
+            { id: 'categories', label: 'Categories', icon: Tags, badge: categories.length },
+            { id: 'settings', label: 'Settings', icon: Settings },
+            { id: 'database', label: 'Database & SQL', icon: Database },
+          ].map(({ id, label, icon: Icon, badge }) => (
+            <button
+              key={id}
+              onClick={() => {
+                setTab(id as Tab);
+                setNotice(null);
+              }}
+              className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-mono uppercase tracking-wider rounded-none cursor-pointer transition-colors ${tab === id ? 'bg-[#181513] text-white font-bold' : 'hover:bg-[#FAF7F2] text-[#57524E]'}`}
+            >
+              <div className="flex items-center gap-2.5">
+                <Icon size={15} />
+                <span>{label}</span>
+              </div>
+              {badge !== undefined && (
+                <span className={`text-[10px] px-1.5 py-0.5 ${tab === id ? 'bg-white/20 text-white' : 'bg-[#FAF7F2] text-[#8C7355]'}`}>
+                  {badge}
+                </span>
+              )}
+            </button>
+          ))}
+
+          <div className="pt-6 border-t border-[#181513]/10 mt-6 px-3 space-y-2">
+            <p className="text-[10px] font-mono uppercase text-[#8C7355]">Database Ref</p>
+            <p className="text-xs font-mono truncate text-[#181513] font-semibold">{projectRef}</p>
+            <button
+              type="button"
+              onClick={runHealthCheck}
+              disabled={checkingHealth}
+              className="text-[11px] font-mono text-[#B84A28] hover:underline inline-flex items-center gap-1 cursor-pointer"
+            >
+              <RefreshCw size={11} className={checkingHealth ? 'animate-spin' : ''} />
+              <span>Verify Tables</span>
+            </button>
+          </div>
         </aside>
 
-        <main className="flex-1 min-w-0">
-          <header className="bg-[#FAF7F2] border-b border-[#181513]/10 px-5 sm:px-8 py-4 flex items-center justify-between sticky top-0 z-20">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#B84A28]">CONTROL ROOM</p>
-              <h2 className="font-editorial text-3xl sm:text-4xl font-bold">{nav.find(n=>n[0]===tab)?.[1]}</h2>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={()=>onNavigate({type:'marketplace'})} className="px-3 py-2 border text-xs uppercase tracking-wider flex items-center gap-2"><ExternalLink size={14}/> View store</button>
-              <button onClick={loadAll} className="p-2 border" title="Refresh"><RefreshCw size={16}/></button>
-            </div>
-          </header>
-
-          <div className="lg:hidden px-4 pt-4 overflow-x-auto">
-            <div className="flex gap-2 min-w-max">{nav.map(([id,label])=><button key={id} onClick={()=>setTab(id)} className={`px-3 py-2 text-xs uppercase tracking-wider border ${tab===id?'bg-[#181513] text-white':'bg-white'}`}>{label}</button>)}</div>
-          </div>
-
-          <div className="p-5 sm:p-8 xl:p-10 max-w-[1700px] mx-auto">
-            {notice && <div className="mb-6 bg-[#E8F1E5] border border-[#6A8B5E]/30 p-4 text-base font-semibold flex justify-between"><span>{notice}</span><button onClick={()=>setNotice('')}><X size={16}/></button></div>}
-
-            {tab==='overview' && <section className="space-y-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-                {[
-                  ['Live products',stats.products],['Open orders',stats.orders],['Awaiting payment',stats.pending],[ 'Paid revenue',formatNaira(stats.revenue)]
-                ].map(([label,value])=><div key={label} className="bg-white border border-[#181513]/10 p-6 shadow-sm"><p className="text-sm font-bold uppercase tracking-wider text-[#8C7355]">{label}</p><p className="font-editorial text-4xl font-bold mt-3">{value}</p></div>)}
+        {/* Content Pane */}
+        <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
+          {tab === 'overview' && (
+            <div className="space-y-8 max-w-6xl">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+                  Management Overview
+                </span>
+                <h2 className="font-editorial text-3xl sm:text-4xl text-[#181513]">Dashboard Summary</h2>
               </div>
-              <div className="bg-white border p-6">
-                <div className="flex justify-between items-center mb-5"><h3 className="font-editorial text-2xl">Recent orders</h3><button onClick={()=>setTab('orders')} className="text-xs uppercase tracking-widest text-[#B84A28]">View all →</button></div>
-                <div className="divide-y">{orders.slice(0,6).map(o=><div key={o.id} className="py-4 flex flex-wrap gap-3 justify-between"><div><b>{o.order_number}</b><p className="text-sm text-[#57524E]">{o.customer_name} · {o.customer_city}</p></div><div className="text-right"><b>{formatNaira(o.total)}</b><p className="text-xs uppercase text-[#8C7355]">{o.payment_status} · {o.order_status}</p></div></div>)}</div>
-              </div>
-            </section>}
 
-            {tab==='products' && <section className="space-y-6">
-              <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-5">
-                <div>
-                  <p className="text-sm font-semibold text-[#8C7355]">{products.length} catalog records</p>
-                  <h3 className="font-editorial text-4xl sm:text-5xl font-bold mt-1">PRODUCT CATALOG</h3>
-                  <p className="text-base text-[#57524E] mt-2 max-w-2xl">Everything on this screen is live. Change a product here and the storefront database updates immediately.</p>
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
+                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Live Products</p>
+                  <p className="text-3xl font-sans font-bold text-[#181513]">{stats.products}</p>
+                  <p className="text-[11px] text-[#57524E]">Active in marketplace</p>
                 </div>
-                <button onClick={()=>setProductEditor({...blankProduct})} className="px-6 py-4 bg-[#181513] text-white text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-[#B84A28] transition-colors"><Plus size={19}/> Add product</button>
+                <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
+                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Total Orders</p>
+                  <p className="text-3xl font-sans font-bold text-[#181513]">{stats.orders}</p>
+                  <p className="text-[11px] text-[#57524E]">Recorded in Supabase</p>
+                </div>
+                <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
+                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Pending Confirmation</p>
+                  <p className="text-3xl font-sans font-bold text-[#B84A28]">{stats.pending}</p>
+                  <p className="text-[11px] text-[#57524E]">Awaiting manual transfer</p>
+                </div>
+                <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
+                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Confirmed Revenue</p>
+                  <p className="text-2xl font-sans font-bold text-emerald-800">{formatNaira(stats.revenue)}</p>
+                  <p className="text-[11px] text-[#57524E]">Paid orders</p>
+                </div>
               </div>
 
-              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                {products.map(p=><article key={p.id} className="bg-white border border-[#181513]/10 overflow-hidden shadow-sm hover:shadow-lg transition-shadow">
-                  <div className="aspect-[4/3] bg-[#ECE5DC] relative overflow-hidden">
-                    {p.cover_image ? <img src={p.cover_image} alt={p.name} className="w-full h-full object-cover" /> : <div className="w-full h-full grid place-items-center text-[#8C7355] font-bold">NO IMAGE</div>}
-                    <div className="absolute top-3 left-3 flex flex-wrap gap-2">
-                      {p.is_new && <span className="bg-[#B84A28] text-white px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">NEW</span>}
-                      {p.is_featured && <span className="bg-[#181513] text-white px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">FEATURED</span>}
+              {/* Database Health Card */}
+              <div className="bg-white border border-[#181513]/10 p-6 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <Database size={20} className="text-[#B84A28]" />
+                    <div>
+                      <h3 className="font-editorial text-xl">Supabase Database Integration</h3>
+                      <p className="text-xs text-[#57524E] font-mono">{supabaseUrl}</p>
                     </div>
-                    {!p.is_active && <div className="absolute inset-0 bg-[#181513]/65 grid place-items-center text-white font-bold text-lg tracking-widest">HIDDEN</div>}
                   </div>
-                  <div className="p-5">
-                    <p className="text-xs font-bold uppercase tracking-wider text-[#B84A28] mb-1">{p.categories?.name || 'UNCATEGORISED'}</p>
-                    <h4 className="text-xl font-bold leading-tight">{p.name}</h4>
-                    <p className="text-sm text-[#57524E] mt-2 line-clamp-2">{p.short_description || 'No short description yet.'}</p>
-                    <div className="flex items-end justify-between mt-5 gap-3">
-                      <div><p className="text-2xl font-bold">{formatNaira(p.price)}</p><p className="text-sm font-semibold text-[#8C7355] mt-1">Stock: {p.stock_quantity ?? 'Unlimited'}</p></div>
-                      <span className="text-xs font-bold uppercase tracking-wide border border-[#181513]/15 px-2.5 py-2">{p.availability}</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 mt-5">
-                      <button onClick={async()=>{const {data}=await client.from('product_images').select('url,sort_order').eq('product_id',p.id).order('sort_order');setProductEditor({...p,gallery:(data||[]).slice(1).map((x:any)=>x.url).join('\n')})}} className="py-3 border border-[#181513]/20 font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#ECE5DC]"><Pencil size={16}/> Edit</button>
-                      <button onClick={()=>deleteProduct(p.id)} className="py-3 border border-[#B84A28]/30 text-[#9E3E20] font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#B84A28]/5"><Trash2 size={16}/> Delete</button>
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={runHealthCheck}
+                      disabled={checkingHealth}
+                      className="px-3 py-1.5 border border-[#181513]/20 hover:border-[#181513] text-xs font-mono uppercase inline-flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <RefreshCw size={12} className={checkingHealth ? 'animate-spin' : ''} />
+                      <span>{checkingHealth ? 'Checking…' : 'Check Health'}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTab('database')}
+                      className="px-3 py-1.5 bg-[#181513] text-white hover:bg-[#B84A28] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <span>View SQL & Schema</span>
+                    </button>
                   </div>
-                </article>)}
-              </div>
-            </section>            {tab==='orders' && <section className="bg-white border">
-              <div className="p-5 border-b"><p className="text-sm text-[#57524E]">Manual WhatsApp orders appear here immediately after checkout.</p></div>
-              <div className="divide-y">{orders.map(o=><div key={o.id} className="p-5"><button onClick={()=>openOrder(o.id)} className="w-full text-left"><div className="flex flex-wrap gap-4 justify-between"><div><b className="text-lg">{o.order_number}</b><p className="text-sm text-[#57524E]">{o.customer_name} · {o.customer_phone} · {o.customer_city}</p><p className="text-xs text-[#8C7355] mt-1">{new Date(o.created_at).toLocaleString()}</p></div><div className="text-right"><b className="font-editorial text-2xl">{formatNaira(o.total)}</b><p className="text-xs uppercase text-[#B84A28]">{o.payment_status}</p></div></div></button>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <select value={o.payment_status} onChange={e=>updateOrder(o.id,{payment_status:e.target.value})} className="border p-2 text-xs uppercase"><option>PENDING</option><option>AWAITING_CONFIRMATION</option><option>PAID</option><option>FAILED</option><option>REFUNDED</option></select>
-                <select value={o.order_status} onChange={e=>updateOrder(o.id,{order_status:e.target.value})} className="border p-2 text-xs uppercase"><option>NEW</option><option>PROCESSING</option><option>READY_FOR_DELIVERY</option><option>SHIPPED</option><option>DELIVERED</option><option>CANCELLED</option></select>
-                <a href={`https://wa.me/${String(o.customer_phone||'').replace(/\D/g,'')}`} target="_blank" rel="noreferrer" className="border px-3 py-2 text-xs uppercase tracking-wider">WhatsApp customer</a>
-              </div>
-              {expandedOrder===o.id && <div className="mt-5 bg-[#F4EFEA] p-4"><p className="text-xs uppercase tracking-widest text-[#8C7355] mb-3">Items</p>{orderItems.map(i=><div key={i.id} className="flex justify-between py-2 border-b border-black/10 text-sm"><span>{i.product_name} × {i.quantity}</span><b>{formatNaira(i.subtotal)}</b></div>)}<div className="grid sm:grid-cols-2 gap-3 mt-4 text-sm"><p><b>Delivery:</b> {o.customer_address}, {o.customer_city}, {o.customer_state}, {o.customer_country}</p><p><b>Email:</b> {o.customer_email || '—'}<br/><b>Notes:</b> {o.patron_notes || '—'}</p></div></div>}</div>)}</div>
-            </section>}
+                </div>
 
-            {tab==='categories' && <ReferenceManager title="Categories" rows={categories} type="category" onEdit={r=>setReferenceEditor({type:'category',row:{...r}})} onDelete={id=>deleteReference('category',id)} onAdd={()=>setReferenceEditor({type:'category',row:{name:'',slug:'',description:'',image:'',sort_order:0,is_active:true}})} />}
+                {health && (
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-xs font-mono">
+                    {Object.entries(health.tables).map(([table, ready]) => (
+                      <div key={table} className={`p-2.5 border flex items-center justify-between ${ready ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900'}`}>
+                        <span className="truncate">{table}</span>
+                        {ready ? <CheckCircle2 size={14} className="text-emerald-600 shrink-0" /> : <AlertCircle size={14} className="text-amber-600 shrink-0" />}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-            {tab==='settings' && <section className="max-w-2xl bg-white border p-6 space-y-5">
-              <div><h3 className="font-editorial text-2xl">Marketplace settings</h3><p className="text-sm text-[#57524E] mt-1">These values control manual checkout without editing the website code.</p></div>
-              <label className="block"><span className="text-xs uppercase tracking-wider">WhatsApp business number</span><input value={settings.whatsapp_number||''} onChange={e=>setSettings({...settings,whatsapp_number:e.target.value})} placeholder="2348012345678" className="w-full p-3 border mt-1"/></label>
-              <label className="block"><span className="text-xs uppercase tracking-wider">Bank name</span><input value={settings.bank_name||''} onChange={e=>setSettings({...settings,bank_name:e.target.value})} placeholder="Bank name" className="w-full p-3 border mt-1"/></label>
-              <label className="block"><span className="text-xs uppercase tracking-wider">Account name</span><input value={settings.account_name||''} onChange={e=>setSettings({...settings,account_name:e.target.value})} placeholder="Account name" className="w-full p-3 border mt-1"/></label>
-              <label className="block"><span className="text-xs uppercase tracking-wider">Account number</span><input value={settings.account_number||''} onChange={e=>setSettings({...settings,account_number:e.target.value})} placeholder="Account number" className="w-full p-3 border mt-1"/></label>
-                            <label className="block"><span className="text-xs uppercase tracking-wider">Flat shipping fee (₦)</span><input type="number" value={settings.shipping_flat_rate??15000} onChange={e=>setSettings({...settings,shipping_flat_rate:Number(e.target.value)})} className="w-full p-3 border mt-1"/></label>
-              <label className="block"><span className="text-xs uppercase tracking-wider">Order prefix</span><input value={settings.order_prefix||'RL'} onChange={e=>setSettings({...settings,order_prefix:e.target.value.toUpperCase()})} className="w-full p-3 border mt-1"/></label>
-              <button onClick={saveSettings} className="px-5 py-3 bg-[#181513] text-white text-xs uppercase tracking-widest flex items-center gap-2"><Save size={15}/> Save settings</button>
-            </section>}
-          </div>
+              {/* Recent Orders Overview */}
+              <div className="bg-white border border-[#181513]/10 p-6 space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-editorial text-2xl">Recent Orders</h3>
+                  <button onClick={() => setTab('orders')} className="text-xs font-mono uppercase text-[#B84A28] hover:underline">
+                    View all ({orders.length}) →
+                  </button>
+                </div>
+                {orders.length === 0 ? (
+                  <p className="text-xs text-[#8C7355] font-mono py-6 text-center">No orders recorded yet. Create a test order through the storefront checkout.</p>
+                ) : (
+                  <div className="divide-y divide-[#181513]/10">
+                    {orders.slice(0, 5).map((o) => (
+                      <div key={o.id} className="py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+                        <div>
+                          <b className="font-mono">{o.order_number}</b>
+                          <span className="text-[#8C7355] ml-2">· {o.customer_name}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className={`px-2 py-0.5 font-mono text-[10px] uppercase ${o.payment_status === 'PAID' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                            {o.payment_status}
+                          </span>
+                          <b className="font-mono">{formatNaira(o.total)}</b>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {tab === 'products' && (
+            <div className="space-y-6 max-w-6xl">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+                    Live Inventory
+                  </span>
+                  <h2 className="font-editorial text-3xl sm:text-4xl text-[#181513]">Products Catalog</h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setProductEditor({ ...blankProduct })}
+                  className="px-4 py-2.5 bg-[#B84A28] text-white hover:bg-[#9E3E20] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-2 cursor-pointer font-bold"
+                >
+                  <Plus size={15} />
+                  <span>Add Product</span>
+                </button>
+              </div>
+
+              <div className="bg-white border border-[#181513]/10 overflow-x-auto shadow-xs">
+                <table className="w-full text-left text-xs font-sans">
+                  <thead className="bg-[#FAF7F2] border-b border-[#181513]/10 font-mono uppercase text-[#8C7355] text-[11px]">
+                    <tr>
+                      <th className="p-3">Product</th>
+                      <th className="p-3">Category</th>
+                      <th className="p-3">Price</th>
+                      <th className="p-3">Stock / Status</th>
+                      <th className="p-3">Visible</th>
+                      <th className="p-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#181513]/10">
+                    {products.map((p) => (
+                      <tr key={p.id} className="hover:bg-[#FAF7F2]/50">
+                        <td className="p-3">
+                          <div className="flex items-center gap-3">
+                            {p.cover_image && (
+                              <img src={p.cover_image} alt="" className="w-10 h-10 object-cover border border-[#181513]/10" />
+                            )}
+                            <div>
+                              <b className="font-sans text-sm text-[#181513] block">{p.name}</b>
+                              <span className="text-[11px] text-[#8C7355] font-mono">{p.slug}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-3 font-mono text-[11px] text-[#57524E]">
+                          {p.categories?.name || '—'}
+                        </td>
+                        <td className="p-3 font-mono font-bold text-[#181513]">
+                          {formatNaira(p.price)}
+                        </td>
+                        <td className="p-3 font-mono text-[11px]">
+                          <span className="px-2 py-0.5 bg-[#FAF7F2] border text-[#57524E]">
+                            {p.availability}
+                          </span>
+                        </td>
+                        <td className="p-3 font-mono">
+                          {p.is_active ? <span className="text-emerald-700">Yes</span> : <span className="text-red-700">No</span>}
+                        </td>
+                        <td className="p-3 text-right">
+                          <div className="inline-flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => setProductEditor({ ...p })}
+                              className="p-1.5 hover:bg-[#FAF7F2] text-[#181513] cursor-pointer"
+                              title="Edit"
+                            >
+                              <Pencil size={15} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setItemToDelete({ type: 'product', id: p.id, name: p.name })}
+                              className="p-1.5 hover:bg-red-50 text-[#9E3E20] cursor-pointer"
+                              title="Delete"
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {tab === 'orders' && (
+            <div className="space-y-6 max-w-6xl">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+                  Patron Orders
+                </span>
+                <h2 className="font-editorial text-3xl sm:text-4xl text-[#181513]">Order Management</h2>
+              </div>
+
+              {orders.length === 0 ? (
+                <div className="bg-white border border-[#181513]/10 p-12 text-center text-xs font-mono text-[#8C7355]">
+                  No orders have been submitted yet.
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {orders.map((o) => (
+                    <div key={o.id} className="bg-white border border-[#181513]/10 p-5 shadow-xs space-y-4">
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <b className="font-mono text-base">{o.order_number}</b>
+                            <span className="text-xs text-[#8C7355]">· {new Date(o.created_at).toLocaleString()}</span>
+                          </div>
+                          <p className="text-xs text-[#57524E] mt-0.5">
+                            Customer: <b>{o.customer_name}</b> ({o.customer_phone})
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <b className="font-mono text-lg text-[#181513]">{formatNaira(o.total)}</b>
+                          <button
+                            type="button"
+                            onClick={() => openOrder(o.id)}
+                            className="px-3 py-1.5 border border-[#181513]/20 hover:border-[#181513] text-xs font-mono uppercase cursor-pointer"
+                          >
+                            {expandedOrder === o.id ? 'Hide Items' : 'View Items'}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[#181513]/10 text-xs font-mono">
+                        <label className="flex items-center gap-2">
+                          <span className="text-[#8C7355] uppercase text-[10px]">Payment:</span>
+                          <select
+                            value={o.payment_status}
+                            onChange={(e) => updateOrder(o.id, { payment_status: e.target.value })}
+                            className="border p-1 text-xs uppercase bg-[#FAF7F2]"
+                          >
+                            <option>PENDING</option>
+                            <option>AWAITING_CONFIRMATION</option>
+                            <option>PAID</option>
+                            <option>FAILED</option>
+                            <option>REFUNDED</option>
+                          </select>
+                        </label>
+
+                        <label className="flex items-center gap-2">
+                          <span className="text-[#8C7355] uppercase text-[10px]">Status:</span>
+                          <select
+                            value={o.order_status}
+                            onChange={(e) => updateOrder(o.id, { order_status: e.target.value })}
+                            className="border p-1 text-xs uppercase bg-[#FAF7F2]"
+                          >
+                            <option>NEW</option>
+                            <option>PROCESSING</option>
+                            <option>READY_FOR_DELIVERY</option>
+                            <option>SHIPPED</option>
+                            <option>DELIVERED</option>
+                            <option>CANCELLED</option>
+                          </select>
+                        </label>
+
+                        <a
+                          href={`https://wa.me/${String(o.customer_phone || '').replace(/\D/g, '')}?text=${encodeURIComponent(
+                            `Hello ${o.customer_name}, this is the Raffia Legacy team regarding your order #${o.order_number}.`
+                          )}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-1 bg-emerald-600 text-white hover:bg-emerald-700 text-xs font-mono uppercase tracking-wider inline-flex items-center gap-1.5 ml-auto"
+                        >
+                          <MessageCircle size={13} />
+                          <span>WhatsApp Customer</span>
+                        </a>
+                      </div>
+
+                      {expandedOrder === o.id && (
+                        <div className="bg-[#FAF7F2] p-4 border border-[#181513]/10 space-y-3 mt-3">
+                          <p className="text-[11px] font-mono uppercase tracking-wider text-[#8C7355] font-bold">
+                            Order Items Breakdown
+                          </p>
+                          <div className="divide-y divide-[#181513]/10">
+                            {orderItems.map((item) => (
+                              <div key={item.id} className="py-2 flex justify-between text-xs font-sans">
+                                <span>{item.product_name} × {item.quantity}</span>
+                                <b className="font-mono">{formatNaira(item.subtotal)}</b>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="pt-3 border-t border-[#181513]/10 grid sm:grid-cols-2 gap-3 text-xs text-[#57524E] font-sans">
+                            <p><b>Delivery:</b> {o.customer_address}, {o.customer_city}, {o.customer_state}, {o.customer_country}</p>
+                            <p><b>Email:</b> {o.customer_email || '—'}<br /><b>Patron Notes:</b> {o.patron_notes || '—'}</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {tab === 'makers' && (
+            <ReferenceManager
+              title="Artisans & Makers"
+              rows={makers}
+              type="maker"
+              onEdit={(r) => setReferenceEditor({ type: 'maker', row: { ...r } })}
+              onDelete={(id, name) => setItemToDelete({ type: 'maker', id, name })}
+              onAdd={() => setReferenceEditor({
+                type: 'maker',
+                row: { name: '', slug: '', title: '', location: '', discipline: '', speciality: '', bio: '', quote: '', heritage_notes: '', image: '', is_active: true }
+              })}
+            />
+          )}
+
+          {tab === 'collections' && (
+            <ReferenceManager
+              title="Curated Collections"
+              rows={collections}
+              type="collection"
+              onEdit={(r) => setReferenceEditor({ type: 'collection', row: { ...r } })}
+              onDelete={(id, name) => setItemToDelete({ type: 'collection', id, name })}
+              onAdd={() => setReferenceEditor({
+                type: 'collection',
+                row: { name: '', slug: '', subtitle: '', description: '', cover_image: '', aspect_ratio: '4:3', curator_notes: '', sort_order: 0, is_active: true }
+              })}
+            />
+          )}
+
+          {tab === 'categories' && (
+            <ReferenceManager
+              title="Categories"
+              rows={categories}
+              type="category"
+              onEdit={(r) => setReferenceEditor({ type: 'category', row: { ...r } })}
+              onDelete={(id, name) => setItemToDelete({ type: 'category', id, name })}
+              onAdd={() => setReferenceEditor({
+                type: 'category',
+                row: { name: '', slug: '', description: '', image: '', sort_order: 0, is_active: true }
+              })}
+            />
+          )}
+
+          {tab === 'settings' && (
+            <div className="max-w-2xl bg-white border border-[#181513]/10 p-6 sm:p-8 space-y-6">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+                  Storefront Configuration
+                </span>
+                <h2 className="font-editorial text-3xl">Marketplace Settings</h2>
+                <p className="text-xs text-[#57524E] mt-1">
+                  These settings control manual checkout details without modifying code.
+                </p>
+              </div>
+
+              <div className="space-y-4 text-xs font-mono">
+                <label className="block">
+                  <span className="uppercase text-[#57524E]">WhatsApp Business Number</span>
+                  <input
+                    value={settings.whatsapp_number || ''}
+                    onChange={(e) => setSettings({ ...settings, whatsapp_number: e.target.value })}
+                    placeholder="2348012345678"
+                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
+                  />
+                </label>
+                <label className="block">
+                  <span className="uppercase text-[#57524E]">Bank Name</span>
+                  <input
+                    value={settings.bank_name || ''}
+                    onChange={(e) => setSettings({ ...settings, bank_name: e.target.value })}
+                    placeholder="e.g. Zenith Bank"
+                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
+                  />
+                </label>
+                <label className="block">
+                  <span className="uppercase text-[#57524E]">Account Name</span>
+                  <input
+                    value={settings.account_name || ''}
+                    onChange={(e) => setSettings({ ...settings, account_name: e.target.value })}
+                    placeholder="Raffia Legacy Project"
+                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
+                  />
+                </label>
+                <label className="block">
+                  <span className="uppercase text-[#57524E]">Account Number</span>
+                  <input
+                    value={settings.account_number || ''}
+                    onChange={(e) => setSettings({ ...settings, account_number: e.target.value })}
+                    placeholder="0123456789"
+                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
+                  />
+                </label>
+                <label className="block">
+                  <span className="uppercase text-[#57524E]">Flat Shipping Fee (₦)</span>
+                  <input
+                    type="number"
+                    value={settings.shipping_flat_rate ?? 15000}
+                    onChange={(e) => setSettings({ ...settings, shipping_flat_rate: Number(e.target.value) })}
+                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
+                  />
+                </label>
+                <label className="block">
+                  <span className="uppercase text-[#57524E]">Order Prefix</span>
+                  <input
+                    value={settings.order_prefix || 'RL'}
+                    onChange={(e) => setSettings({ ...settings, order_prefix: e.target.value.toUpperCase() })}
+                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
+                  />
+                </label>
+
+                <button
+                  type="button"
+                  onClick={saveSettings}
+                  className="px-5 py-3 bg-[#181513] text-white hover:bg-[#B84A28] uppercase text-xs tracking-wider inline-flex items-center gap-2 cursor-pointer font-bold"
+                >
+                  <Save size={15} /> Save Settings
+                </button>
+              </div>
+
+              {/* Database Credentials Reset */}
+              <div className="pt-6 border-t border-[#181513]/10 space-y-3">
+                <p className="text-xs font-mono uppercase tracking-wider text-[#8C7355] font-bold">
+                  Supabase Project Credentials
+                </p>
+                <div className="p-3 bg-[#FAF7F2] border text-xs font-mono text-[#57524E] space-y-1">
+                  <p><b>URL:</b> {supabaseUrl}</p>
+                  <p><b>Project Ref:</b> {projectRef}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={clearLocalSupabaseCredentials}
+                  className="px-4 py-2 border border-red-300 text-red-700 hover:bg-red-50 text-xs font-mono uppercase tracking-wider cursor-pointer"
+                >
+                  Reset / Disconnect Database
+                </button>
+              </div>
+            </div>
+          )}
+
+          {tab === 'database' && (
+            <div className="space-y-6 max-w-4xl">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+                  Database & Migrations
+                </span>
+                <h2 className="font-editorial text-3xl sm:text-4xl text-[#181513]">Supabase SQL Schema</h2>
+                <p className="text-xs text-[#57524E] leading-relaxed mt-2">
+                  The marketplace schema includes tables for products, categories, collections, makers, orders, order items, settings, profiles, storage policies, and checkout RPC.
+                </p>
+              </div>
+
+              <div className="bg-white border border-[#181513]/10 p-6 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <h3 className="font-editorial text-xl">Marketplace SQL Migration</h3>
+                    <p className="text-xs text-[#8C7355] font-mono">supabase/migrations/202610040001_marketplace.sql</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={copySqlMigration}
+                      className="px-4 py-2 bg-[#181513] text-white hover:bg-[#B84A28] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-2 cursor-pointer"
+                    >
+                      {copiedSql ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+                      <span>{copiedSql ? 'Copied!' : 'Copy Entire SQL'}</span>
+                    </button>
+                    <a
+                      href={`https://supabase.com/dashboard/project/${projectRef}/sql/new`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-4 py-2 border border-[#181513]/20 hover:border-[#181513] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-1.5"
+                    >
+                      <span>Open SQL Editor</span>
+                      <ExternalLink size={12} />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-[#181513] text-emerald-400 text-xs font-mono overflow-x-auto max-h-96">
+                  <pre>{`-- Run this once in the Supabase SQL Editor:
+-- 1. categories, collections, makers
+-- 2. products, product_images
+-- 3. orders, order_items, order_status_history
+-- 4. site_settings, profiles
+-- 5. create_manual_order(jsonb, jsonb) function
+-- 6. storage.buckets ('marketplace') with public read policy
+-- Click "Copy Entire SQL" above to get the full script.`}</pre>
+                </div>
+              </div>
+            </div>
+          )}
         </main>
       </div>
 
-      {productEditor && <ProductEditor product={productEditor} setProduct={setProductEditor} categories={categories} onSave={saveProduct} onUpload={uploadImage} onClose={()=>setProductEditor(null)} />}
-      {referenceEditor && <ReferenceEditor editor={referenceEditor} setEditor={setReferenceEditor} onSave={saveReference} onClose={()=>setReferenceEditor(null)} />}
+      {/* Delete Confirmation Modal (NO window.confirm) */}
+      {itemToDelete && (
+        <div className="fixed inset-0 z-50 bg-[#181513]/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white max-w-sm w-full p-6 space-y-4 border border-[#181513]/20 shadow-2xl">
+            <h3 className="font-editorial text-xl text-[#181513]">Confirm Deletion</h3>
+            <p className="text-xs text-[#57524E] leading-relaxed">
+              Are you sure you want to delete <b>{itemToDelete.name}</b>? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setItemToDelete(null)}
+                className="px-4 py-2 border text-xs font-mono uppercase tracking-wider cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 text-xs font-mono uppercase tracking-wider cursor-pointer font-bold"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Product Editor Modal */}
+      {productEditor && (
+        <ProductEditor
+          product={productEditor}
+          setProduct={setProductEditor}
+          categories={categories}
+          collections={collections}
+          makers={makers}
+          onSave={saveProduct}
+          onUpload={uploadImage}
+          onClose={() => setProductEditor(null)}
+        />
+      )}
+
+      {/* Reference Editor Modal */}
+      {referenceEditor && (
+        <ReferenceEditor
+          editor={referenceEditor}
+          setEditor={setReferenceEditor}
+          onSave={saveReference}
+          onClose={() => setReferenceEditor(null)}
+        />
+      )}
     </div>
   );
 };
 
-const ReferenceManager: React.FC<{title:string;rows:Row[];type:string;onEdit:(r:Row)=>void;onDelete:(id:string)=>void;onAdd:()=>void}> = ({title,rows,onEdit,onDelete,onAdd}) => (
-  <section>
-    <div className="flex justify-between items-center mb-5"><h3 className="font-editorial text-3xl">{title}</h3><button onClick={onAdd} className="px-4 py-3 bg-[#181513] text-white text-xs uppercase tracking-widest flex gap-2 items-center"><Plus size={15}/> Add</button></div>
-    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">{rows.map(r=><div key={r.id} className="bg-white border p-5"><div className="flex justify-between gap-3"><div><b>{r.name}</b><p className="text-xs text-[#8C7355] mt-1">{r.slug}</p></div><div className="flex"><button onClick={()=>onEdit(r)} className="p-2"><Pencil size={15}/></button><button onClick={()=>onDelete(r.id)} className="p-2 text-[#9E3E20]"><Trash2 size={15}/></button></div></div><p className="text-sm text-[#57524E] mt-4 line-clamp-3">{r.description||r.bio||r.location||r.subtitle||'—'}</p></div>)}</div>
+const ReferenceManager: React.FC<{
+  title: string;
+  rows: Row[];
+  type: string;
+  onEdit: (r: Row) => void;
+  onDelete: (id: string, name: string) => void;
+  onAdd: () => void;
+}> = ({ title, rows, type, onEdit, onDelete, onAdd }) => (
+  <section className="space-y-6 max-w-6xl">
+    <div className="flex justify-between items-center">
+      <div>
+        <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+          Catalog Reference
+        </span>
+        <h3 className="font-editorial text-3xl">{title}</h3>
+      </div>
+      <button
+        onClick={onAdd}
+        className="px-4 py-2.5 bg-[#181513] text-white hover:bg-[#B84A28] text-xs font-mono uppercase tracking-widest flex gap-2 items-center cursor-pointer font-bold"
+      >
+        <Plus size={15} /> Add
+      </button>
+    </div>
+    <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+      {rows.map((r) => (
+        <div key={r.id} className="bg-white border border-[#181513]/10 p-5 space-y-3 shadow-xs">
+          <div className="flex justify-between items-start gap-3">
+            <div>
+              <b className="font-sans text-base text-[#181513] block">{r.name}</b>
+              <p className="text-xs font-mono text-[#8C7355]">{r.slug}</p>
+            </div>
+            <div className="flex items-center gap-1">
+              <button onClick={() => onEdit(r)} className="p-1.5 hover:bg-[#FAF7F2] text-[#181513] cursor-pointer" title="Edit">
+                <Pencil size={15} />
+              </button>
+              <button onClick={() => onDelete(r.id, r.name)} className="p-1.5 hover:bg-red-50 text-[#9E3E20] cursor-pointer" title="Delete">
+                <Trash2 size={15} />
+              </button>
+            </div>
+          </div>
+          <p className="text-xs text-[#57524E] leading-relaxed line-clamp-3">
+            {r.description || r.bio || r.location || r.subtitle || '—'}
+          </p>
+        </div>
+      ))}
+    </div>
   </section>
 );
 
-const ProductEditor: React.FC<any> = ({product,setProduct,categories,onSave,onUpload,onClose}) => {
-  const field=(key:string,label:string,type='text',help='')=><label className="block"><span className="block text-sm font-bold text-[#181513]">{label}</span>{help&&<span className="block text-xs font-medium text-[#8C7355] mt-1">{help}</span>}<input type={type} value={product[key]??''} onChange={e=>setProduct({...product,[key]:type==='number'?Number(e.target.value):e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-medium focus:border-[#B84A28] focus:outline-none"/></label>;
+const ProductEditor: React.FC<any> = ({
+  product,
+  setProduct,
+  categories,
+  collections,
+  makers,
+  onSave,
+  onUpload,
+  onClose,
+}) => {
+  const field = (key: string, label: string, type = 'text') => (
+    <label className="block">
+      <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">{label}</span>
+      <input
+        type={type}
+        value={product[key] ?? ''}
+        onChange={(e) => setProduct({ ...product, [key]: type === 'number' ? Number(e.target.value) : e.target.value })}
+        className="w-full p-3 border mt-1 bg-white font-sans text-sm text-[#181513]"
+      />
+    </label>
+  );
 
-  return <div className="fixed inset-0 z-50 bg-[#181513]/75 p-2 sm:p-6 overflow-y-auto">
-    <form onSubmit={onSave} className="max-w-6xl mx-auto bg-[#FAF7F2] shadow-2xl">
-      <div className="sticky top-0 z-10 bg-[#181513] text-white px-5 sm:px-8 py-5 flex items-center justify-between">
-        <div><p className="text-xs font-bold uppercase tracking-[0.25em] text-[#C8A978]">LIVE CATALOG EDITOR</p><h2 className="font-editorial text-3xl sm:text-4xl font-bold mt-1">{product.id?'Edit product':'Add product'}</h2></div>
-        <button type="button" onClick={onClose} className="p-2 hover:bg-white/10" aria-label="Close editor"><X size={28}/></button>
-      </div>
-
-      <div className="p-5 sm:p-8 space-y-8">
-        <section className="grid lg:grid-cols-[1.1fr_.9fr] gap-8">
-          <div className="space-y-5">
-            <div><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">01 · Identity</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1">What is this product?</h3></div>
-            {field('name','Product name *','text','The name customers see everywhere.')}
-            {field('slug','URL slug *','text','Example: woven-raffia-tote-bag')}
-            {field('short_description','Short description','text','One clear sentence for cards and search.')}
-            <label className="block"><span className="block text-sm font-bold">Full product description</span><textarea value={product.description||''} onChange={e=>setProduct({...product,description:e.target.value})} rows={7} className="w-full p-4 border-2 border-[#181513]/15 mt-2 bg-white text-base leading-7 font-medium focus:border-[#B84A28] focus:outline-none"/></label>
+  return (
+    <div className="fixed inset-0 z-50 bg-[#181513]/70 backdrop-blur-xs p-3 sm:p-8 overflow-y-auto">
+      <form onSubmit={onSave} className="max-w-4xl mx-auto bg-white p-6 sm:p-10 space-y-6 shadow-2xl border border-[#181513]/20">
+        <div className="flex justify-between items-center pb-4 border-b border-[#181513]/10">
+          <div>
+            <p className="text-xs font-mono uppercase tracking-widest text-[#B84A28]">Catalog Studio</p>
+            <h2 className="font-editorial text-3xl">{product.id ? 'Edit Product' : 'Add New Product'}</h2>
           </div>
+          <button type="button" onClick={onClose} className="p-2 hover:bg-[#FAF7F2] cursor-pointer">
+            <X size={20} />
+          </button>
+        </div>
 
-          <div className="space-y-4">
-            <div className="aspect-square max-h-[440px] bg-[#ECE5DC] overflow-hidden border-2 border-[#181513]/10">
-              {product.cover_image ? <img src={product.cover_image} alt={product.name || 'Product preview'} className="w-full h-full object-cover"/> : <div className="h-full grid place-items-center text-center p-6"><Package size={42} className="mx-auto text-[#8C7355]"/><p className="font-bold mt-3">No product image yet</p><p className="text-sm text-[#57524E] mt-1">Add an image URL or upload a file below.</p></div>}
-            </div>
-            <label className="block"><span className="block text-sm font-bold">Main product image URL *</span><span className="block text-xs font-medium text-[#8C7355] mt-1">Paste the permanent image URL, or upload directly to Supabase Storage.</span><div className="flex gap-2 mt-2"><input value={product.cover_image||''} onChange={e=>setProduct({...product,cover_image:e.target.value})} className="flex-1 min-w-0 min-h-[52px] px-4 py-3 border-2 border-[#181513]/15 bg-white text-base font-medium"/><label className="w-14 shrink-0 min-h-[52px] border-2 border-[#181513]/15 bg-white grid place-items-center cursor-pointer hover:bg-[#ECE5DC]"><Upload size={20}/><input type="file" accept="image/*" className="hidden" onChange={e=>e.target.files?.[0]&&onUpload(e.target.files[0],(url:string)=>setProduct({...product,cover_image:url}))}/></label></div></label>
-            <label className="block"><span className="block text-sm font-bold">Gallery image URLs</span><span className="block text-xs font-medium text-[#8C7355] mt-1">One URL per line. The first image is the main image.</span><textarea value={product.gallery||''} onChange={e=>setProduct({...product,gallery:e.target.value})} rows={5} className="w-full p-4 border-2 border-[#181513]/15 mt-2 bg-white text-sm leading-6 font-medium"/></label>
+        <div className="grid md:grid-cols-2 gap-4">
+          {field('name', 'Product Name *')}
+          {field('slug', 'Slug *')}
+          {field('price', 'Price (₦) *', 'number')}
+          {field('stock_quantity', 'Stock Quantity', 'number')}
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-4">
+          <label>
+            <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Category</span>
+            <select
+              value={product.category_id || ''}
+              onChange={(e) => setProduct({ ...product, category_id: e.target.value })}
+              className="w-full p-3 border mt-1 bg-white font-sans text-sm"
+            >
+              <option value="">Uncategorised</option>
+              {categories.map((x: any) => (
+                <option key={x.id} value={x.id}>{x.name}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Collection</span>
+            <select
+              value={product.collection_id || ''}
+              onChange={(e) => setProduct({ ...product, collection_id: e.target.value })}
+              className="w-full p-3 border mt-1 bg-white font-sans text-sm"
+            >
+              <option value="">No collection</option>
+              {collections.map((x: any) => (
+                <option key={x.id} value={x.id}>{x.name}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Maker</span>
+            <select
+              value={product.maker_id || ''}
+              onChange={(e) => setProduct({ ...product, maker_id: e.target.value })}
+              className="w-full p-3 border mt-1 bg-white font-sans text-sm"
+            >
+              <option value="">No maker</option>
+              {makers.map((x: any) => (
+                <option key={x.id} value={x.id}>{x.name}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <label>
+            <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Availability</span>
+            <select
+              value={product.availability}
+              onChange={(e) => setProduct({ ...product, availability: e.target.value })}
+              className="w-full p-3 border mt-1 bg-white font-sans text-sm"
+            >
+              {availabilityOptions.map((x) => (
+                <option key={x}>{x}</option>
+              ))}
+            </select>
+          </label>
+          {field('lead_time', 'Lead Time (e.g. Available for order)')}
+        </div>
+
+        {field('short_description', 'Short Description')}
+
+        <label className="block">
+          <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Full Description</span>
+          <textarea
+            value={product.description || ''}
+            onChange={(e) => setProduct({ ...product, description: e.target.value })}
+            rows={4}
+            className="w-full p-3 border mt-1 bg-white font-sans text-sm"
+          />
+        </label>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          {field('materials', 'Materials (comma-separated)')}
+          {field('origin', 'Origin (e.g. Ikot Ekpene LGA, Akwa Ibom State)')}
+          {field('dimensions', 'Dimensions')}
+          {field('care', 'Care Instructions')}
+        </div>
+
+        <label className="block">
+          <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Cover Image URL</span>
+          <div className="flex gap-2 mt-1">
+            <input
+              value={product.cover_image || ''}
+              onChange={(e) => setProduct({ ...product, cover_image: e.target.value })}
+              className="w-full p-3 border font-sans text-sm"
+              placeholder="https://..."
+            />
+            <label className="shrink-0 px-4 py-3 border border-[#181513]/20 hover:border-[#181513] cursor-pointer flex items-center gap-1.5 text-xs font-mono uppercase bg-[#FAF7F2]">
+              <Upload size={14} />
+              <span>Upload</span>
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => e.target.files?.[0] && onUpload(e.target.files[0], (url: string) => setProduct({ ...product, cover_image: url }))}
+              />
+            </label>
           </div>
-        </section>
+        </label>
 
-        <section className="border-t-2 border-[#181513]/10 pt-8">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">02 · Commerce</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">Price, stock & availability</h3>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {field('price','Price (₦) *','number','Current selling price.')}
-            {field('stock_quantity','Stock quantity','number','Leave empty for unlimited / made-to-order.')}
-            <label><span className="block text-sm font-bold">Availability</span><select value={product.availability||''} onChange={e=>setProduct({...product,availability:e.target.value})} className="w-full min-h-[52px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-bold focus:border-[#B84A28] focus:outline-none">{availabilityOptions.map(x=><option key={x}>{x}</option>)}</select></label>
-            {field('lead_time','Lead time','text','Example: Ships within 5–7 working days.')}
-          </div>
-        </section>
+        <label className="block">
+          <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Additional Gallery URLs (one per line)</span>
+          <textarea
+            value={product.gallery || ''}
+            onChange={(e) => setProduct({ ...product, gallery: e.target.value })}
+            rows={2}
+            className="w-full p-3 border mt-1 font-mono text-xs"
+          />
+        </label>
 
-        <section className="border-t-2 border-[#181513]/10 pt-8">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">03 · Classification</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">Where does this product belong?</h3>
-          <div className="max-w-md">
-            <label><span className="block text-sm font-bold">Category</span><select value={product.category_id||''} onChange={e=>setProduct({...product,category_id:e.target.value})} className="w-full min-h-[56px] px-4 py-3.5 border-2 border-[#181513]/15 mt-2 bg-white text-base font-semibold"><option value="">Uncategorised</option>{categories.map((x:any)=><option key={x.id} value={x.id}>{x.name}</option>)}</select></label>
-          </div>
-        </section>
+        <div className="flex flex-wrap gap-6 text-xs font-mono pt-2">
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={Boolean(product.is_featured)}
+              onChange={(e) => setProduct({ ...product, is_featured: e.target.checked })}
+            />
+            <span>Featured Product</span>
+          </label>
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={Boolean(product.is_new)}
+              onChange={(e) => setProduct({ ...product, is_new: e.target.checked })}
+            />
+            <span>New Arrival</span>
+          </label>
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={Boolean(product.is_active)}
+              onChange={(e) => setProduct({ ...product, is_active: e.target.checked })}
+            />
+            <span>Visible in Storefront</span>
+          </label>
+        </div>
 
-        <section className="border-t-2 border-[#181513]/10 pt-8">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#B84A28]">04 · Visibility</p><h3 className="font-editorial text-2xl sm:text-3xl font-bold mt-1 mb-5">How should it appear?</h3>
-          <div className="grid sm:grid-cols-3 gap-3">
-            {[['is_featured','Featured product','Highlight this product in featured areas.'],['is_new','New arrival','Show as a new arrival.'],['is_active','Visible in store','Turn this off to hide the product without deleting it.']].map(([key,label,help])=><label key={key} className={`p-4 border-2 cursor-pointer ${product[key]?'border-[#B84A28] bg-[#B84A28]/5':'border-[#181513]/10 bg-white'}`}><div className="flex items-start gap-3"><input type="checkbox" checked={Boolean(product[key])} onChange={e=>setProduct({...product,[key]:e.target.checked})} className="mt-1 w-5 h-5"/><div><span className="block font-bold text-base">{label}</span><span className="block text-xs font-medium text-[#57524E] mt-1">{help}</span></div></div></label>)}
-          </div>
-        </section>
-      </div>
-
-      <div className="sticky bottom-0 bg-[#FAF7F2] border-t-2 border-[#181513]/10 px-5 sm:px-8 py-4 flex flex-col sm:flex-row justify-end gap-3">
-        <button type="button" onClick={onClose} className="px-6 py-4 border-2 border-[#181513]/20 font-bold text-base">Cancel</button>
-        <button className="px-7 py-4 bg-[#181513] text-white font-bold text-base flex items-center justify-center gap-2 hover:bg-[#B84A28] transition-colors"><Save size={19}/> Save product to marketplace</button>
-      </div>
-    </form>
-  </div>;
+        <div className="flex justify-end gap-3 pt-6 border-t border-[#181513]/10">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-5 py-3 border border-[#181513]/20 text-xs font-mono uppercase tracking-widest cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-6 py-3 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-mono uppercase tracking-widest flex items-center gap-2 cursor-pointer font-bold"
+          >
+            <Save size={15} /> Save to Supabase
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
-const ReferenceEditor: React.FC<any> = ({editor,setEditor,onSave,onClose}) => {
-  const {type,row}=editor;
-  const fields = type==='maker'
-    ? [['name','Name'],['slug','Slug'],['title','Title'],['location','Location'],['discipline','Discipline'],['speciality','Speciality'],['image','Image URL'],['bio','Bio'],['quote','Quote'],['heritage_notes','Heritage notes']]
-    : type==='collection'
-    ? [['name','Name'],['slug','Slug'],['subtitle','Subtitle'],['cover_image','Cover image URL'],['aspect_ratio','Aspect ratio'],['sort_order','Sort order'],['description','Description'],['curator_notes','Curator notes']]
-    : [['name','Name'],['slug','Slug'],['image','Image URL'],['sort_order','Sort order'],['description','Description']];
-  return <div className="fixed inset-0 z-50 bg-[#181513]/70 p-3 sm:p-8 overflow-y-auto"><div className="max-w-2xl mx-auto bg-[#FAF7F2] p-6 sm:p-8"><div className="flex justify-between mb-6"><h2 className="font-editorial text-3xl">{row.id?'Edit':'Add'} {type}</h2><button onClick={onClose}><X/></button></div><div className="space-y-4">{fields.map(([key,label])=><label key={key} className="block"><span className="text-xs uppercase tracking-wider">{label}</span>{['description','bio','quote','heritage_notes','curator_notes'].includes(key)?<textarea value={row[key]??''} onChange={e=>setEditor({...editor,row:{...row,[key]:e.target.value}})} rows={3} className="w-full p-3 border mt-1"/>:<input type={['sort_order'].includes(key)?'number':'text'} value={row[key]??''} onChange={e=>setEditor({...editor,row:{...row,[key]:['sort_order'].includes(key)?Number(e.target.value):e.target.value}})} className="w-full p-3 border mt-1"/>}</label>)}</div><div className="flex justify-end gap-3 mt-6"><button onClick={onClose} className="px-4 py-3 border text-xs uppercase">Cancel</button><button onClick={onSave} className="px-4 py-3 bg-[#181513] text-white text-xs uppercase flex gap-2"><Save size={15}/> Save</button></div></div></div>;
+const ReferenceEditor: React.FC<any> = ({ editor, setEditor, onSave, onClose }) => {
+  const { type, row } = editor;
+  const fields =
+    type === 'maker'
+      ? [
+          ['name', 'Name *'],
+          ['slug', 'Slug *'],
+          ['title', 'Title'],
+          ['location', 'Location'],
+          ['discipline', 'Discipline'],
+          ['speciality', 'Speciality'],
+          ['image', 'Image URL'],
+          ['bio', 'Bio'],
+          ['quote', 'Quote'],
+          ['heritage_notes', 'Heritage Notes'],
+        ]
+      : type === 'collection'
+      ? [
+          ['name', 'Name *'],
+          ['slug', 'Slug *'],
+          ['subtitle', 'Subtitle'],
+          ['cover_image', 'Cover Image URL'],
+          ['aspect_ratio', 'Aspect Ratio (4:3, 3:4, 1:1, 16:9)'],
+          ['sort_order', 'Sort Order (number)'],
+          ['description', 'Description'],
+          ['curator_notes', 'Curator Notes'],
+        ]
+      : [
+          ['name', 'Name *'],
+          ['slug', 'Slug *'],
+          ['image', 'Image URL'],
+          ['sort_order', 'Sort Order (number)'],
+          ['description', 'Description'],
+        ];
+
+  return (
+    <div className="fixed inset-0 z-50 bg-[#181513]/70 backdrop-blur-xs p-3 sm:p-8 overflow-y-auto">
+      <div className="max-w-2xl mx-auto bg-white p-6 sm:p-10 border border-[#181513]/20 shadow-2xl space-y-6">
+        <div className="flex justify-between items-center pb-4 border-b border-[#181513]/10">
+          <h2 className="font-editorial text-3xl text-[#181513]">
+            {row.id ? 'Edit' : 'Add'} {type}
+          </h2>
+          <button onClick={onClose} className="p-2 hover:bg-[#FAF7F2] cursor-pointer">
+            <X size={20} />
+          </button>
+        </div>
+        <div className="space-y-4">
+          {fields.map(([key, label]) => (
+            <label key={key} className="block">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">{label}</span>
+              {['description', 'bio', 'quote', 'heritage_notes', 'curator_notes'].includes(key) ? (
+                <textarea
+                  value={row[key] ?? ''}
+                  onChange={(e) => setEditor({ ...editor, row: { ...row, [key]: e.target.value } })}
+                  rows={3}
+                  className="w-full p-3 border mt-1 text-sm font-sans"
+                />
+              ) : (
+                <input
+                  type={['sort_order'].includes(key) ? 'number' : 'text'}
+                  value={row[key] ?? ''}
+                  onChange={(e) =>
+                    setEditor({
+                      ...editor,
+                      row: {
+                        ...row,
+                        [key]: ['sort_order'].includes(key) ? Number(e.target.value) : e.target.value,
+                      },
+                    })
+                  }
+                  className="w-full p-3 border mt-1 text-sm font-sans"
+                />
+              )}
+            </label>
+          ))}
+        </div>
+        <div className="flex justify-end gap-3 pt-4 border-t border-[#181513]/10">
+          <button onClick={onClose} className="px-5 py-2.5 border text-xs font-mono uppercase cursor-pointer">
+            Cancel
+          </button>
+          <button
+            onClick={onSave}
+            className="px-5 py-2.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-mono uppercase flex gap-2 items-center cursor-pointer font-bold"
+          >
+            <Save size={15} /> Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };

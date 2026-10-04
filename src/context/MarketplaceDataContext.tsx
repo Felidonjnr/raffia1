@@ -50,8 +50,9 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
   }, []);
 
   useEffect(() => {
-    if (!supabase) return;
-    const channel = supabase
+    const client = supabase;
+    if (!client) return;
+    const channel = client
       .channel('marketplace-live-catalog')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, refresh)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'product_images' }, refresh)
@@ -63,7 +64,7 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
     const timer = window.setInterval(() => refresh(), 60000);
     return () => {
       window.clearInterval(timer);
-      supabase.removeChannel(channel);
+      client.removeChannel(channel);
     };
   }, []);
 

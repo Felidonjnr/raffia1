@@ -1,7 +1,6 @@
 import React from 'react';
 import { ViewRoute } from '../types';
-import { MAKERS } from '../data/makers';
-import { PRODUCTS } from '../data/products';
+import { useMarketplaceData } from '../context/MarketplaceDataContext';
 import { ArchivalImage } from '../components/ArchivalImage';
 import { formatNaira } from '../utils/format';
 import { ArrowRight, MapPin, ArrowLeft } from 'lucide-react';
@@ -15,6 +14,7 @@ export const MakersDirectoryPage: React.FC<MakersDirectoryPageProps> = ({
   onNavigate,
   onSelectMaker,
 }) => {
+  const { makers: MAKERS, products: PRODUCTS } = useMarketplaceData();
   return (
     <div className="min-h-screen bg-[#FAF7F2] pb-24">
       {/* Editorial Header */}
@@ -49,7 +49,7 @@ export const MakersDirectoryPage: React.FC<MakersDirectoryPageProps> = ({
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-16">
         <div className="space-y-20">
           {MAKERS.map((maker) => {
-            const makerProducts = PRODUCTS.filter((p) => maker.productIds.includes(p.id));
+            const makerProducts = PRODUCTS.filter((p) => (maker.productIds || []).includes(p.id) || p.maker.id === maker.id || p.maker.slug === maker.slug);
 
             return (
               <div

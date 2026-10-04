@@ -36,13 +36,34 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div key={title as string}>
             <h3>{title}</h3>
             {(items as string[]).slice(0, 5).map(item => (
-              <button key={item} onClick={() => title === 'MARKETPLACE' ? onNavigate({type:'marketplace'}) : soon(item)}>{item}</button>
+              <button
+                key={item}
+                onClick={() => {
+                  if (item === 'Meet the Makers' || item === 'People & Makers') onNavigate({ type: 'makers' });
+                  else if (item === 'The Legacy Collection') onNavigate({ type: 'collections' });
+                  else if (item === 'The Legacy Year' || item === 'Our Programmes') onNavigate({ type: 'legacy_year' });
+                  else if (item === 'About the Festival' || item === 'Festival Experiences') onNavigate({ type: 'festival' });
+                  else if (title === 'MARKETPLACE') onNavigate({ type: 'marketplace' });
+                  else soon(item);
+                }}
+              >
+                {item}
+              </button>
             ))}
           </div>
         ))}
       </div>
-      <div className="footer-bottom">
-        <span>© 2026 Raffia Legacy Project · Dance Ville</span>
+      <div className="footer-bottom flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3 text-xs text-white/60">
+          <span>© 2026 Raffia Legacy Project · Dance Ville</span>
+          <span>·</span>
+          <button
+            onClick={() => onNavigate({ type: 'admin' })}
+            className="hover:text-[#E59C6D] transition-colors uppercase tracking-widest text-[11px]"
+          >
+            Admin & Database
+          </button>
+        </div>
         <button onClick={() => onNavigate({type:'marketplace'})}>Shop Marketplace <ArrowUpRight size={14}/></button>
       </div>
     </footer>

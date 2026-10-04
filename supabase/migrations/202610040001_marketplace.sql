@@ -199,6 +199,22 @@ create trigger customers_updated_at before update on public.customers for each r
 drop trigger if exists orders_updated_at on public.orders;
 create trigger orders_updated_at before update on public.orders for each row execute function public.set_updated_at();
 
+-- Automatically create profile for any authenticated user
+create or replace function public.handle_new_user()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  insert into public.profiles (id, full_name, role)
+  values (new.id, coalesce(new.raw_user_meta_data->>'full_name', new.email, 'Admin User'), 'admin')
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+after insert on auth.users
+for each row execute function public.handle_new_user();
+
 create or replace function public.is_admin()
 returns boolean
 language sql
@@ -322,7 +338,14 @@ begin
   for item in select * from jsonb_array_elements(p_items)
   loop
     v_qty := greatest(1, coalesce((item->>'quantity')::integer, 1));
-    select * into v_product from public.products where id = (item->>'productId')::uuid and is_active = true for update;
+    select * into v_product from public.products
+    where (
+      case when (item->>'productId') ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+           then id = (item->>'productId')::uuid
+           else false end
+      or slug = (item->>'productId')
+    ) and is_active = true
+    for update;
     if not found then raise exception 'A selected product is no longer available.'; end if;
     if v_product.availability = 'ARCHIVE ONLY' then raise exception '% is no longer available for purchase.', v_product.name; end if;
     if v_product.stock_quantity is not null and v_product.stock_quantity < v_qty then
@@ -364,7 +387,14 @@ begin
   for item in select * from jsonb_array_elements(p_items)
   loop
     v_qty := greatest(1, coalesce((item->>'quantity')::integer, 1));
-    select * into v_product from public.products where id = (item->>'productId')::uuid and is_active = true for update;
+    select * into v_product from public.products
+    where (
+      case when (item->>'productId') ~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+           then id = (item->>'productId')::uuid
+           else false end
+      or slug = (item->>'productId')
+    ) and is_active = true
+    for update;
     v_line := v_product.price * v_qty;
     insert into public.order_items(order_id,product_id,product_name,unit_price,quantity,subtotal)
     values(v_order_id,v_product.id,v_product.name,v_product.price,v_qty,v_line);
@@ -453,6 +483,10 @@ create policy admin_history on public.order_status_history for all to authentica
 
 drop policy if exists own_profile on public.profiles;
 create policy own_profile on public.profiles for select to authenticated using (id=auth.uid() or public.is_admin());
+drop policy if exists own_profile_insert on public.profiles;
+create policy own_profile_insert on public.profiles for insert to authenticated with check (id=auth.uid());
+drop policy if exists own_profile_update on public.profiles;
+create policy own_profile_update on public.profiles for update to authenticated using (id=auth.uid());
 drop policy if exists admin_profiles on public.profiles;
 create policy admin_profiles on public.profiles for all to authenticated using (public.is_admin()) with check (public.is_admin());
 
