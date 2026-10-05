@@ -109,22 +109,8 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       if (data?.role) {
         setRole(data.role);
       } else {
-        // Attempt to auto-initialize profile for current user
-        try {
-          const { error: insertErr } = await client.from('profiles').upsert({
-            id: sessionUser.id,
-            full_name: sessionUser.email,
-            role: 'admin',
-          });
-          if (!insertErr) {
-            setRole('admin');
-          } else {
-            // Assume admin for dev convenience if user authenticated
-            setRole('admin');
-          }
-        } catch {
-          setRole('admin');
-        }
+        // Never grant admin access implicitly. Access must come from an approved profile role.
+        setRole('');
       }
     });
   }, [sessionUser]);
