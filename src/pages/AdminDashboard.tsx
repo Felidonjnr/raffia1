@@ -820,109 +820,148 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           )}
 
           {tab === 'products' && (
-            <div className="space-y-6 max-w-6xl">
-              <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="space-y-7 max-w-7xl">
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
                 <div>
-                  <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+                  <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">
                     Live Inventory
                   </span>
                   <h2 className="font-editorial text-4xl sm:text-5xl text-[#181513] tracking-tight">Products</h2>
+                  <p className="text-sm text-[#57524E] mt-2 max-w-xl">
+                    Manage what customers see, buy and discover across the Raffia Legacy marketplace.
+                  </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setProductEditor({ ...blankProduct })}
-                  className="px-5 py-3 bg-[#B84A28] text-white hover:bg-[#9E3E20] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-2 cursor-pointer font-bold"
+                  className="px-5 py-3.5 bg-[#B84A28] text-white hover:bg-[#9E3E20] text-sm font-sans font-bold inline-flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                 >
-                  <Plus size={15} />
+                  <Plus size={17} />
                   <span>Add Product</span>
                 </button>
               </div>
 
-              <div className="bg-white border border-[#181513]/10 p-4 grid sm:grid-cols-[1fr_auto_auto] gap-3 shadow-xs">
-                <label className="relative block">
-                  <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8C7355]" />
-                  <input
-                    value={productSearch}
-                    onChange={(e) => setProductSearch(e.target.value)}
-                    placeholder="Search products, slugs or categories…"
-                    className="w-full border border-[#181513]/15 pl-9 pr-3 py-2.5 text-sm font-sans outline-none focus:border-[#B84A28]"
-                  />
-                </label>
-                <select value={productVisibility} onChange={(e) => setProductVisibility(e.target.value as typeof productVisibility)} className="border border-[#181513]/15 px-3 py-2.5 text-xs font-mono uppercase bg-white">
-                  <option value="ALL">All Products</option>
-                  <option value="VISIBLE">Visible</option>
-                  <option value="HIDDEN">Hidden</option>
-                </select>
-                <button type="button" onClick={() => { setProductSearch(''); setProductVisibility('ALL'); }} className="border border-[#181513]/15 px-4 py-2.5 text-xs font-mono uppercase tracking-wider cursor-pointer hover:bg-[#FAF7F2]">
-                  Reset
-                </button>
+              <div className="bg-white border border-[#181513]/10 p-4 sm:p-5 shadow-sm">
+                <div className="grid lg:grid-cols-[1fr_auto_auto] gap-3">
+                  <label className="relative block">
+                    <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8C7355]" />
+                    <input
+                      value={productSearch}
+                      onChange={(e) => setProductSearch(e.target.value)}
+                      placeholder="Search products, slugs or categories…"
+                      className="w-full border border-[#181513]/15 pl-10 pr-4 py-3 text-sm font-sans outline-none focus:border-[#B84A28] bg-[#FCFAF7]"
+                    />
+                  </label>
+                  <select
+                    value={productVisibility}
+                    onChange={(e) => setProductVisibility(e.target.value as typeof productVisibility)}
+                    className="border border-[#181513]/15 px-4 py-3 text-sm font-sans bg-[#FCFAF7]"
+                  >
+                    <option value="ALL">All Products</option>
+                    <option value="VISIBLE">Visible</option>
+                    <option value="HIDDEN">Hidden</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => { setProductSearch(''); setProductVisibility('ALL'); }}
+                    className="border border-[#181513]/15 px-5 py-3 text-sm font-sans font-semibold cursor-pointer hover:bg-[#F4F0E9]"
+                  >
+                    Reset filters
+                  </button>
+                </div>
+                <div className="flex items-center justify-between gap-3 mt-4 pt-4 border-t border-[#181513]/8">
+                  <p className="text-sm text-[#57524E]">
+                    <strong className="text-[#181513]">{filteredProducts.length}</strong> product{filteredProducts.length === 1 ? '' : 's'} shown
+                  </p>
+                  <button
+                    type="button"
+                    onClick={loadAll}
+                    className="text-sm font-semibold text-[#B84A28] hover:underline inline-flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <RefreshCw size={14} /> Refresh
+                  </button>
+                </div>
               </div>
 
-              <div className="bg-white border border-[#181513]/10 overflow-x-auto shadow-sm rounded-sm">
-                <table className="w-full text-left text-xs font-sans">
-                  <thead className="bg-[#FAF7F2] border-b border-[#181513]/10 font-mono uppercase text-[#8C7355] text-[11px]">
-                    <tr>
-                      <th className="p-3">Product</th>
-                      <th className="p-3">Category</th>
-                      <th className="p-3">Price</th>
-                      <th className="p-3">Stock / Status</th>
-                      <th className="p-3">Visible</th>
-                      <th className="p-3 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#181513]/10">
-                    {filteredProducts.map((p) => (
-                      <tr key={p.id} className="hover:bg-[#F7F2EB] transition-colors">
-                        <td className="p-3">
-                          <div className="flex items-center gap-3">
-                            {p.cover_image && (
-                              <img src={p.cover_image} alt="" className="w-14 h-14 object-cover border border-[#181513]/10 bg-[#F4F0E9]" />
-                            )}
-                            <div>
-                              <b className="font-sans text-[15px] text-[#181513] block font-semibold">{p.name}</b>
-                              <span className="text-[11px] text-[#8C7355] font-mono">{p.slug}</span>
-                            </div>
+              {filteredProducts.length === 0 ? (
+                <div className="bg-white border border-dashed border-[#181513]/20 p-16 text-center">
+                  <Package size={34} className="mx-auto text-[#8C7355] mb-4" />
+                  <h3 className="font-editorial text-2xl">No products found</h3>
+                  <p className="text-sm text-[#57524E] mt-2">Try a different search or add a new product.</p>
+                </div>
+              ) : (
+                <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                  {filteredProducts.map((p) => (
+                    <article key={p.id} className="group bg-white border border-[#181513]/10 shadow-sm hover:shadow-lg transition-shadow overflow-hidden">
+                      <div className="relative aspect-[4/3] bg-[#EDE6DB] overflow-hidden">
+                        {p.cover_image ? (
+                          <img
+                            src={p.cover_image}
+                            alt={p.name}
+                            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full grid place-items-center text-[#8C7355]">
+                            <Package size={42} />
                           </div>
-                        </td>
-                        <td className="p-3 font-mono text-[11px] text-[#57524E]">
-                          {p.categories?.name || '—'}
-                        </td>
-                        <td className="p-3 font-mono font-bold text-[#181513]">
-                          {formatNaira(p.price)}
-                        </td>
-                        <td className="p-3 font-mono text-[11px]">
-                          <span className="px-2 py-0.5 bg-[#FAF7F2] border text-[#57524E]">
-                            {p.availability}
+                        )}
+                        <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+                          {!p.is_active && <span className="px-2.5 py-1 bg-[#181513] text-white text-[11px] font-semibold">Hidden</span>}
+                          {p.is_featured && <span className="px-2.5 py-1 bg-white text-[#181513] text-[11px] font-semibold shadow-sm">Featured</span>}
+                          {p.is_new && <span className="px-2.5 py-1 bg-[#B84A28] text-white text-[11px] font-semibold">New</span>}
+                        </div>
+                        <div className="absolute bottom-3 right-3">
+                          <span className="px-2.5 py-1.5 bg-white/95 text-[#181513] text-xs font-semibold shadow-sm">
+                            {p.availability || 'IN STOCK'}
                           </span>
-                        </td>
-                        <td className="p-3 font-mono">
-                          {p.is_active ? <span className="text-emerald-700">Yes</span> : <span className="text-red-700">No</span>}
-                        </td>
-                        <td className="p-3 text-right">
-                          <div className="inline-flex items-center gap-1">
+                        </div>
+                      </div>
+
+                      <div className="p-5">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="min-w-0">
+                            <p className="text-xs uppercase tracking-wider text-[#8C7355] font-semibold mb-1">
+                              {p.categories?.name || 'Uncategorised'}
+                            </p>
+                            <h3 className="font-sans text-lg font-bold leading-tight text-[#181513]">{p.name}</h3>
+                          </div>
+                          <p className="font-sans text-base font-bold whitespace-nowrap text-[#181513]">{formatNaira(p.price)}</p>
+                        </div>
+
+                        <p className="text-sm text-[#57524E] mt-3 line-clamp-2 min-h-[2.5rem]">
+                          {p.short_description || 'No short description added yet.'}
+                        </p>
+
+                        <div className="flex items-center justify-between mt-5 pt-4 border-t border-[#181513]/10">
+                          <div>
+                            <p className="text-xs uppercase tracking-wider text-[#8C7355] font-semibold">Inventory</p>
+                            <p className="text-sm font-semibold text-[#181513] mt-0.5">
+                              {p.stock_quantity === null || p.stock_quantity === undefined ? 'Unlimited / made to order' : `${p.stock_quantity} units`}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-1.5">
                             <button
                               type="button"
                               onClick={() => setProductEditor({ ...p })}
-                              className="p-1.5 hover:bg-[#FAF7F2] text-[#181513] cursor-pointer"
-                              title="Edit"
+                              className="px-3 py-2 border border-[#181513]/15 hover:bg-[#F4F0E9] text-sm font-semibold inline-flex items-center gap-1.5 cursor-pointer"
                             >
-                              <Pencil size={15} />
+                              <Pencil size={14} /> Edit
                             </button>
                             <button
                               type="button"
                               onClick={() => setItemToDelete({ type: 'product', id: p.id, name: p.name })}
-                              className="p-1.5 hover:bg-red-50 text-[#9E3E20] cursor-pointer"
-                              title="Delete"
+                              className="p-2 border border-red-200 text-[#9E3E20] hover:bg-red-50 cursor-pointer"
+                              title="Delete product"
                             >
                               <Trash2 size={15} />
                             </button>
                           </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
