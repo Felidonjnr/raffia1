@@ -713,12 +713,12 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
         {/* Content Pane */}
         <main className="flex-1 p-5 sm:p-7 lg:p-10 overflow-y-auto">
           {tab === 'overview' && (
-            <div className="space-y-8 max-w-6xl">
+            <div className="space-y-8 max-w-7xl">
               <div>
                 <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
                   Management Overview
                 </span>
-                <h2 className="font-editorial text-4xl sm:text-5xl text-[#181513] tracking-tight">Good to see you. <span className="text-[#B84A28]">Here's the store.</span></h2>
+                <h2 className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-[#181513] tracking-tight">Good to see you. <span className="text-[#B84A28]">Here’s the store.</span></h2>
               </div>
 
               {/* Stats Grid */}
@@ -743,6 +743,24 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                   <p className="text-3xl font-sans font-bold text-emerald-800">{formatNaira(stats.revenue)}</p>
                   <p className="text-[11px] text-[#57524E]">Paid orders</p>
                 </div>
+              </div>
+
+              <div className="grid sm:grid-cols-3 gap-4">
+                <button type="button" onClick={() => setProductEditor({ ...blankProduct })} className="bg-[#181513] text-white p-5 text-left hover:bg-[#B84A28] transition-colors cursor-pointer">
+                  <Plus size={20} />
+                  <p className="text-lg font-bold mt-5">Add a product</p>
+                  <p className="text-sm text-white/60 mt-1">Create a new live catalog item.</p>
+                </button>
+                <button type="button" onClick={() => setTab('orders')} className="bg-white border border-[#181513]/10 p-5 text-left hover:border-[#B84A28] transition-colors cursor-pointer">
+                  <ShoppingBag size={20} className="text-[#B84A28]" />
+                  <p className="text-lg font-bold mt-5">Review orders</p>
+                  <p className="text-sm text-[#57524E] mt-1">Confirm payments and move fulfilment forward.</p>
+                </button>
+                <button type="button" onClick={() => setTab('settings')} className="bg-white border border-[#181513]/10 p-5 text-left hover:border-[#B84A28] transition-colors cursor-pointer">
+                  <Settings size={20} className="text-[#B84A28]" />
+                  <p className="text-lg font-bold mt-5">Store settings</p>
+                  <p className="text-sm text-[#57524E] mt-1">Update WhatsApp, bank and shipping details.</p>
+                </button>
               </div>
 
               {/* Database Health Card */}
@@ -966,143 +984,118 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           )}
 
           {tab === 'orders' && (
-            <div className="space-y-6 max-w-6xl">
+            <div className="space-y-7 max-w-7xl">
               <div>
-                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
-                  Patron Orders
-                </span>
-                <h2 className="font-editorial text-3xl sm:text-4xl text-[#181513]">Order Management</h2>
+                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">Commerce Operations</span>
+                <h2 className="font-editorial text-4xl sm:text-5xl text-[#181513] tracking-tight">Orders</h2>
+                <p className="text-sm text-[#57524E] mt-2 max-w-2xl">Confirm payment, communicate with customers and move every order from new to delivered.</p>
+              </div>
+
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {[
+                  ['All orders', orders.length, 'text-[#181513]'],
+                  ['Awaiting payment', orders.filter((o) => o.payment_status !== 'PAID' && o.payment_status !== 'FAILED' && o.payment_status !== 'REFUNDED').length, 'text-[#B84A28]'],
+                  ['Paid', orders.filter((o) => o.payment_status === 'PAID').length, 'text-emerald-700'],
+                  ['Ready / shipped', orders.filter((o) => ['READY_FOR_DELIVERY','SHIPPED'].includes(o.order_status)).length, 'text-[#181513]'],
+                ].map(([label, value, color]) => (
+                  <div key={String(label)} className="bg-white border border-[#181513]/10 p-5 shadow-sm">
+                    <p className="text-xs uppercase tracking-wider text-[#8C7355] font-semibold">{label}</p>
+                    <p className={`text-3xl font-bold mt-2 ${color}`}>{value}</p>
+                  </div>
+                ))}
               </div>
 
               {orders.length === 0 ? (
-                <div className="bg-white border border-[#181513]/10 p-12 text-center text-xs font-mono text-[#8C7355]">
-                  No orders have been submitted yet.
+                <div className="bg-white border border-dashed border-[#181513]/20 p-16 text-center">
+                  <ShoppingBag size={36} className="mx-auto text-[#8C7355] mb-4" />
+                  <h3 className="font-editorial text-2xl">No orders yet</h3>
+                  <p className="text-sm text-[#57524E] mt-2">Orders created through the storefront checkout will appear here.</p>
                 </div>
               ) : (
                 <>
-                  <div className="bg-white border border-[#181513]/10 p-4 grid lg:grid-cols-[1fr_auto_auto_auto] gap-3 shadow-xs">
-                    <label className="relative block">
-                      <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8C7355]" />
-                      <input
-                        value={orderSearch}
-                        onChange={(e) => setOrderSearch(e.target.value)}
-                        placeholder="Search order number, customer or phone…"
-                        className="w-full border border-[#181513]/15 pl-9 pr-3 py-2.5 text-sm font-sans outline-none focus:border-[#B84A28]"
-                      />
-                    </label>
-                    <select value={orderPaymentFilter} onChange={(e) => setOrderPaymentFilter(e.target.value)} className="border border-[#181513]/15 px-3 py-2.5 text-xs font-mono uppercase bg-white">
-                      <option value="ALL">All Payments</option>
-                      <option>PENDING</option>
-                      <option>AWAITING_CONFIRMATION</option>
-                      <option>PAID</option>
-                      <option>FAILED</option>
-                      <option>REFUNDED</option>
-                    </select>
-                    <select value={orderStatusFilter} onChange={(e) => setOrderStatusFilter(e.target.value)} className="border border-[#181513]/15 px-3 py-2.5 text-xs font-mono uppercase bg-white">
-                      <option value="ALL">All Statuses</option>
-                      <option>NEW</option>
-                      <option>PROCESSING</option>
-                      <option>READY_FOR_DELIVERY</option>
-                      <option>SHIPPED</option>
-                      <option>DELIVERED</option>
-                      <option>CANCELLED</option>
-                    </select>
-                    <button type="button" onClick={() => { setOrderSearch(''); setOrderPaymentFilter('ALL'); setOrderStatusFilter('ALL'); }} className="border border-[#181513]/15 px-4 py-2.5 text-xs font-mono uppercase tracking-wider cursor-pointer hover:bg-[#FAF7F2]">
-                      Reset
-                    </button>
+                  <div className="bg-white border border-[#181513]/10 p-4 sm:p-5 shadow-sm">
+                    <div className="grid lg:grid-cols-[1fr_auto_auto_auto] gap-3">
+                      <label className="relative block">
+                        <Search size={17} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8C7355]" />
+                        <input value={orderSearch} onChange={(e) => setOrderSearch(e.target.value)} placeholder="Search order, customer or phone…" className="w-full border border-[#181513]/15 pl-10 pr-4 py-3 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" />
+                      </label>
+                      <select value={orderPaymentFilter} onChange={(e) => setOrderPaymentFilter(e.target.value)} className="border border-[#181513]/15 px-4 py-3 text-sm bg-[#FCFAF7]">
+                        <option value="ALL">All payments</option><option>PENDING</option><option>AWAITING_CONFIRMATION</option><option>PAID</option><option>FAILED</option><option>REFUNDED</option>
+                      </select>
+                      <select value={orderStatusFilter} onChange={(e) => setOrderStatusFilter(e.target.value)} className="border border-[#181513]/15 px-4 py-3 text-sm bg-[#FCFAF7]">
+                        <option value="ALL">All statuses</option><option>NEW</option><option>PROCESSING</option><option>READY_FOR_DELIVERY</option><option>SHIPPED</option><option>DELIVERED</option><option>CANCELLED</option>
+                      </select>
+                      <button type="button" onClick={() => { setOrderSearch(''); setOrderPaymentFilter('ALL'); setOrderStatusFilter('ALL'); }} className="border border-[#181513]/15 px-5 py-3 text-sm font-semibold hover:bg-[#F4F0E9] cursor-pointer">Reset</button>
+                    </div>
                   </div>
+
                   <div className="space-y-4">
                     {filteredOrders.map((o) => (
-                    <div key={o.id} className="bg-white border border-[#181513]/10 p-5 shadow-xs space-y-4">
-                      <div className="flex flex-wrap items-center justify-between gap-4">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <b className="font-mono text-base">{o.order_number}</b>
-                            <span className="text-xs text-[#8C7355]">· {new Date(o.created_at).toLocaleString()}</span>
-                          </div>
-                          <p className="text-xs text-[#57524E] mt-0.5">
-                            Customer: <b>{o.customer_name}</b> ({o.customer_phone})
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <b className="font-mono text-lg text-[#181513]">{formatNaira(o.total)}</b>
-                          <button
-                            type="button"
-                            onClick={() => openOrder(o.id)}
-                            className="px-3 py-1.5 border border-[#181513]/20 hover:border-[#181513] text-xs font-mono uppercase cursor-pointer"
-                          >
-                            {expandedOrder === o.id ? 'Hide Items' : 'View Items'}
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-[#181513]/10 text-xs font-mono">
-                        <label className="flex items-center gap-2">
-                          <span className="text-[#8C7355] uppercase text-[10px]">Payment:</span>
-                          <select
-                            value={o.payment_status}
-                            onChange={(e) => updateOrder(o.id, { payment_status: e.target.value })}
-                            className="border p-1 text-xs uppercase bg-[#FAF7F2]"
-                          >
-                            <option>PENDING</option>
-                            <option>AWAITING_CONFIRMATION</option>
-                            <option>PAID</option>
-                            <option>FAILED</option>
-                            <option>REFUNDED</option>
-                          </select>
-                        </label>
-
-                        <label className="flex items-center gap-2">
-                          <span className="text-[#8C7355] uppercase text-[10px]">Status:</span>
-                          <select
-                            value={o.order_status}
-                            onChange={(e) => updateOrder(o.id, { order_status: e.target.value })}
-                            className="border p-1 text-xs uppercase bg-[#FAF7F2]"
-                          >
-                            <option>NEW</option>
-                            <option>PROCESSING</option>
-                            <option>READY_FOR_DELIVERY</option>
-                            <option>SHIPPED</option>
-                            <option>DELIVERED</option>
-                            <option>CANCELLED</option>
-                          </select>
-                        </label>
-
-                        <a
-                          href={`https://wa.me/${String(o.customer_phone || '').replace(/\D/g, '')}?text=${encodeURIComponent(
-                            `Hello ${o.customer_name}, this is the Raffia Legacy team regarding your order #${o.order_number}.`
-                          )}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-3 py-1 bg-emerald-600 text-white hover:bg-emerald-700 text-xs font-mono uppercase tracking-wider inline-flex items-center gap-1.5 ml-auto"
-                        >
-                          <MessageCircle size={13} />
-                          <span>WhatsApp Customer</span>
-                        </a>
-                      </div>
-
-                      {expandedOrder === o.id && (
-                        <div className="bg-[#FAF7F2] p-4 border border-[#181513]/10 space-y-3 mt-3">
-                          <p className="text-[11px] font-mono uppercase tracking-wider text-[#8C7355] font-bold">
-                            Order Items Breakdown
-                          </p>
-                          <div className="divide-y divide-[#181513]/10">
-                            {orderItems.map((item) => (
-                              <div key={item.id} className="py-2 flex justify-between text-xs font-sans">
-                                <span>{item.product_name} × {item.quantity}</span>
-                                <b className="font-mono">{formatNaira(item.subtotal)}</b>
+                      <article key={o.id} className="bg-white border border-[#181513]/10 shadow-sm overflow-hidden">
+                        <div className="p-5 sm:p-6">
+                          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-5">
+                            <div>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <b className="font-sans text-xl">{o.order_number}</b>
+                                <span className={`px-2.5 py-1 text-xs font-semibold ${o.payment_status === 'PAID' ? 'bg-emerald-100 text-emerald-800' : o.payment_status === 'FAILED' || o.payment_status === 'REFUNDED' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'}`}>{o.payment_status}</span>
+                                <span className="px-2.5 py-1 bg-[#F4F0E9] text-[#57524E] text-xs font-semibold">{o.order_status}</span>
                               </div>
-                            ))}
+                              <p className="text-sm text-[#57524E] mt-2"><strong className="text-[#181513]">{o.customer_name}</strong> · {o.customer_phone}</p>
+                              <p className="text-xs text-[#8C7355] mt-1">{new Date(o.created_at).toLocaleString()}</p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <div className="text-right">
+                                <p className="text-xs uppercase tracking-wider text-[#8C7355]">Order total</p>
+                                <p className="text-2xl font-bold mt-1">{formatNaira(o.total)}</p>
+                              </div>
+                              <button type="button" onClick={() => openOrder(o.id)} className="px-3.5 py-2.5 border border-[#181513]/15 hover:bg-[#F4F0E9] text-sm font-semibold cursor-pointer">
+                                {expandedOrder === o.id ? 'Hide items' : 'View items'}
+                              </button>
+                            </div>
                           </div>
-                          <div className="pt-3 border-t border-[#181513]/10 grid sm:grid-cols-2 gap-3 text-xs text-[#57524E] font-sans">
-                            <p><b>Delivery:</b> {o.customer_address}, {o.customer_city}, {o.customer_state}, {o.customer_country}</p>
-                            <p><b>Email:</b> {o.customer_email || '—'}<br /><b>Patron Notes:</b> {o.patron_notes || '—'}</p>
+
+                          <div className="grid md:grid-cols-2 gap-4 mt-6 pt-5 border-t border-[#181513]/10">
+                            <label className="block">
+                              <span className="block text-xs uppercase tracking-wider text-[#8C7355] font-semibold mb-1.5">Payment status</span>
+                              <select value={o.payment_status} onChange={(e) => updateOrder(o.id, { payment_status: e.target.value })} className="w-full border border-[#181513]/15 p-3 text-sm bg-[#FCFAF7]">
+                                <option>PENDING</option><option>AWAITING_CONFIRMATION</option><option>PAID</option><option>FAILED</option><option>REFUNDED</option>
+                              </select>
+                            </label>
+                            <label className="block">
+                              <span className="block text-xs uppercase tracking-wider text-[#8C7355] font-semibold mb-1.5">Fulfilment status</span>
+                              <select value={o.order_status} onChange={(e) => updateOrder(o.id, { order_status: e.target.value })} className="w-full border border-[#181513]/15 p-3 text-sm bg-[#FCFAF7]">
+                                <option>NEW</option><option>PROCESSING</option><option>READY_FOR_DELIVERY</option><option>SHIPPED</option><option>DELIVERED</option><option>CANCELLED</option>
+                              </select>
+                            </label>
                           </div>
+
+                          <div className="flex flex-wrap items-center gap-3 mt-4">
+                            <a href={`https://wa.me/${String(o.customer_phone || '').replace(/\D/g, '')}?text=${encodeURIComponent(`Hello ${o.customer_name}, this is the Raffia Legacy team regarding your order #${o.order_number}.`)}`} target="_blank" rel="noreferrer" className="px-4 py-2.5 bg-emerald-600 text-white hover:bg-emerald-700 text-sm font-semibold inline-flex items-center gap-2">
+                              <MessageCircle size={15} /> WhatsApp customer
+                            </a>
+                          </div>
+
+                          {expandedOrder === o.id && (
+                            <div className="mt-5 bg-[#F4F0E9] p-5 border border-[#181513]/10">
+                              <p className="text-xs uppercase tracking-wider text-[#8C7355] font-bold">Order items</p>
+                              <div className="divide-y divide-[#181513]/10 mt-2">
+                                {orderItems.map((item) => (
+                                  <div key={item.id} className="py-3 flex justify-between gap-4 text-sm">
+                                    <span>{item.product_name} × {item.quantity}</span><strong>{formatNaira(item.subtotal)}</strong>
+                                  </div>
+                                ))}
+                              </div>
+                              <div className="pt-4 mt-2 border-t border-[#181513]/10 grid md:grid-cols-2 gap-4 text-sm text-[#57524E]">
+                                <p><strong className="text-[#181513]">Delivery:</strong><br />{o.customer_address}, {o.customer_city}, {o.customer_state}, {o.customer_country}</p>
+                                <p><strong className="text-[#181513]">Email:</strong> {o.customer_email || '—'}<br /><strong className="text-[#181513]">Notes:</strong> {o.patron_notes || '—'}</p>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                      </article>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           )}
@@ -1122,153 +1115,90 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           )}
 
           {tab === 'settings' && (
-            <div className="max-w-2xl bg-white border border-[#181513]/10 p-6 sm:p-8 space-y-6">
+            <div className="space-y-7 max-w-5xl">
               <div>
-                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
-                  Storefront Configuration
-                </span>
-                <h2 className="font-editorial text-3xl">Marketplace Settings</h2>
-                <p className="text-xs text-[#57524E] mt-1">
-                  These settings control manual checkout details without modifying code.
-                </p>
+                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">Store Configuration</span>
+                <h2 className="font-editorial text-4xl sm:text-5xl tracking-tight">Settings</h2>
+                <p className="text-sm text-[#57524E] mt-2 max-w-2xl">Keep checkout, payment instructions and delivery settings in one place.</p>
               </div>
 
-              <div className="space-y-4 text-xs font-mono">
-                <label className="block">
-                  <span className="uppercase text-[#57524E]">WhatsApp Business Number</span>
-                  <input
-                    value={settings.whatsapp_number || ''}
-                    onChange={(e) => setSettings({ ...settings, whatsapp_number: e.target.value })}
-                    placeholder="2348012345678"
-                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
-                  />
-                </label>
-                <label className="block">
-                  <span className="uppercase text-[#57524E]">Bank Name</span>
-                  <input
-                    value={settings.bank_name || ''}
-                    onChange={(e) => setSettings({ ...settings, bank_name: e.target.value })}
-                    placeholder="e.g. Zenith Bank"
-                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
-                  />
-                </label>
-                <label className="block">
-                  <span className="uppercase text-[#57524E]">Account Name</span>
-                  <input
-                    value={settings.account_name || ''}
-                    onChange={(e) => setSettings({ ...settings, account_name: e.target.value })}
-                    placeholder="Raffia Legacy Project"
-                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
-                  />
-                </label>
-                <label className="block">
-                  <span className="uppercase text-[#57524E]">Account Number</span>
-                  <input
-                    value={settings.account_number || ''}
-                    onChange={(e) => setSettings({ ...settings, account_number: e.target.value })}
-                    placeholder="0123456789"
-                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
-                  />
-                </label>
-                <label className="block">
-                  <span className="uppercase text-[#57524E]">Flat Shipping Fee (₦)</span>
-                  <input
-                    type="number"
-                    value={settings.shipping_flat_rate ?? 15000}
-                    onChange={(e) => setSettings({ ...settings, shipping_flat_rate: Number(e.target.value) })}
-                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
-                  />
-                </label>
-                <label className="block">
-                  <span className="uppercase text-[#57524E]">Order Prefix</span>
-                  <input
-                    value={settings.order_prefix || 'RL'}
-                    onChange={(e) => setSettings({ ...settings, order_prefix: e.target.value.toUpperCase() })}
-                    className="w-full p-3 border mt-1 font-mono text-sm bg-[#FAF7F2]"
-                  />
-                </label>
+              <div className="grid lg:grid-cols-2 gap-5">
+                <section className="bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm">
+                  <div className="flex items-start gap-3 mb-6"><MessageCircle className="text-[#B84A28]" size={22}/><div><h3 className="font-editorial text-2xl">Customer contact</h3><p className="text-sm text-[#57524E] mt-1">Used for manual WhatsApp checkout.</p></div></div>
+                  <label className="block"><span className="text-sm font-semibold">WhatsApp Business number</span><input value={settings.whatsapp_number || ''} onChange={(e) => setSettings({ ...settings, whatsapp_number: e.target.value })} placeholder="2348012345678" className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
+                </section>
 
-                <button
-                  type="button"
-                  onClick={saveSettings}
-                  className="px-5 py-3 bg-[#181513] text-white hover:bg-[#B84A28] uppercase text-xs tracking-wider inline-flex items-center gap-2 cursor-pointer font-bold"
-                >
-                  <Save size={15} /> Save Settings
-                </button>
+                <section className="bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm">
+                  <div className="flex items-start gap-3 mb-6"><Database className="text-[#B84A28]" size={22}/><div><h3 className="font-editorial text-2xl">Order settings</h3><p className="text-sm text-[#57524E] mt-1">Controls generated order references.</p></div></div>
+                  <label className="block"><span className="text-sm font-semibold">Order prefix</span><input value={settings.order_prefix || 'RL'} onChange={(e) => setSettings({ ...settings, order_prefix: e.target.value.toUpperCase() })} className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
+                </section>
+
+                <section className="bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm lg:col-span-2">
+                  <div className="mb-6"><h3 className="font-editorial text-2xl">Manual payment details</h3><p className="text-sm text-[#57524E] mt-1">These details are shown to customers during manual transfer checkout.</p></div>
+                  <div className="grid md:grid-cols-3 gap-5">
+                    <label className="block"><span className="text-sm font-semibold">Bank name</span><input value={settings.bank_name || ''} onChange={(e) => setSettings({ ...settings, bank_name: e.target.value })} placeholder="e.g. Zenith Bank" className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
+                    <label className="block"><span className="text-sm font-semibold">Account name</span><input value={settings.account_name || ''} onChange={(e) => setSettings({ ...settings, account_name: e.target.value })} placeholder="Raffia Legacy Project" className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
+                    <label className="block"><span className="text-sm font-semibold">Account number</span><input value={settings.account_number || ''} onChange={(e) => setSettings({ ...settings, account_number: e.target.value })} placeholder="0123456789" className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
+                  </div>
+                </section>
+
+                <section className="bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm">
+                  <h3 className="font-editorial text-2xl">Delivery</h3>
+                  <p className="text-sm text-[#57524E] mt-1 mb-6">Default flat shipping fee applied at checkout.</p>
+                  <label className="block"><span className="text-sm font-semibold">Flat shipping fee (₦)</span><input type="number" value={settings.shipping_flat_rate ?? 15000} onChange={(e) => setSettings({ ...settings, shipping_flat_rate: Number(e.target.value) })} className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
+                </section>
+
+                <section className="bg-[#181513] text-white p-6 sm:p-7 shadow-sm">
+                  <h3 className="font-editorial text-2xl">Database connection</h3>
+                  <p className="text-sm text-white/60 mt-1 mb-5">Connected project used by this admin studio.</p>
+                  <p className="text-sm font-mono text-white/85 break-all">{supabaseUrl}</p>
+                  <button type="button" onClick={clearLocalSupabaseCredentials} className="mt-5 px-4 py-2.5 border border-white/20 hover:bg-white/10 text-sm font-semibold cursor-pointer">Disconnect database</button>
+                </section>
               </div>
 
-              {/* Database Credentials Reset */}
-              <div className="pt-6 border-t border-[#181513]/10 space-y-3">
-                <p className="text-xs font-mono uppercase tracking-wider text-[#8C7355] font-bold">
-                  Supabase Project Credentials
-                </p>
-                <div className="p-3 bg-[#FAF7F2] border text-xs font-mono text-[#57524E] space-y-1">
-                  <p><b>URL:</b> {supabaseUrl}</p>
-                  <p><b>Project Ref:</b> {projectRef}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={clearLocalSupabaseCredentials}
-                  className="px-4 py-2 border border-red-300 text-red-700 hover:bg-red-50 text-xs font-mono uppercase tracking-wider cursor-pointer"
-                >
-                  Reset / Disconnect Database
-                </button>
+              <div className="flex justify-end">
+                <button type="button" onClick={saveSettings} className="px-6 py-3.5 bg-[#B84A28] text-white hover:bg-[#9E3E20] text-sm font-bold inline-flex items-center gap-2 cursor-pointer shadow-sm"><Save size={16}/> Save store settings</button>
               </div>
             </div>
           )}
 
           {tab === 'database' && (
-            <div className="space-y-6 max-w-4xl">
+            <div className="space-y-7 max-w-5xl">
               <div>
-                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
-                  Database & Migrations
-                </span>
-                <h2 className="font-editorial text-3xl sm:text-4xl text-[#181513]">Supabase SQL Schema</h2>
-                <p className="text-xs text-[#57524E] leading-relaxed mt-2">
-                  The marketplace schema includes tables for products, categories, collections, makers, orders, order items, settings, profiles, storage policies, and checkout RPC.
-                </p>
+                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">System</span>
+                <h2 className="font-editorial text-4xl sm:text-5xl tracking-tight">Database</h2>
+                <p className="text-sm text-[#57524E] mt-2 max-w-2xl">Technical tools for checking the live Supabase connection and accessing the marketplace schema.</p>
               </div>
 
-              <div className="bg-white border border-[#181513]/10 p-6 space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div>
-                    <h3 className="font-editorial text-xl">Marketplace SQL Migration</h3>
-                    <p className="text-xs text-[#8C7355] font-mono">supabase/migrations/202610040001_marketplace.sql</p>
+              <div className="grid lg:grid-cols-3 gap-5">
+                <div className="lg:col-span-2 bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div><h3 className="font-editorial text-2xl">Supabase connection</h3><p className="text-sm text-[#57524E] mt-1 break-all">{supabaseUrl}</p></div>
+                    <button type="button" onClick={runHealthCheck} disabled={checkingHealth} className="px-4 py-2.5 border border-[#181513]/15 hover:bg-[#F4F0E9] text-sm font-semibold inline-flex items-center gap-2 cursor-pointer"><RefreshCw size={15} className={checkingHealth ? 'animate-spin' : ''}/>{checkingHealth ? 'Checking…' : 'Check health'}</button>
                   </div>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={copySqlMigration}
-                      className="px-4 py-2 bg-[#181513] text-white hover:bg-[#B84A28] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-2 cursor-pointer"
-                    >
-                      {copiedSql ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
-                      <span>{copiedSql ? 'Copied!' : 'Copy Entire SQL'}</span>
-                    </button>
-                    <a
-                      href={`https://supabase.com/dashboard/project/${projectRef}/sql/new`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="px-4 py-2 border border-[#181513]/20 hover:border-[#181513] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-1.5"
-                    >
-                      <span>Open SQL Editor</span>
-                      <ExternalLink size={12} />
-                    </a>
-                  </div>
+                  {health && <div className="grid sm:grid-cols-2 gap-3 mt-6">{Object.entries(health.tables).map(([table, ready]) => <div key={table} className={`p-3 border flex items-center justify-between text-sm ${ready ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900'}`}><span className="font-medium">{table}</span>{ready ? <CheckCircle2 size={16}/> : <AlertCircle size={16}/>}</div>)}</div>}
                 </div>
 
-                <div className="p-4 bg-[#181513] text-emerald-400 text-xs font-mono overflow-x-auto max-h-96">
-                  <pre>{`-- Run this once in the Supabase SQL Editor:
--- 1. categories, collections, makers
--- 2. products, product_images
--- 3. orders, order_items, order_status_history
--- 4. site_settings, profiles
--- 5. create_manual_order(jsonb, jsonb) function
--- 6. storage.buckets ('marketplace') with public read policy
--- Click "Copy Entire SQL" above to get the full script.`}</pre>
+                <div className="bg-[#181513] text-white p-6 sm:p-7 shadow-sm">
+                  <Database size={24} className="text-[#D7A98F]" />
+                  <h3 className="font-editorial text-2xl mt-5">Migration tools</h3>
+                  <p className="text-sm text-white/60 mt-2">Copy the current marketplace schema and open the SQL editor.</p>
+                  <button type="button" onClick={copySqlMigration} className="w-full mt-6 px-4 py-3 bg-white text-[#181513] hover:bg-[#F4F0E9] text-sm font-bold inline-flex items-center justify-center gap-2 cursor-pointer">{copiedSql ? <Check size={15}/> : <Copy size={15}/>} {copiedSql ? 'Copied' : 'Copy SQL schema'}</button>
+                  <a href={`https://supabase.com/dashboard/project/${projectRef}/sql/new`} target="_blank" rel="noreferrer" className="w-full mt-2 px-4 py-3 border border-white/20 hover:bg-white/10 text-white text-sm font-semibold inline-flex items-center justify-center gap-2"><ExternalLink size={14}/> Open SQL editor</a>
+                </div>
+              </div>
+
+              <div className="bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm">
+                <h3 className="font-editorial text-2xl">Schema overview</h3>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-5">
+                  {['Products & images','Categories','Orders & order items','Customers','Site settings','Profiles & roles','Marketplace storage','Manual checkout RPC'].map((item) => (
+                    <div key={item} className="border border-[#181513]/10 bg-[#FCFAF7] p-4 text-sm font-semibold">{item}</div>
+                  ))}
                 </div>
               </div>
             </div>
           )}
+
         </main>
       </div>
 
