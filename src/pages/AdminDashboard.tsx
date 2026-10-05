@@ -1382,153 +1382,254 @@ const ProductEditor: React.FC<any> = ({
   onUpload,
   onClose,
 }) => {
-  const field = (key: string, label: string, type = 'text') => (
+  const [activeSection, setActiveSection] = useState<'details' | 'commerce' | 'images' | 'visibility'>('details');
+  const galleryUrls = String(product.gallery || '').split('\n').map((x: string) => x.trim()).filter(Boolean);
+  const allImages = [product.cover_image, ...galleryUrls].filter(Boolean);
+
+  const update = (key: string, value: any) => setProduct({ ...product, [key]: value });
+
+  const field = (key: string, label: string, type = 'text', placeholder = '') => (
     <label className="block">
-      <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">{label}</span>
+      <span className="text-sm font-semibold text-[#181513]">{label}</span>
       <input
         type={type}
         value={product[key] ?? ''}
-        onChange={(e) => setProduct({ ...product, [key]: type === 'number' ? Number(e.target.value) : e.target.value })}
-        className="w-full p-3 border mt-1 bg-white font-sans text-sm text-[#181513]"
+        placeholder={placeholder}
+        onChange={(e) => update(key, type === 'number' ? Number(e.target.value) : e.target.value)}
+        className="w-full p-3.5 border border-[#181513]/15 mt-1.5 bg-white font-sans text-sm text-[#181513] outline-none focus:border-[#B84A28] focus:ring-2 focus:ring-[#B84A28]/10"
       />
     </label>
   );
 
+  const tabs = [
+    { id: 'details', label: 'Product details' },
+    { id: 'commerce', label: 'Pricing & inventory' },
+    { id: 'images', label: 'Images' },
+    { id: 'visibility', label: 'Store display' },
+  ] as const;
+
   return (
-    <div className="fixed inset-0 z-50 bg-[#181513]/70 backdrop-blur-xs p-3 sm:p-8 overflow-y-auto">
-      <form onSubmit={onSave} className="max-w-5xl mx-auto bg-white p-6 sm:p-10 lg:p-12 space-y-8 shadow-2xl border border-[#181513]/20 rounded-sm">
-        <div className="flex justify-between items-center pb-4 border-b border-[#181513]/10">
-          <div>
-            <p className="text-xs font-mono uppercase tracking-widest text-[#B84A28]">Catalog Studio</p>
-            <h2 className="font-editorial text-4xl sm:text-5xl tracking-tight">{product.id ? 'Edit Product' : 'Add New Product'}</h2>
+    <div className="fixed inset-0 z-50 bg-[#181513]/75 backdrop-blur-sm p-2 sm:p-5 lg:p-8 overflow-y-auto">
+      <form onSubmit={onSave} className="max-w-5xl mx-auto bg-[#FAF7F2] shadow-2xl border border-white/10 rounded-sm overflow-hidden">
+        <div className="bg-[#181513] text-white px-5 sm:px-8 lg:px-10 py-6 sm:py-7">
+          <div className="flex items-start justify-between gap-5">
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-[#D7A98F] font-semibold">Catalog Studio</p>
+              <h2 className="font-editorial text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-1">
+                {product.id ? 'Edit Product' : 'Add New Product'}
+              </h2>
+              <p className="text-sm text-white/60 mt-2">Everything customers need to understand and buy this piece.</p>
+            </div>
+            <button type="button" onClick={onClose} className="p-2.5 border border-white/15 hover:bg-white/10 cursor-pointer rounded-sm" aria-label="Close">
+              <X size={20} />
+            </button>
           </div>
-          <button type="button" onClick={onClose} className="p-2 hover:bg-[#FAF7F2] cursor-pointer">
-            <X size={20} />
-          </button>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4">
-          {field('name', 'Product Name *')}
-          {field('slug', 'Slug *')}
-          {field('price', 'Price (₦) *', 'number')}
-          {field('stock_quantity', 'Stock Quantity', 'number')}
-        </div>
-
-        <label>
-          <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Category</span>
-          <select
-            value={product.category_id || ''}
-            onChange={(e) => setProduct({ ...product, category_id: e.target.value })}
-            className="w-full p-3 border mt-1 bg-white font-sans text-sm"
-          >
-            <option value="">Uncategorised</option>
-            {categories.map((x: any) => (
-              <option key={x.id} value={x.id}>{x.name}</option>
+        <div className="px-4 sm:px-8 lg:px-10 border-b border-[#181513]/10 bg-white overflow-x-auto">
+          <div className="flex min-w-max">
+            {tabs.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveSection(item.id)}
+                className={`px-4 sm:px-5 py-4 text-sm font-semibold border-b-2 transition-colors cursor-pointer ${activeSection === item.id ? 'border-[#B84A28] text-[#B84A28]' : 'border-transparent text-[#57524E] hover:text-[#181513]'}`}
+              >
+                {item.label}
+              </button>
             ))}
-          </select>
-        </label>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          <label>
-            <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Availability</span>
-            <select
-              value={product.availability}
-              onChange={(e) => setProduct({ ...product, availability: e.target.value })}
-              className="w-full p-3 border mt-1 bg-white font-sans text-sm"
-            >
-              {availabilityOptions.map((x) => (
-                <option key={x}>{x}</option>
-              ))}
-            </select>
-          </label>
-          {field('lead_time', 'Lead Time (e.g. Available for order)')}
-        </div>
-
-        {field('short_description', 'Short Description')}
-
-        <label className="block">
-          <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Full Description</span>
-          <textarea
-            value={product.description || ''}
-            onChange={(e) => setProduct({ ...product, description: e.target.value })}
-            rows={4}
-            className="w-full p-3 border mt-1 bg-white font-sans text-sm"
-          />
-        </label>
-
-        <label className="block">
-          <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Cover Image URL</span>
-          <div className="flex gap-2 mt-1">
-            <input
-              value={product.cover_image || ''}
-              onChange={(e) => setProduct({ ...product, cover_image: e.target.value })}
-              className="w-full p-3 border font-sans text-sm"
-              placeholder="https://..."
-            />
-            <label className="shrink-0 px-4 py-3 border border-[#181513]/20 hover:border-[#181513] cursor-pointer flex items-center gap-1.5 text-xs font-mono uppercase bg-[#FAF7F2]">
-              <Upload size={14} />
-              <span>Upload</span>
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => e.target.files?.[0] && onUpload(e.target.files[0], (url: string) => setProduct({ ...product, cover_image: url }))}
-              />
-            </label>
           </div>
-        </label>
-
-        <label className="block">
-          <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">Additional Gallery URLs (one per line)</span>
-          <textarea
-            value={product.gallery || ''}
-            onChange={(e) => setProduct({ ...product, gallery: e.target.value })}
-            rows={2}
-            className="w-full p-3 border mt-1 font-mono text-xs"
-          />
-        </label>
-
-        <div className="flex flex-wrap gap-6 text-xs font-mono pt-2">
-          <label className="inline-flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={Boolean(product.is_featured)}
-              onChange={(e) => setProduct({ ...product, is_featured: e.target.checked })}
-            />
-            <span>Featured Product</span>
-          </label>
-          <label className="inline-flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={Boolean(product.is_new)}
-              onChange={(e) => setProduct({ ...product, is_new: e.target.checked })}
-            />
-            <span>New Arrival</span>
-          </label>
-          <label className="inline-flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={Boolean(product.is_active)}
-              onChange={(e) => setProduct({ ...product, is_active: e.target.checked })}
-            />
-            <span>Visible in Storefront</span>
-          </label>
         </div>
 
-        <div className="flex justify-end gap-3 pt-6 border-t border-[#181513]/10">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-3 border border-[#181513]/20 text-xs font-mono uppercase tracking-widest cursor-pointer"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-6 py-3 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-mono uppercase tracking-widest flex items-center gap-2 cursor-pointer font-bold"
-          >
-            <Save size={15} /> Save to Supabase
-          </button>
+        <div className="p-5 sm:p-8 lg:p-10">
+          {activeSection === 'details' && (
+            <div className="space-y-7">
+              <div>
+                <h3 className="font-editorial text-2xl sm:text-3xl">Tell the story of the product</h3>
+                <p className="text-sm text-[#57524E] mt-1">Keep the name and description clear, specific and customer-friendly.</p>
+              </div>
+              <div className="grid md:grid-cols-2 gap-5">
+                {field('name', 'Product name *', 'text', 'e.g. Multicolour Patterned Raffia Shoulder Bag')}
+                {field('slug', 'URL slug *', 'text', 'multicolour-patterned-raffia-shoulder-bag')}
+              </div>
+              {field('short_description', 'Short description', 'text', 'A concise sentence shown on product cards.')}
+              <label className="block">
+                <span className="text-sm font-semibold text-[#181513]">Full description</span>
+                <textarea
+                  value={product.description || ''}
+                  onChange={(e) => update('description', e.target.value)}
+                  rows={7}
+                  placeholder="Describe the piece, materials, use and anything a customer should know."
+                  className="w-full p-3.5 border border-[#181513]/15 mt-1.5 bg-white font-sans text-sm text-[#181513] outline-none focus:border-[#B84A28] focus:ring-2 focus:ring-[#B84A28]/10 resize-y"
+                />
+              </label>
+              <label className="block max-w-xl">
+                <span className="text-sm font-semibold text-[#181513]">Category</span>
+                <select
+                  value={product.category_id || ''}
+                  onChange={(e) => update('category_id', e.target.value)}
+                  className="w-full p-3.5 border border-[#181513]/15 mt-1.5 bg-white font-sans text-sm outline-none focus:border-[#B84A28]"
+                >
+                  <option value="">Uncategorised</option>
+                  {categories.map((x: any) => <option key={x.id} value={x.id}>{x.name}</option>)}
+                </select>
+              </label>
+            </div>
+          )}
+
+          {activeSection === 'commerce' && (
+            <div className="space-y-7">
+              <div>
+                <h3 className="font-editorial text-2xl sm:text-3xl">Pricing & inventory</h3>
+                <p className="text-sm text-[#57524E] mt-1">Control how this product is sold and how stock is represented.</p>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-5">
+                {field('price', 'Price (₦) *', 'number', '15000')}
+                {field('stock_quantity', 'Stock quantity', 'number', 'Leave blank for made-to-order / unlimited')}
+              </div>
+              <div className="grid sm:grid-cols-2 gap-5">
+                <label className="block">
+                  <span className="text-sm font-semibold text-[#181513]">Availability</span>
+                  <select
+                    value={product.availability || 'IN STOCK'}
+                    onChange={(e) => update('availability', e.target.value)}
+                    className="w-full p-3.5 border border-[#181513]/15 mt-1.5 bg-white font-sans text-sm outline-none focus:border-[#B84A28]"
+                  >
+                    {availabilityOptions.map((x) => <option key={x}>{x}</option>)}
+                  </select>
+                </label>
+                {field('lead_time', 'Lead time', 'text', 'e.g. Available for order')}
+              </div>
+              <div className="bg-white border border-[#181513]/10 p-5 sm:p-6">
+                <p className="text-xs uppercase tracking-wider text-[#8C7355] font-bold">Current selling position</p>
+                <div className="grid sm:grid-cols-3 gap-4 mt-4">
+                  <div><p className="text-xs text-[#8C7355]">Price</p><p className="text-xl font-bold mt-1">{formatNaira(Number(product.price || 0))}</p></div>
+                  <div><p className="text-xs text-[#8C7355]">Availability</p><p className="text-sm font-semibold mt-1">{product.availability || 'IN STOCK'}</p></div>
+                  <div><p className="text-xs text-[#8C7355]">Stock</p><p className="text-sm font-semibold mt-1">{product.stock_quantity === '' || product.stock_quantity === null ? 'Made to order / unlimited' : product.stock_quantity}</p></div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeSection === 'images' && (
+            <div className="space-y-7">
+              <div>
+                <h3 className="font-editorial text-2xl sm:text-3xl">Product photography</h3>
+                <p className="text-sm text-[#57524E] mt-1">Use your Cloudinary links or upload directly to Supabase Storage.</p>
+              </div>
+
+              <div className="grid lg:grid-cols-[1.1fr_.9fr] gap-6">
+                <div className="bg-white border border-[#181513]/10 p-5">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p className="text-sm font-bold">Main image</p>
+                      <p className="text-xs text-[#8C7355] mt-0.5">This is the image used across the storefront.</p>
+                    </div>
+                    <label className="px-3.5 py-2.5 bg-[#181513] text-white hover:bg-[#B84A28] cursor-pointer inline-flex items-center gap-2 text-sm font-semibold">
+                      <Upload size={15} /> Upload
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => e.target.files?.[0] && onUpload(e.target.files[0], (url: string) => update('cover_image', url))}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="aspect-[4/3] bg-[#EDE6DB] overflow-hidden border border-[#181513]/10 mb-4">
+                    {product.cover_image ? (
+                      <img src={product.cover_image} alt={product.name || 'Product preview'} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="h-full grid place-items-center text-[#8C7355]">
+                        <Package size={46} />
+                      </div>
+                    )}
+                  </div>
+
+                  <label className="block">
+                    <span className="text-sm font-semibold">Cloudinary / external image URL</span>
+                    <input
+                      value={product.cover_image || ''}
+                      onChange={(e) => update('cover_image', e.target.value)}
+                      placeholder="https://res.cloudinary.com/..."
+                      className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm font-sans outline-none focus:border-[#B84A28]"
+                    />
+                  </label>
+                </div>
+
+                <div className="bg-white border border-[#181513]/10 p-5">
+                  <p className="text-sm font-bold">Gallery</p>
+                  <p className="text-xs text-[#8C7355] mt-0.5 mb-4">Add one image URL per line.</p>
+                  <textarea
+                    value={product.gallery || ''}
+                    onChange={(e) => update('gallery', e.target.value)}
+                    rows={8}
+                    placeholder={'https://res.cloudinary.com/...\nhttps://res.cloudinary.com/...'}
+                    className="w-full p-3.5 border border-[#181513]/15 text-sm font-sans outline-none focus:border-[#B84A28] resize-y"
+                  />
+                  <div className="grid grid-cols-3 gap-2 mt-4">
+                    {galleryUrls.slice(0, 6).map((url: string, index: number) => (
+                      <img key={`${url}-${index}`} src={url} alt="" className="aspect-square object-cover border border-[#181513]/10" />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {allImages.length > 0 && (
+                <div className="bg-white border border-[#181513]/10 p-5">
+                  <p className="text-sm font-bold">Image set preview</p>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mt-4">
+                    {allImages.slice(0, 12).map((url: string, index: number) => (
+                      <div key={`${url}-${index}`} className="aspect-square bg-[#EDE6DB] overflow-hidden border border-[#181513]/10">
+                        <img src={url} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeSection === 'visibility' && (
+            <div className="space-y-7">
+              <div>
+                <h3 className="font-editorial text-2xl sm:text-3xl">Store display</h3>
+                <p className="text-sm text-[#57524E] mt-1">Decide where and how prominently this product appears.</p>
+              </div>
+              <div className="grid md:grid-cols-3 gap-4">
+                {[
+                  ['is_active', 'Visible in storefront', 'Customers can discover and purchase this product.'],
+                  ['is_featured', 'Featured product', 'Use this product in featured marketplace placements.'],
+                  ['is_new', 'New arrival', 'Marks this product as a recent addition.'],
+                ].map(([key, label, description]) => (
+                  <label key={key} className={`border p-5 cursor-pointer transition-colors ${product[key] ? 'border-[#B84A28] bg-[#B84A28]/5' : 'border-[#181513]/10 bg-white hover:bg-[#F4F0E9]'}`}>
+                    <input
+                      type="checkbox"
+                      checked={Boolean(product[key])}
+                      onChange={(e) => update(key, e.target.checked)}
+                      className="w-5 h-5 accent-[#B84A28]"
+                    />
+                    <span className="block text-base font-bold mt-4">{label}</span>
+                    <span className="block text-sm text-[#57524E] leading-relaxed mt-1">{description}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="px-5 sm:px-8 lg:px-10 py-5 bg-white border-t border-[#181513]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <p className="text-sm text-[#57524E]">
+            {product.id ? 'Changes will update the live Supabase record.' : 'Save this product to add it to the live catalog.'}
+          </p>
+          <div className="flex justify-end gap-3">
+            <button type="button" onClick={onClose} className="px-5 py-3 border border-[#181513]/20 text-sm font-semibold cursor-pointer hover:bg-[#F4F0E9]">
+              Cancel
+            </button>
+            <button type="submit" className="px-6 py-3 bg-[#181513] hover:bg-[#B84A28] text-white text-sm font-bold inline-flex items-center gap-2 cursor-pointer">
+              <Save size={16} /> Save Product
+            </button>
+          </div>
         </div>
       </form>
     </div>
