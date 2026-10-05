@@ -389,7 +389,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             <button
               type="button"
               onClick={() => onNavigate({ type: 'home' })}
-              className="text-xs uppercase tracking-widest text-[#8C7355] hover:text-[#181513] inline-flex items-center gap-1.5 cursor-pointer font-mono"
+              className="text-xs uppercase tracking-widest text-white/60 hover:text-white inline-flex items-center gap-1.5 cursor-pointer font-mono"
             >
               <ArrowLeft size={14} /> Return to Storefront
             </button>
@@ -614,9 +614,9 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#181513] flex flex-col">
+    <div className="min-h-screen bg-[#F4F0E9] text-[#181513] flex flex-col">
       {/* Top Admin Header */}
-      <header className="border-b border-[#181513]/15 bg-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-40 shadow-xs">
+      <header className="border-b border-[#181513]/10 bg-[#181513] text-white px-5 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-40 shadow-lg">
         <div className="flex items-center gap-4">
           <button
             type="button"
@@ -625,24 +625,24 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           >
             <ArrowLeft size={14} /> Storefront
           </button>
-          <span className="text-[#181513]/20">/</span>
+          <span className="text-white/20">/</span>
           <div className="flex items-center gap-2">
-            <span className="font-editorial text-xl font-bold">Raffia Legacy</span>
-            <span className="text-[11px] font-mono uppercase px-2 py-0.5 bg-[#181513] text-white">Admin Studio</span>
+            <span className="font-editorial text-2xl font-bold tracking-tight">Raffia Legacy</span>
+            <span className="text-[11px] font-mono uppercase px-2.5 py-1 bg-[#B84A28] text-white tracking-wider">Admin Studio</span>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Supabase Status Pill */}
-          <div className="flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-mono">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 border border-white/15 text-white text-xs font-mono">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="font-semibold">Supabase Live</span>
           </div>
 
           <button
             type="button"
             onClick={signOut}
-            className="px-3 py-1.5 border border-[#181513]/20 hover:border-[#9E3E20] hover:text-[#9E3E20] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="px-3.5 py-2 border border-white/20 hover:border-white hover:bg-white/10 text-white text-xs font-mono uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <LogOut size={13} />
             <span>Sign Out</span>
@@ -663,8 +663,8 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       {/* Main Body */}
       <div className="flex-1 flex flex-col md:flex-row">
         {/* Sidebar Nav */}
-        <aside className="w-full md:w-64 bg-white border-r border-[#181513]/10 p-4 space-y-1 shrink-0">
-          <p className="text-[10px] font-mono uppercase tracking-widest text-[#8C7355] px-3 py-2 font-bold">
+        <aside className="w-full md:w-64 bg-[#211D1A] text-white border-r border-[#181513] p-4 lg:p-5 space-y-1 shrink-0 md:min-h-[calc(100vh-73px)]">
+          <p className="text-[11px] font-mono uppercase tracking-widest text-white/40 px-3 py-2 font-bold">
             Catalog & Orders
           </p>
           {[
@@ -681,7 +681,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                 setTab(id as Tab);
                 setNotice(null);
               }}
-              className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-mono uppercase tracking-wider rounded-none cursor-pointer transition-colors ${tab === id ? 'bg-[#181513] text-white font-bold' : 'hover:bg-[#FAF7F2] text-[#57524E]'}`}
+              className={`w-full flex items-center justify-between px-3 py-3 text-sm font-sans rounded-lg cursor-pointer transition-colors ${tab === id ? 'bg-[#B84A28] text-white font-bold shadow-sm' : 'hover:bg-white/10 text-white/65'}`}
             >
               <div className="flex items-center gap-2.5">
                 <Icon size={15} />
@@ -695,9 +695,9 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             </button>
           ))}
 
-          <div className="pt-6 border-t border-[#181513]/10 mt-6 px-3 space-y-2">
-            <p className="text-[10px] font-mono uppercase text-[#8C7355]">Database Ref</p>
-            <p className="text-xs font-mono truncate text-[#181513] font-semibold">{projectRef}</p>
+          <div className="pt-6 border-t border-white/10 mt-6 px-3 space-y-2">
+            <p className="text-[10px] font-mono uppercase text-white/40">Database Ref</p>
+            <p className="text-xs font-mono truncate text-white/80 font-semibold">{projectRef}</p>
             <button
               type="button"
               onClick={runHealthCheck}
@@ -711,36 +711,36 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
         </aside>
 
         {/* Content Pane */}
-        <main className="flex-1 p-6 lg:p-10 overflow-y-auto">
+        <main className="flex-1 p-5 sm:p-7 lg:p-10 overflow-y-auto">
           {tab === 'overview' && (
             <div className="space-y-8 max-w-6xl">
               <div>
                 <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
                   Management Overview
                 </span>
-                <h2 className="font-editorial text-3xl sm:text-4xl text-[#181513]">Dashboard Summary</h2>
+                <h2 className="font-editorial text-4xl sm:text-5xl text-[#181513] tracking-tight">Good to see you. <span className="text-[#B84A28]">Here's the store.</span></h2>
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
+              <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+                <div className="bg-white border border-[#181513]/10 p-6 space-y-2 shadow-sm hover:shadow-md transition-shadow">
                   <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Live Products</p>
-                  <p className="text-3xl font-sans font-bold text-[#181513]">{stats.products}</p>
+                  <p className="text-4xl font-sans font-bold text-[#181513]">{stats.products}</p>
                   <p className="text-[11px] text-[#57524E]">Active in marketplace</p>
                 </div>
                 <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
                   <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Total Orders</p>
-                  <p className="text-3xl font-sans font-bold text-[#181513]">{stats.orders}</p>
+                  <p className="text-4xl font-sans font-bold text-[#181513]">{stats.orders}</p>
                   <p className="text-[11px] text-[#57524E]">Recorded in Supabase</p>
                 </div>
                 <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
                   <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Pending Confirmation</p>
-                  <p className="text-3xl font-sans font-bold text-[#B84A28]">{stats.pending}</p>
+                  <p className="text-4xl font-sans font-bold text-[#B84A28]">{stats.pending}</p>
                   <p className="text-[11px] text-[#57524E]">Awaiting manual transfer</p>
                 </div>
                 <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
                   <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Confirmed Revenue</p>
-                  <p className="text-2xl font-sans font-bold text-emerald-800">{formatNaira(stats.revenue)}</p>
+                  <p className="text-3xl font-sans font-bold text-emerald-800">{formatNaira(stats.revenue)}</p>
                   <p className="text-[11px] text-[#57524E]">Paid orders</p>
                 </div>
               </div>
@@ -826,12 +826,12 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                   <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
                     Live Inventory
                   </span>
-                  <h2 className="font-editorial text-3xl sm:text-4xl text-[#181513]">Products Catalog</h2>
+                  <h2 className="font-editorial text-4xl sm:text-5xl text-[#181513] tracking-tight">Products</h2>
                 </div>
                 <button
                   type="button"
                   onClick={() => setProductEditor({ ...blankProduct })}
-                  className="px-4 py-2.5 bg-[#B84A28] text-white hover:bg-[#9E3E20] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-2 cursor-pointer font-bold"
+                  className="px-5 py-3 bg-[#B84A28] text-white hover:bg-[#9E3E20] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-2 cursor-pointer font-bold"
                 >
                   <Plus size={15} />
                   <span>Add Product</span>
@@ -858,7 +858,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                 </button>
               </div>
 
-              <div className="bg-white border border-[#181513]/10 overflow-x-auto shadow-xs">
+              <div className="bg-white border border-[#181513]/10 overflow-x-auto shadow-sm rounded-sm">
                 <table className="w-full text-left text-xs font-sans">
                   <thead className="bg-[#FAF7F2] border-b border-[#181513]/10 font-mono uppercase text-[#8C7355] text-[11px]">
                     <tr>
@@ -872,14 +872,14 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                   </thead>
                   <tbody className="divide-y divide-[#181513]/10">
                     {filteredProducts.map((p) => (
-                      <tr key={p.id} className="hover:bg-[#FAF7F2]/50">
+                      <tr key={p.id} className="hover:bg-[#F7F2EB] transition-colors">
                         <td className="p-3">
                           <div className="flex items-center gap-3">
                             {p.cover_image && (
-                              <img src={p.cover_image} alt="" className="w-10 h-10 object-cover border border-[#181513]/10" />
+                              <img src={p.cover_image} alt="" className="w-14 h-14 object-cover border border-[#181513]/10 bg-[#F4F0E9]" />
                             )}
                             <div>
-                              <b className="font-sans text-sm text-[#181513] block">{p.name}</b>
+                              <b className="font-sans text-[15px] text-[#181513] block font-semibold">{p.name}</b>
                               <span className="text-[11px] text-[#8C7355] font-mono">{p.slug}</span>
                             </div>
                           </div>
@@ -1357,11 +1357,11 @@ const ProductEditor: React.FC<any> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-[#181513]/70 backdrop-blur-xs p-3 sm:p-8 overflow-y-auto">
-      <form onSubmit={onSave} className="max-w-4xl mx-auto bg-white p-6 sm:p-10 space-y-6 shadow-2xl border border-[#181513]/20">
+      <form onSubmit={onSave} className="max-w-5xl mx-auto bg-white p-6 sm:p-10 lg:p-12 space-y-8 shadow-2xl border border-[#181513]/20 rounded-sm">
         <div className="flex justify-between items-center pb-4 border-b border-[#181513]/10">
           <div>
             <p className="text-xs font-mono uppercase tracking-widest text-[#B84A28]">Catalog Studio</p>
-            <h2 className="font-editorial text-3xl">{product.id ? 'Edit Product' : 'Add New Product'}</h2>
+            <h2 className="font-editorial text-4xl sm:text-5xl tracking-tight">{product.id ? 'Edit Product' : 'Add New Product'}</h2>
           </div>
           <button type="button" onClick={onClose} className="p-2 hover:bg-[#FAF7F2] cursor-pointer">
             <X size={20} />
