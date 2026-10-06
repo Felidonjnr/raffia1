@@ -33,8 +33,11 @@ const availabilityOptions = ['IN STOCK', 'MADE TO ORDER', 'LIMITED EDITION', 'AR
 export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }> = ({ onNavigate }) => {
   const [sessionUser, setSessionUser] = useState<any>(null);
   const [role, setRole] = useState('');
+  const [authMode, setAuthMode] = useState<'signin' | 'request'>('signin');
+  const [authFullName, setAuthFullName] = useState('');
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
+  const [authConfirmPassword, setAuthConfirmPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [loadingAuth, setLoadingAuth] = useState(true);
 
@@ -184,10 +187,47 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     e.preventDefault();
     if (!client) return;
     setAuthError('');
-    const result = await client.auth.signInWithPassword({ email: authEmail, password: authPassword });
+    const result = await client.auth.signInWithPassword({ email: authEmail.trim(), password: authPassword });
     if (result.error) {
       setAuthError(result.error.message);
     }
+  };
+
+  const requestAccess = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!client) return;
+    setAuthError('');
+
+    if (authPassword.length < 8) {
+      setAuthError('Password must be at least 8 characters.');
+      return;
+    }
+
+    if (authPassword !== authConfirmPassword) {
+      setAuthError('Passwords do not match.');
+      return;
+    }
+
+    const result = await client.auth.signUp({
+      email: authEmail.trim(),
+      password: authPassword,
+      options: {
+        data: { full_name: authFullName.trim() }
+      }
+    });
+
+    if (result.error) {
+      setAuthError(result.error.message);
+      return;
+    }
+
+    setAuthPassword('');
+    setAuthConfirmPassword('');
+    setNotice({
+      type: 'success',
+      text: 'Access request submitted. An administrator must approve your account before you can enter the dashboard.'
+    });
+    setAuthMode('signin');
   };
 
   const updateUserRole = async (userId: string, nextRole: 'pending' | 'editor' | 'admin') => {
@@ -559,9 +599,13 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
               Management Portal
             </span>
-            <h1 className="font-sans text-3xl sm:text-4xl text-[#181513]">Admin Access</h1>
+            <h1 className="font-sans text-3xl sm:text-4xl text-[#181513]">
+              {authMode === 'signin' ? 'Admin Access' : 'Request Access'}
+            </h1>
             <p className="text-xs text-[#57524E] leading-relaxed mt-2">
-              Sign in to manage products, orders, categories, collections, and artisans.
+              {authMode === 'signin'
+                ? 'Sign in to manage products, orders, categories, collections, and artisans.'
+                : 'Create your account to request access to the Raffia Legacy administration dashboard. Approval is required before you can enter.'}
             </p>
           </div>
 
@@ -572,41 +616,87 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           )}
 
           {notice && (
-            <div className={`p-3 text-xs font-sans border ${notice.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
+            <div className={`p-3 text-xs font-sans border ${notice.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : notice.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
               {notice.text}
             </div>
           )}
 
-          <form onSubmit={signIn} className="space-y-4">
+          <form onSubmit={authMode === 'signin' ? signIn : requestAccess} className="space-y-4">
+            {authMode === 'request' && (
+              <label className="block">
+                <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Full Name</span>
+                <input
+                  type="text"
+                  value={authFullName}
+                  onChange={(e) => setAuthFullName(e.target.value)}
+                  placeholder="Your full name"
+                  className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white"
+                  required
+                />
+              </label>
+            )}
+
             <label className="block">
               <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Email Address</span>
               <input
                 type="email"
                 value={authEmail}
                 onChange={(e) => setAuthEmail(e.target.value)}
-                placeholder="admin@raffialegacy.com"
-                className="w-full p-3 border mt-1 font-sans text-sm bg-white"
+                placeholder="you@example.com"
+                className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white"
                 required
               />
             </label>
+
             <label className="block">
               <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Password</span>
               <input
                 type="password"
                 value={authPassword}
                 onChange={(e) => setAuthPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full p-3 border mt-1 font-sans text-sm bg-white"
+                placeholder="At least 8 characters"
+                className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white"
+                minLength={8}
                 required
               />
             </label>
+
+            {authMode === 'request' && (
+              <label className="block">
+                <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Confirm Password</span>
+                <input
+                  type="password"
+                  value={authConfirmPassword}
+                  onChange={(e) => setAuthConfirmPassword(e.target.value)}
+                  placeholder="Repeat your password"
+                  className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white"
+                  minLength={8}
+                  required
+                />
+              </label>
+            )}
+
             <button
               type="submit"
               className="w-full py-3.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-sans uppercase tracking-widest font-bold transition-colors cursor-pointer"
             >
-              Sign In to Dashboard
+              {authMode === 'signin' ? 'Sign In to Dashboard' : 'Submit Access Request'}
             </button>
           </form>
+
+          <div className="text-center pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                setAuthError('');
+                setNotice(null);
+                setAuthMode(authMode === 'signin' ? 'request' : 'signin');
+              }}
+              className="text-sm font-semibold text-[#B84A28] hover:underline cursor-pointer font-sans"
+            >
+              {authMode === 'signin' ? 'Request Access' : 'Back to Sign In'}
+            </button>
+          </div>
 
           <div className="pt-4 border-t border-[#181513]/10 text-center">
             <p className="text-[11px] text-[#8C7355] font-sans">
