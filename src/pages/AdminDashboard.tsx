@@ -358,7 +358,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   if (loadingAuth) {
     return (
       <div className="min-h-screen bg-[#FAF7F2] grid place-items-center">
-        <div className="flex items-center gap-3 text-sm font-mono text-[#8C7355]">
+        <div className="flex items-center gap-3 text-sm font-sans text-[#8C7355]">
           <RefreshCw className="animate-spin w-4 h-4" />
           <span>Initialising Marketplace Portal…</span>
         </div>
@@ -375,34 +375,34 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             <button
               type="button"
               onClick={() => onNavigate({ type: 'home' })}
-              className="text-xs uppercase tracking-widest text-white/60 hover:text-white inline-flex items-center gap-1.5 cursor-pointer font-mono"
+              className="text-xs uppercase tracking-widest text-white/60 hover:text-white inline-flex items-center gap-1.5 cursor-pointer font-sans"
             >
               <ArrowLeft size={14} /> Return to Storefront
             </button>
-            <span className="px-2.5 py-1 bg-[#B84A28]/10 text-[#B84A28] text-xs font-mono tracking-wider uppercase font-semibold">
+            <span className="px-2.5 py-1 bg-[#B84A28]/10 text-[#B84A28] text-xs font-sans tracking-wider uppercase font-semibold">
               Setup Required
             </span>
           </div>
 
           <div>
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">
+            <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-2">
               Database Integration
             </span>
-            <h1 className="font-editorial text-4xl sm:text-5xl text-[#181513]">Connect Supabase</h1>
+            <h1 className="font-sans text-4xl sm:text-5xl text-[#181513]">Connect Supabase</h1>
             <p className="text-sm text-[#57524E] leading-relaxed mt-3">
               The Raffia Legacy marketplace uses Supabase for live catalog products, orders, categories, makers, and storage. Your project URL has been automatically detected below.
             </p>
           </div>
 
           {notice && (
-            <div className={`p-4 text-xs font-mono border ${notice.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
+            <div className={`p-4 text-xs font-sans border ${notice.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
               {notice.text}
             </div>
           )}
 
           {/* Quick Setup Card */}
           <div className="bg-[#FAF7F2] border border-[#181513]/10 p-5 space-y-4 text-xs font-sans text-[#57524E]">
-            <p className="font-bold text-[#181513] uppercase font-mono tracking-wider flex items-center gap-2">
+            <p className="font-bold text-[#181513] uppercase font-sans tracking-wider flex items-center gap-2">
               <Database size={15} className="text-[#B84A28]" />
               Quick Connection Guide
             </p>
@@ -439,7 +439,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               <button
                 type="button"
                 onClick={copySqlMigration}
-                className="px-3.5 py-2 bg-[#181513] text-white hover:bg-[#B84A28] transition-colors font-mono text-xs uppercase tracking-wider inline-flex items-center gap-2 cursor-pointer"
+                className="px-3.5 py-2 bg-[#181513] text-white hover:bg-[#B84A28] transition-colors font-sans text-xs uppercase tracking-wider inline-flex items-center gap-2 cursor-pointer"
               >
                 {copiedSql ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
                 <span>{copiedSql ? 'Copied to Clipboard!' : 'Copy SQL Schema Script'}</span>
@@ -449,20 +449,20 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
 
           <form onSubmit={handleConnectSupabase} className="space-y-4">
             <label className="block">
-              <span className="text-xs uppercase tracking-wider text-[#57524E] font-mono">Supabase Project URL</span>
+              <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Supabase Project URL</span>
               <input
                 type="text"
                 value={connectUrl}
                 onChange={(e) => setConnectUrl(e.target.value)}
                 placeholder="https://huqedtopuoygbiwrwfwm.supabase.co"
-                className="w-full p-3 border mt-1 font-mono text-xs bg-white text-[#181513]"
+                className="w-full p-3 border mt-1 font-sans text-xs bg-white text-[#181513]"
                 required
               />
             </label>
 
             <label className="block">
               <div className="flex justify-between items-center">
-                <span className="text-xs uppercase tracking-wider text-[#57524E] font-mono">Anon / Publishable API Key</span>
+                <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Anon / Publishable API Key</span>
                 <a
                   href={`https://supabase.com/dashboard/project/${projectRef}/settings/api`}
                   target="_blank"
@@ -477,14 +477,14 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                 value={connectKey}
                 onChange={(e) => setConnectKey(e.target.value)}
                 placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                className="w-full p-3 border mt-1 font-mono text-xs bg-white text-[#181513]"
+                className="w-full p-3 border mt-1 font-sans text-xs bg-white text-[#181513]"
                 required
               />
             </label>
 
             <button
               type="submit"
-              className="w-full py-4 bg-[#B84A28] hover:bg-[#9E3E20] text-white text-xs font-mono uppercase tracking-widest font-bold transition-colors cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-4 bg-[#B84A28] hover:bg-[#9E3E20] text-white text-xs font-sans uppercase tracking-widest font-bold transition-colors cursor-pointer flex items-center justify-center gap-2"
             >
               <CheckCircle2 size={16} />
               <span>Connect Database & Refresh</span>
@@ -504,15 +504,15 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             <ShieldCheck size={26} />
           </div>
           <div>
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28]">Restricted Area</span>
-            <h1 className="font-editorial text-3xl text-[#181513] mt-2">Access not approved</h1>
+            <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28]">Restricted Area</span>
+            <h1 className="font-sans text-3xl text-[#181513] mt-2">Access not approved</h1>
             <p className="text-sm text-[#57524E] leading-relaxed mt-3">
               Your account is signed in, but it has not been assigned an admin or editor role. Ask the site administrator to approve your account.
             </p>
           </div>
           <div className="flex gap-3 justify-center">
-            <button type="button" onClick={() => onNavigate({ type: 'home' })} className="px-5 py-3 border border-[#181513]/20 text-xs font-mono uppercase tracking-wider cursor-pointer">Return to Storefront</button>
-            <button type="button" onClick={signOut} className="px-5 py-3 bg-[#181513] text-white text-xs font-mono uppercase tracking-wider cursor-pointer">Sign Out</button>
+            <button type="button" onClick={() => onNavigate({ type: 'home' })} className="px-5 py-3 border border-[#181513]/20 text-xs font-sans uppercase tracking-wider cursor-pointer">Return to Storefront</button>
+            <button type="button" onClick={signOut} className="px-5 py-3 bg-[#181513] text-white text-xs font-sans uppercase tracking-wider cursor-pointer">Sign Out</button>
           </div>
         </div>
       </div>
@@ -527,40 +527,40 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             <button
               type="button"
               onClick={() => onNavigate({ type: 'home' })}
-              className="text-xs uppercase tracking-widest text-[#8C7355] hover:text-[#181513] inline-flex items-center gap-1.5 cursor-pointer font-mono"
+              className="text-xs uppercase tracking-widest text-[#8C7355] hover:text-[#181513] inline-flex items-center gap-1.5 cursor-pointer font-sans"
             >
               <ArrowLeft size={14} /> Return to Storefront
             </button>
-            <span className="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-mono uppercase tracking-wider">
+            <span className="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-sans uppercase tracking-wider">
               Supabase Connected
             </span>
           </div>
 
           <div>
-            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+            <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
               Management Portal
             </span>
-            <h1 className="font-editorial text-3xl sm:text-4xl text-[#181513]">Admin Access</h1>
+            <h1 className="font-sans text-3xl sm:text-4xl text-[#181513]">Admin Access</h1>
             <p className="text-xs text-[#57524E] leading-relaxed mt-2">
               Sign in to manage products, orders, categories, collections, and artisans.
             </p>
           </div>
 
           {authError && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-xs font-mono">
+            <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-xs font-sans">
               {authError}
             </div>
           )}
 
           {notice && (
-            <div className={`p-3 text-xs font-mono border ${notice.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
+            <div className={`p-3 text-xs font-sans border ${notice.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
               {notice.text}
             </div>
           )}
 
           <form onSubmit={signIn} className="space-y-4">
             <label className="block">
-              <span className="text-xs uppercase tracking-wider text-[#57524E] font-mono">Email Address</span>
+              <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Email Address</span>
               <input
                 type="email"
                 value={authEmail}
@@ -571,7 +571,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               />
             </label>
             <label className="block">
-              <span className="text-xs uppercase tracking-wider text-[#57524E] font-mono">Password</span>
+              <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Password</span>
               <input
                 type="password"
                 value={authPassword}
@@ -583,14 +583,14 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             </label>
             <button
               type="submit"
-              className="w-full py-3.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-mono uppercase tracking-widest font-bold transition-colors cursor-pointer"
+              className="w-full py-3.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-sans uppercase tracking-widest font-bold transition-colors cursor-pointer"
             >
               Sign In to Dashboard
             </button>
           </form>
 
           <div className="pt-4 border-t border-[#181513]/10 text-center">
-            <p className="text-[11px] text-[#8C7355] font-mono">
+            <p className="text-[11px] text-[#8C7355] font-sans">
               Database: {supabaseUrl.replace(/https?:\/\//, '').split('.')[0]}.supabase.co
             </p>
           </div>
@@ -607,20 +607,20 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           <button
             type="button"
             onClick={() => onNavigate({ type: 'home' })}
-            className="text-xs uppercase tracking-widest text-[#8C7355] hover:text-[#181513] inline-flex items-center gap-1.5 cursor-pointer font-mono"
+            className="text-xs uppercase tracking-widest text-[#8C7355] hover:text-[#181513] inline-flex items-center gap-1.5 cursor-pointer font-sans"
           >
             <ArrowLeft size={14} /> Storefront
           </button>
           <span className="text-white/20">/</span>
           <div className="flex items-center gap-2">
-            <span className="font-editorial text-2xl font-bold tracking-tight">Raffia Legacy</span>
-            <span className="text-[11px] font-mono uppercase px-2.5 py-1 bg-[#B84A28] text-white tracking-wider">Admin Studio</span>
+            <span className="font-sans text-2xl font-bold tracking-tight">Raffia Legacy</span>
+            <span className="text-[11px] font-sans uppercase px-2.5 py-1 bg-[#B84A28] text-white tracking-wider">Admin Studio</span>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Supabase Status Pill */}
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 border border-white/15 text-white text-xs font-mono">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 border border-white/15 text-white text-xs font-sans">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span className="font-semibold">Supabase Live</span>
           </div>
@@ -628,7 +628,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           <button
             type="button"
             onClick={signOut}
-            className="px-3.5 py-2 border border-white/20 hover:border-white hover:bg-white/10 text-white text-xs font-mono uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="px-3.5 py-2 border border-white/20 hover:border-white hover:bg-white/10 text-white text-xs font-sans uppercase tracking-wider inline-flex items-center gap-1.5 transition-colors cursor-pointer"
           >
             <LogOut size={13} />
             <span>Sign Out</span>
@@ -638,7 +638,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
 
       {/* Notice Banner */}
       {notice && (
-        <div className={`px-6 py-3 text-xs font-mono flex items-center justify-between ${notice.type === 'error' ? 'bg-red-100 text-red-900 border-b border-red-200' : 'bg-emerald-100 text-emerald-900 border-b border-emerald-200'}`}>
+        <div className={`px-6 py-3 text-xs font-sans flex items-center justify-between ${notice.type === 'error' ? 'bg-red-100 text-red-900 border-b border-red-200' : 'bg-emerald-100 text-emerald-900 border-b border-emerald-200'}`}>
           <span>{notice.text}</span>
           <button type="button" onClick={() => setNotice(null)} className="p-1 hover:opacity-75">
             <X size={14} />
@@ -650,7 +650,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       <div className="flex-1 flex flex-col md:flex-row">
         {/* Sidebar Nav */}
         <aside className="w-full md:w-64 bg-[#211D1A] text-white border-r border-[#181513] p-4 lg:p-5 space-y-1 shrink-0 md:min-h-[calc(100vh-73px)]">
-          <p className="text-[11px] font-mono uppercase tracking-widest text-white/40 px-3 py-2 font-bold">
+          <p className="text-[11px] font-sans uppercase tracking-widest text-white/40 px-3 py-2 font-bold">
             Catalog & Orders
           </p>
           {[
@@ -682,13 +682,13 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           ))}
 
           <div className="pt-6 border-t border-white/10 mt-6 px-3 space-y-2">
-            <p className="text-[10px] font-mono uppercase text-white/40">Database Ref</p>
-            <p className="text-xs font-mono truncate text-white/80 font-semibold">{projectRef}</p>
+            <p className="text-[10px] font-sans uppercase text-white/40">Database Ref</p>
+            <p className="text-xs font-sans truncate text-white/80 font-semibold">{projectRef}</p>
             <button
               type="button"
               onClick={runHealthCheck}
               disabled={checkingHealth}
-              className="text-[11px] font-mono text-[#B84A28] hover:underline inline-flex items-center gap-1 cursor-pointer"
+              className="text-[11px] font-sans text-[#B84A28] hover:underline inline-flex items-center gap-1 cursor-pointer"
             >
               <RefreshCw size={11} className={checkingHealth ? 'animate-spin' : ''} />
               <span>Verify Tables</span>
@@ -701,31 +701,31 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           {tab === 'overview' && (
             <div className="space-y-8 max-w-7xl">
               <div>
-                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+                <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
                   Management Overview
                 </span>
-                <h2 className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-[#181513] tracking-tight">Good to see you. <span className="text-[#B84A28]">Here’s the store.</span></h2>
+                <h2 className="font-sans text-4xl sm:text-5xl lg:text-6xl text-[#181513] tracking-tight">Good to see you. <span className="text-[#B84A28]">Here’s the store.</span></h2>
               </div>
 
               {/* Stats Grid */}
               <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
                 <div className="bg-white border border-[#181513]/10 p-6 space-y-2 shadow-sm hover:shadow-md transition-shadow">
-                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Live Products</p>
+                  <p className="text-[11px] font-sans uppercase tracking-widest text-[#8C7355]">Live Products</p>
                   <p className="text-4xl font-sans font-bold text-[#181513]">{stats.products}</p>
                   <p className="text-[11px] text-[#57524E]">Active in marketplace</p>
                 </div>
                 <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
-                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Total Orders</p>
+                  <p className="text-[11px] font-sans uppercase tracking-widest text-[#8C7355]">Total Orders</p>
                   <p className="text-4xl font-sans font-bold text-[#181513]">{stats.orders}</p>
                   <p className="text-[11px] text-[#57524E]">Recorded in Supabase</p>
                 </div>
                 <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
-                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Pending Confirmation</p>
+                  <p className="text-[11px] font-sans uppercase tracking-widest text-[#8C7355]">Pending Confirmation</p>
                   <p className="text-4xl font-sans font-bold text-[#B84A28]">{stats.pending}</p>
                   <p className="text-[11px] text-[#57524E]">Awaiting manual transfer</p>
                 </div>
                 <div className="bg-white border border-[#181513]/10 p-5 space-y-1">
-                  <p className="text-[11px] font-mono uppercase tracking-widest text-[#8C7355]">Confirmed Revenue</p>
+                  <p className="text-[11px] font-sans uppercase tracking-widest text-[#8C7355]">Confirmed Revenue</p>
                   <p className="text-3xl font-sans font-bold text-emerald-800">{formatNaira(stats.revenue)}</p>
                   <p className="text-[11px] text-[#57524E]">Paid orders</p>
                 </div>
@@ -755,8 +755,8 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                   <div className="flex items-center gap-3">
                     <Database size={20} className="text-[#B84A28]" />
                     <div>
-                      <h3 className="font-editorial text-xl">Supabase Database Integration</h3>
-                      <p className="text-xs text-[#57524E] font-mono">{supabaseUrl}</p>
+                      <h3 className="font-sans text-xl">Supabase Database Integration</h3>
+                      <p className="text-xs text-[#57524E] font-sans">{supabaseUrl}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -764,7 +764,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                       type="button"
                       onClick={runHealthCheck}
                       disabled={checkingHealth}
-                      className="px-3 py-1.5 border border-[#181513]/20 hover:border-[#181513] text-xs font-mono uppercase inline-flex items-center gap-1.5 cursor-pointer"
+                      className="px-3 py-1.5 border border-[#181513]/20 hover:border-[#181513] text-xs font-sans uppercase inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <RefreshCw size={12} className={checkingHealth ? 'animate-spin' : ''} />
                       <span>{checkingHealth ? 'Checking…' : 'Check Health'}</span>
@@ -772,7 +772,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                     <button
                       type="button"
                       onClick={() => setTab('database')}
-                      className="px-3 py-1.5 bg-[#181513] text-white hover:bg-[#B84A28] text-xs font-mono uppercase tracking-wider inline-flex items-center gap-1.5 cursor-pointer"
+                      className="px-3 py-1.5 bg-[#181513] text-white hover:bg-[#B84A28] text-xs font-sans uppercase tracking-wider inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>View SQL & Schema</span>
                     </button>
@@ -780,7 +780,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                 </div>
 
                 {health && (
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-xs font-mono">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-xs font-sans">
                     {Object.entries(health.tables).map(([table, ready]) => (
                       <div key={table} className={`p-2.5 border flex items-center justify-between ${ready ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900'}`}>
                         <span className="truncate">{table}</span>
@@ -794,26 +794,26 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               {/* Recent Orders Overview */}
               <div className="bg-white border border-[#181513]/10 p-6 space-y-4">
                 <div className="flex justify-between items-center">
-                  <h3 className="font-editorial text-2xl">Recent Orders</h3>
-                  <button onClick={() => setTab('orders')} className="text-xs font-mono uppercase text-[#B84A28] hover:underline">
+                  <h3 className="font-sans text-2xl">Recent Orders</h3>
+                  <button onClick={() => setTab('orders')} className="text-xs font-sans uppercase text-[#B84A28] hover:underline">
                     View all ({orders.length}) →
                   </button>
                 </div>
                 {orders.length === 0 ? (
-                  <p className="text-xs text-[#8C7355] font-mono py-6 text-center">No orders recorded yet. Create a test order through the storefront checkout.</p>
+                  <p className="text-xs text-[#8C7355] font-sans py-6 text-center">No orders recorded yet. Create a test order through the storefront checkout.</p>
                 ) : (
                   <div className="divide-y divide-[#181513]/10">
                     {orders.slice(0, 5).map((o) => (
                       <div key={o.id} className="py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
                         <div>
-                          <b className="font-mono">{o.order_number}</b>
+                          <b className="font-sans">{o.order_number}</b>
                           <span className="text-[#8C7355] ml-2">· {o.customer_name}</span>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className={`px-2 py-0.5 font-mono text-[10px] uppercase ${o.payment_status === 'PAID' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                          <span className={`px-2 py-0.5 font-sans text-[10px] uppercase ${o.payment_status === 'PAID' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
                             {o.payment_status}
                           </span>
-                          <b className="font-mono">{formatNaira(o.total)}</b>
+                          <b className="font-sans">{formatNaira(o.total)}</b>
                         </div>
                       </div>
                     ))}
@@ -827,10 +827,10 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             <div className="space-y-7 max-w-7xl">
               <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
                 <div>
-                  <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">
+                  <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-2">
                     Live Inventory
                   </span>
-                  <h2 className="font-editorial text-4xl sm:text-5xl text-[#181513] tracking-tight">Products</h2>
+                  <h2 className="font-sans text-4xl sm:text-5xl text-[#181513] tracking-tight">Products</h2>
                   <p className="text-sm text-[#57524E] mt-2 max-w-xl">
                     Manage what customers see, buy and discover across the Raffia Legacy marketplace.
                   </p>
@@ -890,7 +890,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               {filteredProducts.length === 0 ? (
                 <div className="bg-white border border-dashed border-[#181513]/20 p-16 text-center">
                   <Package size={34} className="mx-auto text-[#8C7355] mb-4" />
-                  <h3 className="font-editorial text-2xl">No products found</h3>
+                  <h3 className="font-sans text-2xl">No products found</h3>
                   <p className="text-sm text-[#57524E] mt-2">Try a different search or add a new product.</p>
                 </div>
               ) : (
@@ -972,8 +972,8 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           {tab === 'orders' && (
             <div className="space-y-7 max-w-7xl">
               <div>
-                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">Commerce Operations</span>
-                <h2 className="font-editorial text-4xl sm:text-5xl text-[#181513] tracking-tight">Orders</h2>
+                <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-2">Commerce Operations</span>
+                <h2 className="font-sans text-4xl sm:text-5xl text-[#181513] tracking-tight">Orders</h2>
                 <p className="text-sm text-[#57524E] mt-2 max-w-2xl">Confirm payment, communicate with customers and move every order from new to delivered.</p>
               </div>
 
@@ -994,7 +994,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               {orders.length === 0 ? (
                 <div className="bg-white border border-dashed border-[#181513]/20 p-16 text-center">
                   <ShoppingBag size={36} className="mx-auto text-[#8C7355] mb-4" />
-                  <h3 className="font-editorial text-2xl">No orders yet</h3>
+                  <h3 className="font-sans text-2xl">No orders yet</h3>
                   <p className="text-sm text-[#57524E] mt-2">Orders created through the storefront checkout will appear here.</p>
                 </div>
               ) : (
@@ -1103,24 +1103,24 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           {tab === 'settings' && (
             <div className="space-y-7 max-w-5xl">
               <div>
-                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">Store Configuration</span>
-                <h2 className="font-editorial text-4xl sm:text-5xl tracking-tight">Settings</h2>
+                <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-2">Store Configuration</span>
+                <h2 className="font-sans text-4xl sm:text-5xl tracking-tight">Settings</h2>
                 <p className="text-sm text-[#57524E] mt-2 max-w-2xl">Keep checkout, payment instructions and delivery settings in one place.</p>
               </div>
 
               <div className="grid lg:grid-cols-2 gap-5">
                 <section className="bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm">
-                  <div className="flex items-start gap-3 mb-6"><MessageCircle className="text-[#B84A28]" size={22}/><div><h3 className="font-editorial text-2xl">Customer contact</h3><p className="text-sm text-[#57524E] mt-1">Used for manual WhatsApp checkout.</p></div></div>
+                  <div className="flex items-start gap-3 mb-6"><MessageCircle className="text-[#B84A28]" size={22}/><div><h3 className="font-sans text-2xl">Customer contact</h3><p className="text-sm text-[#57524E] mt-1">Used for manual WhatsApp checkout.</p></div></div>
                   <label className="block"><span className="text-sm font-semibold">WhatsApp Business number</span><input value={settings.whatsapp_number || ''} onChange={(e) => setSettings({ ...settings, whatsapp_number: e.target.value })} placeholder="2348012345678" className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
                 </section>
 
                 <section className="bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm">
-                  <div className="flex items-start gap-3 mb-6"><Database className="text-[#B84A28]" size={22}/><div><h3 className="font-editorial text-2xl">Order settings</h3><p className="text-sm text-[#57524E] mt-1">Controls generated order references.</p></div></div>
+                  <div className="flex items-start gap-3 mb-6"><Database className="text-[#B84A28]" size={22}/><div><h3 className="font-sans text-2xl">Order settings</h3><p className="text-sm text-[#57524E] mt-1">Controls generated order references.</p></div></div>
                   <label className="block"><span className="text-sm font-semibold">Order prefix</span><input value={settings.order_prefix || 'RL'} onChange={(e) => setSettings({ ...settings, order_prefix: e.target.value.toUpperCase() })} className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
                 </section>
 
                 <section className="bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm lg:col-span-2">
-                  <div className="mb-6"><h3 className="font-editorial text-2xl">Manual payment details</h3><p className="text-sm text-[#57524E] mt-1">These details are shown to customers during manual transfer checkout.</p></div>
+                  <div className="mb-6"><h3 className="font-sans text-2xl">Manual payment details</h3><p className="text-sm text-[#57524E] mt-1">These details are shown to customers during manual transfer checkout.</p></div>
                   <div className="grid md:grid-cols-3 gap-5">
                     <label className="block"><span className="text-sm font-semibold">Bank name</span><input value={settings.bank_name || ''} onChange={(e) => setSettings({ ...settings, bank_name: e.target.value })} placeholder="e.g. Zenith Bank" className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
                     <label className="block"><span className="text-sm font-semibold">Account name</span><input value={settings.account_name || ''} onChange={(e) => setSettings({ ...settings, account_name: e.target.value })} placeholder="Raffia Legacy Project" className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
@@ -1129,15 +1129,15 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                 </section>
 
                 <section className="bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm">
-                  <h3 className="font-editorial text-2xl">Delivery</h3>
+                  <h3 className="font-sans text-2xl">Delivery</h3>
                   <p className="text-sm text-[#57524E] mt-1 mb-6">Default flat shipping fee applied at checkout.</p>
                   <label className="block"><span className="text-sm font-semibold">Flat shipping fee (₦)</span><input type="number" value={settings.shipping_flat_rate ?? 15000} onChange={(e) => setSettings({ ...settings, shipping_flat_rate: Number(e.target.value) })} className="w-full p-3.5 border border-[#181513]/15 mt-1.5 text-sm bg-[#FCFAF7] outline-none focus:border-[#B84A28]" /></label>
                 </section>
 
                 <section className="bg-[#181513] text-white p-6 sm:p-7 shadow-sm">
-                  <h3 className="font-editorial text-2xl">Database connection</h3>
+                  <h3 className="font-sans text-2xl">Database connection</h3>
                   <p className="text-sm text-white/60 mt-1 mb-5">Connected project used by this admin studio.</p>
-                  <p className="text-sm font-mono text-white/85 break-all">{supabaseUrl}</p>
+                  <p className="text-sm font-sans text-white/85 break-all">{supabaseUrl}</p>
                   <button type="button" onClick={clearLocalSupabaseCredentials} className="mt-5 px-4 py-2.5 border border-white/20 hover:bg-white/10 text-sm font-semibold cursor-pointer">Disconnect database</button>
                 </section>
               </div>
@@ -1151,15 +1151,15 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           {tab === 'database' && (
             <div className="space-y-7 max-w-5xl">
               <div>
-                <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2">System</span>
-                <h2 className="font-editorial text-4xl sm:text-5xl tracking-tight">Database</h2>
+                <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-2">System</span>
+                <h2 className="font-sans text-4xl sm:text-5xl tracking-tight">Database</h2>
                 <p className="text-sm text-[#57524E] mt-2 max-w-2xl">Technical tools for checking the live Supabase connection and accessing the marketplace schema.</p>
               </div>
 
               <div className="grid lg:grid-cols-3 gap-5">
                 <div className="lg:col-span-2 bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm">
                   <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div><h3 className="font-editorial text-2xl">Supabase connection</h3><p className="text-sm text-[#57524E] mt-1 break-all">{supabaseUrl}</p></div>
+                    <div><h3 className="font-sans text-2xl">Supabase connection</h3><p className="text-sm text-[#57524E] mt-1 break-all">{supabaseUrl}</p></div>
                     <button type="button" onClick={runHealthCheck} disabled={checkingHealth} className="px-4 py-2.5 border border-[#181513]/15 hover:bg-[#F4F0E9] text-sm font-semibold inline-flex items-center gap-2 cursor-pointer"><RefreshCw size={15} className={checkingHealth ? 'animate-spin' : ''}/>{checkingHealth ? 'Checking…' : 'Check health'}</button>
                   </div>
                   {health && <div className="grid sm:grid-cols-2 gap-3 mt-6">{Object.entries(health.tables).map(([table, ready]) => <div key={table} className={`p-3 border flex items-center justify-between text-sm ${ready ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-amber-50 border-amber-200 text-amber-900'}`}><span className="font-medium">{table}</span>{ready ? <CheckCircle2 size={16}/> : <AlertCircle size={16}/>}</div>)}</div>}
@@ -1167,7 +1167,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
 
                 <div className="bg-[#181513] text-white p-6 sm:p-7 shadow-sm">
                   <Database size={24} className="text-[#D7A98F]" />
-                  <h3 className="font-editorial text-2xl mt-5">Migration tools</h3>
+                  <h3 className="font-sans text-2xl mt-5">Migration tools</h3>
                   <p className="text-sm text-white/60 mt-2">Copy the current marketplace schema and open the SQL editor.</p>
                   <button type="button" onClick={copySqlMigration} className="w-full mt-6 px-4 py-3 bg-white text-[#181513] hover:bg-[#F4F0E9] text-sm font-bold inline-flex items-center justify-center gap-2 cursor-pointer">{copiedSql ? <Check size={15}/> : <Copy size={15}/>} {copiedSql ? 'Copied' : 'Copy SQL schema'}</button>
                   <a href={`https://supabase.com/dashboard/project/${projectRef}/sql/new`} target="_blank" rel="noreferrer" className="w-full mt-2 px-4 py-3 border border-white/20 hover:bg-white/10 text-white text-sm font-semibold inline-flex items-center justify-center gap-2"><ExternalLink size={14}/> Open SQL editor</a>
@@ -1175,7 +1175,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               </div>
 
               <div className="bg-white border border-[#181513]/10 p-6 sm:p-7 shadow-sm">
-                <h3 className="font-editorial text-2xl">Schema overview</h3>
+                <h3 className="font-sans text-2xl">Schema overview</h3>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-5">
                   {['Products & images','Categories','Orders & order items','Customers','Site settings','Profiles & roles','Marketplace storage','Manual checkout RPC'].map((item) => (
                     <div key={item} className="border border-[#181513]/10 bg-[#FCFAF7] p-4 text-sm font-semibold">{item}</div>
@@ -1192,7 +1192,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       {itemToDelete && (
         <div className="fixed inset-0 z-50 bg-[#181513]/70 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white max-w-sm w-full p-6 space-y-4 border border-[#181513]/20 shadow-2xl">
-            <h3 className="font-editorial text-xl text-[#181513]">Confirm Deletion</h3>
+            <h3 className="font-sans text-xl text-[#181513]">Confirm Deletion</h3>
             <p className="text-xs text-[#57524E] leading-relaxed">
               Are you sure you want to delete <b>{itemToDelete.name}</b>? This action cannot be undone.
             </p>
@@ -1200,14 +1200,14 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               <button
                 type="button"
                 onClick={() => setItemToDelete(null)}
-                className="px-4 py-2 border text-xs font-mono uppercase tracking-wider cursor-pointer"
+                className="px-4 py-2 border text-xs font-sans uppercase tracking-wider cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={confirmDelete}
-                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 text-xs font-mono uppercase tracking-wider cursor-pointer font-bold"
+                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 text-xs font-sans uppercase tracking-wider cursor-pointer font-bold"
               >
                 Delete
               </button>
@@ -1252,14 +1252,14 @@ const ReferenceManager: React.FC<{
   <section className="space-y-6 max-w-6xl">
     <div className="flex justify-between items-center">
       <div>
-        <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
+        <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
           Catalog Reference
         </span>
-        <h3 className="font-editorial text-3xl">{title}</h3>
+        <h3 className="font-sans text-3xl">{title}</h3>
       </div>
       <button
         onClick={onAdd}
-        className="px-4 py-2.5 bg-[#181513] text-white hover:bg-[#B84A28] text-xs font-mono uppercase tracking-widest flex gap-2 items-center cursor-pointer font-bold"
+        className="px-4 py-2.5 bg-[#181513] text-white hover:bg-[#B84A28] text-xs font-sans uppercase tracking-widest flex gap-2 items-center cursor-pointer font-bold"
       >
         <Plus size={15} /> Add
       </button>
@@ -1270,7 +1270,7 @@ const ReferenceManager: React.FC<{
           <div className="flex justify-between items-start gap-3">
             <div>
               <b className="font-sans text-base text-[#181513] block">{r.name}</b>
-              <p className="text-xs font-mono text-[#8C7355]">{r.slug}</p>
+              <p className="text-xs font-sans text-[#8C7355]">{r.slug}</p>
             </div>
             <div className="flex items-center gap-1">
               <button onClick={() => onEdit(r)} className="p-1.5 hover:bg-[#FAF7F2] text-[#181513] cursor-pointer" title="Edit">
@@ -1331,7 +1331,7 @@ const ProductEditor: React.FC<any> = ({
           <div className="flex items-start justify-between gap-5">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-[#D7A98F] font-semibold">Catalog Studio</p>
-              <h2 className="font-editorial text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-1">
+              <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl tracking-tight mt-1">
                 {product.id ? 'Edit Product' : 'Add New Product'}
               </h2>
               <p className="text-sm text-white/60 mt-2">Everything customers need to understand and buy this piece.</p>
@@ -1361,7 +1361,7 @@ const ProductEditor: React.FC<any> = ({
           {activeSection === 'details' && (
             <div className="space-y-7">
               <div>
-                <h3 className="font-editorial text-2xl sm:text-3xl">Tell the story of the product</h3>
+                <h3 className="font-sans text-2xl sm:text-3xl">Tell the story of the product</h3>
                 <p className="text-sm text-[#57524E] mt-1">Keep the name and description clear, specific and customer-friendly.</p>
               </div>
               <div className="grid md:grid-cols-2 gap-5">
@@ -1396,7 +1396,7 @@ const ProductEditor: React.FC<any> = ({
           {activeSection === 'commerce' && (
             <div className="space-y-7">
               <div>
-                <h3 className="font-editorial text-2xl sm:text-3xl">Pricing & inventory</h3>
+                <h3 className="font-sans text-2xl sm:text-3xl">Pricing & inventory</h3>
                 <p className="text-sm text-[#57524E] mt-1">Control how this product is sold and how stock is represented.</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
@@ -1430,7 +1430,7 @@ const ProductEditor: React.FC<any> = ({
           {activeSection === 'images' && (
             <div className="space-y-7">
               <div>
-                <h3 className="font-editorial text-2xl sm:text-3xl">Product photography</h3>
+                <h3 className="font-sans text-2xl sm:text-3xl">Product photography</h3>
                 <p className="text-sm text-[#57524E] mt-1">Use your Cloudinary links or upload directly to Supabase Storage.</p>
               </div>
 
@@ -1509,7 +1509,7 @@ const ProductEditor: React.FC<any> = ({
           {activeSection === 'visibility' && (
             <div className="space-y-7">
               <div>
-                <h3 className="font-editorial text-2xl sm:text-3xl">Store display</h3>
+                <h3 className="font-sans text-2xl sm:text-3xl">Store display</h3>
                 <p className="text-sm text-[#57524E] mt-1">Decide where and how prominently this product appears.</p>
               </div>
               <div className="grid md:grid-cols-3 gap-4">
@@ -1591,7 +1591,7 @@ const ReferenceEditor: React.FC<any> = ({ editor, setEditor, onSave, onClose }) 
     <div className="fixed inset-0 z-50 bg-[#181513]/70 backdrop-blur-xs p-3 sm:p-8 overflow-y-auto">
       <div className="max-w-2xl mx-auto bg-white p-6 sm:p-10 border border-[#181513]/20 shadow-2xl space-y-6">
         <div className="flex justify-between items-center pb-4 border-b border-[#181513]/10">
-          <h2 className="font-editorial text-3xl text-[#181513]">
+          <h2 className="font-sans text-3xl text-[#181513]">
             {row.id ? 'Edit' : 'Add'} {type}
           </h2>
           <button onClick={onClose} className="p-2 hover:bg-[#FAF7F2] cursor-pointer">
@@ -1601,7 +1601,7 @@ const ReferenceEditor: React.FC<any> = ({ editor, setEditor, onSave, onClose }) 
         <div className="space-y-4">
           {fields.map(([key, label]) => (
             <label key={key} className="block">
-              <span className="text-xs font-mono uppercase tracking-wider text-[#57524E]">{label}</span>
+              <span className="text-xs font-sans uppercase tracking-wider text-[#57524E]">{label}</span>
               {['description', 'bio', 'quote', 'heritage_notes', 'curator_notes'].includes(key) ? (
                 <textarea
                   value={row[key] ?? ''}
@@ -1629,12 +1629,12 @@ const ReferenceEditor: React.FC<any> = ({ editor, setEditor, onSave, onClose }) 
           ))}
         </div>
         <div className="flex justify-end gap-3 pt-4 border-t border-[#181513]/10">
-          <button onClick={onClose} className="px-5 py-2.5 border text-xs font-mono uppercase cursor-pointer">
+          <button onClick={onClose} className="px-5 py-2.5 border text-xs font-sans uppercase cursor-pointer">
             Cancel
           </button>
           <button
             onClick={onSave}
-            className="px-5 py-2.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-mono uppercase flex gap-2 items-center cursor-pointer font-bold"
+            className="px-5 py-2.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-sans uppercase flex gap-2 items-center cursor-pointer font-bold"
           >
             <Save size={15} /> Save
           </button>
