@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { formatNaira } from '../utils/format';
 
-type Tab = 'overview' | 'products' | 'orders' | 'categories' | 'settings' | 'database';
+type Tab = 'overview' | 'products' | 'orders' | 'categories' | 'users' | 'settings' | 'database';
 type Row = Record<string, any>;
 
 const blankProduct: Row = {
@@ -44,6 +44,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   const [makers, setMakers] = useState<Row[]>([]);
   const [collections, setCollections] = useState<Row[]>([]);
   const [categories, setCategories] = useState<Row[]>([]);
+  const [users, setUsers] = useState<Row[]>([]);
   const [settings, setSettings] = useState<Row>({
     whatsapp_number: '', bank_name: '', account_name: '', account_number: '', shipping_flat_rate: 15000, order_prefix: 'RL'
   });
@@ -116,18 +117,20 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   }, [sessionUser]);
 
   const isAdmin = role === 'admin' || role === 'editor';
+  const canManageUsers = role === 'admin';
 
   const loadAll = async () => {
     if (!client) return;
     setLoading(true);
     try {
-      const [p, o, m, c, cat, s] = await Promise.all([
+      const [p, o, m, c, cat, s, u] = await Promise.all([
         client.from('products').select('*,categories(id,name),collections(id,name),makers(id,name)').order('created_at', { ascending: false }),
         client.from('orders').select('*').order('created_at', { ascending: false }),
         client.from('makers').select('*').order('name'),
         client.from('collections').select('*').order('sort_order').order('name'),
         client.from('categories').select('*').order('sort_order').order('name'),
         client.from('site_settings').select('*').eq('id', 1).maybeSingle(),
+        client.from('profiles').select('id,email,full_name,role,created_at').order('created_at', { ascending: false }),
       ]);
       if (!p.error) setProducts(p.data || []);
       if (!o.error) setOrders(o.data || []);
@@ -135,6 +138,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       if (!c.error) setCollections(c.data || []);
       if (!cat.error) setCategories(cat.data || []);
       if (!s.error && s.data) setSettings(s.data);
+      if (!u.error) setUsers(u.data || []);
     } catch (err: any) {
       setNotice({ type: 'error', text: err?.message || 'Error loading records' });
     } finally {
@@ -184,6 +188,21 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     if (result.error) {
       setAuthError(result.error.message);
     }
+  };
+
+  const updateUserRole = async (userId: string, nextRole: 'pending' | 'editor' | 'admin') => {
+    if (!client || !canManageUsers) return;
+    if (userId === sessionUser?.id && nextRole !== 'admin') {
+      setNotice({ type: 'error', text: 'You cannot remove your own admin access from this screen.' });
+      return;
+    }
+    const { error } = await client.from('profiles').update({ role: nextRole }).eq('id', userId);
+    if (error) {
+      setNotice({ type: 'error', text: error.message });
+      return;
+    }
+    setNotice({ type: 'success', text: nextRole === 'pending' ? 'User access revoked.' : `User role changed to ${nextRole}.` });
+    await loadAll();
   };
 
   const signOut = async () => {
@@ -658,6 +677,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
             { id: 'products', label: 'Products', icon: Package, badge: products.length },
             { id: 'orders', label: 'Orders', icon: ShoppingBag, badge: orders.length },
             { id: 'categories', label: 'Categories', icon: Tags, badge: categories.length },
+            ...(canManageUsers ? [{ id: 'users', label: 'Team & Access', icon: ShieldCheck, badge: users.filter((u) => u.role === 'pending').length }] : []),
             { id: 'settings', label: 'Settings', icon: Settings },
             { id: 'database', label: 'Database & SQL', icon: Database },
           ].map(({ id, label, icon: Icon, badge }) => (
@@ -1098,6 +1118,77 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
                 row: { name: '', slug: '', description: '', image: '', sort_order: 0, is_active: true }
               })}
             />
+          )}
+
+          {tab === 'users' && canManageUsers && (
+            <div className="space-y-7 max-w-6xl">
+              <div>
+                <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-2">Administration</span>
+                <h2 className="font-sans text-4xl sm:text-5xl tracking-tight">Team & Access</h2>
+                <p className="text-sm text-[#57524E] mt-2 max-w-2xl">
+                  Approve new accounts and assign the level of access they should have in Admin Studio.
+                </p>
+              </div>
+
+              <div className="bg-white border border-[#181513]/10 overflow-hidden">
+                <div className="px-5 py-4 border-b border-[#181513]/10 flex items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-base font-bold">Admin accounts</h3>
+                    <p className="text-xs text-[#8C7355] mt-1">Pending accounts cannot access the admin panel.</p>
+                  </div>
+                  <span className="px-2.5 py-1 bg-[#B84A28]/10 text-[#B84A28] text-xs font-bold">
+                    {users.filter((u) => u.role === 'pending').length} pending
+                  </span>
+                </div>
+
+                <div className="divide-y divide-[#181513]/10">
+                  {users.length === 0 ? (
+                    <div className="p-10 text-center text-sm text-[#57524E]">No profiles found.</div>
+                  ) : users.map((user) => (
+                    <div key={user.id} className="p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="font-bold text-[#181513]">{user.full_name || 'Unnamed user'}</p>
+                          {user.role === 'pending' && (
+                            <span className="px-2 py-0.5 bg-amber-100 text-amber-900 text-[11px] font-semibold">Pending approval</span>
+                          )}
+                          {user.id === sessionUser?.id && (
+                            <span className="px-2 py-0.5 bg-emerald-100 text-emerald-900 text-[11px] font-semibold">You</span>
+                          )}
+                        </div>
+                        <p className="text-sm text-[#57524E] mt-1">{user.email || 'Email unavailable'}</p>
+                        <p className="text-[11px] text-[#8C7355] mt-1">User ID: {user.id}</p>
+                      </div>
+                      <div className="flex items-center gap-3 shrink-0">
+                        <label className="text-xs font-semibold text-[#57524E]">Role</label>
+                        <select
+                          value={user.role || 'pending'}
+                          disabled={user.id === sessionUser?.id}
+                          onChange={(e) => updateUserRole(user.id, e.target.value as 'pending' | 'editor' | 'admin')}
+                          className="min-w-36 border border-[#181513]/15 bg-white px-3 py-2.5 text-sm font-semibold outline-none focus:border-[#B84A28] disabled:bg-[#F4F0E9] disabled:text-[#8C7355]"
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="editor">Editor</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-[#181513] text-white p-5 sm:p-6">
+                <div className="flex gap-3">
+                  <ShieldCheck className="text-[#D7A98F] shrink-0" size={20} />
+                  <div>
+                    <p className="font-bold">Access control</p>
+                    <p className="text-sm text-white/65 mt-1 leading-relaxed">
+                      Only admins can assign roles. Editors can work in the dashboard but cannot approve or promote other accounts.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
 
           {tab === 'settings' && (
