@@ -5,13 +5,6 @@
 -- Promote only the intended administrator manually after signup:
 -- update public.profiles set role='admin' where id=(select id from auth.users where email='YOUR-ADMIN-EMAIL');
 
-alter table public.profiles
-  drop constraint if exists profiles_role_check;
-
-alter table public.profiles
-  add constraint profiles_role_check
-  check (role in ('pending','admin','editor'));
-
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
