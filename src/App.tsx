@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useMemo, useState } from 'react';
 import { ViewRoute } from './types';
 import { CartProvider } from './context/CartContext';
 import { MarketplaceDataProvider } from './context/MarketplaceDataContext';
@@ -23,6 +23,21 @@ import { GetInvolvedPage } from './pages/GetInvolvedPage';
 import { RaffiaPage } from './pages/RaffiaPage';
 import { ExplorePage } from './pages/ExplorePage';
 import { ComingSoon } from './components/ComingSoon';
+
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard').then((module) => ({ default: module.AdminDashboard })));
+const HomePage = lazy(() => import('./pages/HomePage').then((module) => ({ default: module.HomePage })));
+const MarketplacePage = lazy(() => import('./pages/MarketplacePage').then((module) => ({ default: module.MarketplacePage })));
+const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage').then((module) => ({ default: module.ProductDetailPage })));
+const CollectionsPage = lazy(() => import('./pages/CollectionsPage').then((module) => ({ default: module.CollectionsPage })));
+const MakersDirectoryPage = lazy(() => import('./pages/MakersDirectoryPage').then((module) => ({ default: module.MakersDirectoryPage })));
+const MakerDetailPage = lazy(() => import('./pages/MakerDetailPage').then((module) => ({ default: module.MakerDetailPage })));
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage').then((module) => ({ default: module.CheckoutPage })));
+const ProjectPage = lazy(() => import('./pages/ProjectPage').then((module) => ({ default: module.ProjectPage })));
+const LegacyYearPage = lazy(() => import('./pages/LegacyYearPage').then((module) => ({ default: module.LegacyYearPage })));
+const FestivalPage = lazy(() => import('./pages/FestivalPage').then((module) => ({ default: module.FestivalPage })));
+const GetInvolvedPage = lazy(() => import('./pages/GetInvolvedPage').then((module) => ({ default: module.GetInvolvedPage })));
+const RaffiaPage = lazy(() => import('./pages/RaffiaPage').then((module) => ({ default: module.RaffiaPage })));
+const ExplorePage = lazy(() => import('./pages/ExplorePage').then((module) => ({ default: module.ExplorePage })));
 
 const comingSoon = (title: string, subtitle?: string): ViewRoute => ({
   type: 'coming_soon',
@@ -122,7 +137,7 @@ export default function App() {
   if (currentRoute.type === 'admin') {
     return (
       <MarketplaceDataProvider>
-        <AdminDashboard onNavigate={navigateTo} />
+        <Suspense fallback={<div className="min-h-screen grid place-items-center bg-[#F3EBDD] text-[#241A14] text-sm">Loading dashboard…</div>}><AdminDashboard onNavigate={navigateTo} /></Suspense>
       </MarketplaceDataProvider>
     );
   }
@@ -134,7 +149,7 @@ export default function App() {
         <div className="app-shell">
           <Navbar currentRoute={currentRoute} onNavigate={navigateTo} onOpenSearch={() => setIsSearchOpen(true)} />
           <main className="app-main">
-            <PageTransition routeKey={routeKey}>
+            <Suspense fallback={<div className="min-h-[60vh] grid place-items-center bg-[#F3EBDD] text-[#241A14] text-sm">Loading experience…</div>}><PageTransition routeKey={routeKey}>
               {currentRoute.type === 'home' && (
                 <HomePage
                   onNavigate={navigateTo}
@@ -216,7 +231,7 @@ export default function App() {
                     onNavigate={navigateTo}
                   />
                 )}
-            </PageTransition>
+            </PageTransition></Suspense>
           </main>
           <CartDrawer
             onNavigateToProduct={(slug) => navigateTo({ type: 'product', slug })}
