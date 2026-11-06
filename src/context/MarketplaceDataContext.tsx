@@ -25,12 +25,17 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
   const [error, setError] = useState('');
   const refreshTimer = useRef<number | null>(null);
   const requestInFlight = useRef(false);
+  const refreshQueued = useRef(false);
+  const hasLoaded = useRef(false);
 
   const refresh = useCallback(async () => {
-    if (requestInFlight.current) return;
+    if (requestInFlight.current) {
+      refreshQueued.current = true;
+      return;
+    }
     requestInFlight.current = true;
     setError('');
-    if (products.length === 0) setLoading(true);
+    if (!hasLoaded.current) setLoading(true);
     try {
       const [nextProducts, nextCollections, nextMakers, nextCategories] = await Promise.all([
         getMarketplaceProducts(),
@@ -46,9 +51,14 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
       setError(e instanceof Error ? e.message : 'Unable to load marketplace data.');
     } finally {
       requestInFlight.current = false;
+      hasLoaded.current = true;
       setLoading(false);
+      if (refreshQueued.current) {
+        refreshQueued.current = false;
+        window.setTimeout(() => void refresh(), 0);
+      }
     }
-  }, [products.length]);
+  }, []);
 
   useEffect(() => {
     void refresh();
