@@ -63,6 +63,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <p className="mt-3 text-sm text-white/65 max-w-xl">Receive occasional updates about the project, makers, programmes and festival.</p>
           </div>
           <form onSubmit={submitNewsletter} className="space-y-4">
+            <input type="text" name="website" value="" readOnly tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
             <div className="flex flex-col sm:flex-row gap-2">
               <label className="sr-only" htmlFor="raffia-newsletter-email">Email address</label>
               <input id="raffia-newsletter-email" type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="Your email address" className="min-h-12 flex-1 px-4 bg-white text-[#241A14] text-sm outline-none focus:ring-2 focus:ring-[#C8A978]" />
