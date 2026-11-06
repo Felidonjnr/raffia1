@@ -10,7 +10,10 @@ create table if not exists public.newsletter_subscribers (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint newsletter_subscribers_email_normalized
-    check (email = lower(btrim(email)) and email ~* '^[A-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?(?:\\.[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?)+$')
+    check (
+      email = lower(btrim(email))
+      and email ~ '^[^@[:space:]]+@[^@[:space:]]+[.][^@[:space:]]+$'
+    )
 );
 
 create index if not exists newsletter_subscribers_status_created_idx
