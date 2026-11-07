@@ -187,7 +187,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <p className="mt-5 text-center text-[9px] font-medium uppercase tracking-[0.18em] text-[#9C8C7C]">No spam. Just the good stuff.</p>
           </section>
         </div>
-      )}}
+      )}
     </footer>
   );
 };
