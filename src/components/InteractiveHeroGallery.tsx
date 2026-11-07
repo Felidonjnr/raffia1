@@ -50,12 +50,20 @@ export const HERO_SLIDES: HeroSlide[] = [
 ];
 
 interface InteractiveHeroGalleryProps {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
   onExploreLegacy: () => void;
   onShopCollection: () => void;
   onInspectImage?: (slide: HeroSlide) => void;
 }
 
 export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
+  days,
+  hours,
+  minutes,
+  seconds,
   onExploreLegacy,
   onShopCollection,
   onInspectImage,
@@ -206,22 +214,38 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
             A YEAR-ROUND CELEBRATION OF RAFFIA
           </p>
           <p className="text-sm sm:text-base text-[#F3EBDD]/90 mt-3 font-sans leading-relaxed max-w-xl mx-auto drop-shadow">
-            A year-round of activities celebrating raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.
+            A year-round celebration of raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.
           </p>
         </motion.div>
 
-        {/* Festival announcement — date will be published when confirmed */}
+        {/* Festival Countdown */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
-          className="mb-9 w-full max-w-lg border border-white/20 bg-[#241A14]/85 px-5 py-4 text-left shadow-2xl backdrop-blur-md sm:px-6"
+          className="mb-9 w-full max-w-lg border border-white/20 bg-[#241A14]/85 p-4 shadow-2xl backdrop-blur-md sm:p-5"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#C8A978]">THE RAFFIA FESTIVAL</span>
-            <span className="border border-[#C8A978]/50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#F3EBDD]">2027 · DATE TO BE ANNOUNCED</span>
+          <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-3 mb-3 text-sm font-sans tracking-[0.12em] uppercase text-[#C8A978]">
+            <span className="font-bold">THE RAFFIA FESTIVAL</span>
+            <strong className="font-bold text-white">29 NOVEMBER 2026</strong>
           </div>
-          <p className="mt-3 text-sm leading-relaxed text-[#F3EBDD]/75">The flagship celebration is planned for 2027. Festival dates and participation details will be announced as preparations progress.</p>
+          <div className="grid grid-cols-4 gap-2 sm:gap-3 text-center text-white">
+            {[
+              { value: days, label: 'DAYS' },
+              { value: hours, label: 'HOURS' },
+              { value: minutes, label: 'MINUTES' },
+              { value: seconds, label: 'SECONDS' },
+            ].map((unit) => (
+              <div key={unit.label} className="border border-white/10 bg-white/5 p-2.5 sm:p-3">
+                <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
+                  {String(unit.value).padStart(2, '0')}
+                </b>
+                <small className="mt-2 block text-xs sm:text-sm font-sans font-bold tracking-[0.1em] uppercase text-[#C8A978]">
+                  {unit.label}
+                </small>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         {/* Action CTAs */}
