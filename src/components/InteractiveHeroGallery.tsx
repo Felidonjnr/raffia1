@@ -50,20 +50,12 @@ export const HERO_SLIDES: HeroSlide[] = [
 ];
 
 interface InteractiveHeroGalleryProps {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
   onExploreLegacy: () => void;
   onShopCollection: () => void;
   onInspectImage?: (slide: HeroSlide) => void;
 }
 
 export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
-  days,
-  hours,
-  minutes,
-  seconds,
   onExploreLegacy,
   onShopCollection,
   onInspectImage,
@@ -218,49 +210,18 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           </p>
         </motion.div>
 
-        {/* Festival Countdown */}
+        {/* Festival announcement — date will be published when confirmed */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
-          className="mb-9 w-full max-w-lg bg-[#241A14]/85 backdrop-blur-md p-4 sm:p-5 border border-white/20 shadow-2xl"
+          className="mb-9 w-full max-w-lg border border-white/20 bg-[#241A14]/85 px-5 py-4 text-left shadow-2xl backdrop-blur-md sm:px-6"
         >
-          <div className="flex items-center justify-between gap-4 text-sm font-sans tracking-[0.12em] uppercase text-[#C8A978] pb-3 border-b border-white/10 mb-3">
-            <span className="font-bold">THE RAFFIA FESTIVAL</span>
-            <strong className="text-white font-bold">COMING SOON</strong>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#C8A978]">THE RAFFIA FESTIVAL</span>
+            <span className="border border-[#C8A978]/50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#F3EBDD]">2027 · DATE TO BE ANNOUNCED</span>
           </div>
-
-          <div className="grid grid-cols-4 gap-2 sm:gap-3 text-center text-white">
-            <div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
-                {String(days).padStart(2, '0')}
-              </b>
-              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
-                DAYS
-              </small>
-            </div><div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
-                {String(hours).padStart(2, '0')}
-              </b>
-              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
-                HOURS
-              </small>
-            </div><div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
-                {String(minutes).padStart(2, '0')}
-              </b>
-              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
-                MINUTES
-              </small>
-            </div><div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#B65332] tabular-nums leading-none">
-                {String(seconds).padStart(2, '0')}
-              </b>
-              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
-                SECONDS
-              </small>
-            </div>
-          </div>
+          <p className="mt-3 text-sm leading-relaxed text-[#F3EBDD]/75">The flagship celebration is planned for 2027. Festival dates and participation details will be announced as preparations progress.</p>
         </motion.div>
 
         {/* Action CTAs */}
