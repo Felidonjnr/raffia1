@@ -154,7 +154,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
       {popupOpen && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 py-8 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/80 px-4 py-5 backdrop-blur-sm"
           role="presentation"
           onMouseDown={(event) => { if (event.target === event.currentTarget) closePopup(); }}
         >
@@ -162,30 +162,32 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="raffia-newsletter-popup-title"
-            className="relative w-full max-w-xl overflow-hidden border border-[#C8A978]/40 bg-[#211710] px-7 py-10 text-white shadow-2xl sm:px-12 sm:py-14"
+            className="relative my-auto w-full max-w-[500px] max-h-[calc(100dvh-40px)] overflow-y-auto border border-[#C8A978]/45 bg-[#211710] px-6 py-8 text-white shadow-2xl sm:px-10 sm:py-10"
+            style={{ color: '#F7F0E5' }}
           >
-            <button type="button" onClick={closePopup} aria-label="Close newsletter popup" className="absolute right-4 top-4 p-2 text-white/60 transition hover:text-white">
-              <X size={20} />
+            <button type="button" onClick={closePopup} aria-label="Close newsletter popup" className="absolute right-3 top-3 z-10 p-2 text-white/65 transition hover:text-white">
+              <X size={21} />
             </button>
-            <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.28em] text-[#C8A978]">THE RAFFIA LEGACY LETTER</p>
-            <h2 id="raffia-newsletter-popup-title" className="max-w-md text-3xl font-black leading-tight sm:text-4xl">A little more culture in your inbox.</h2>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-white/65">Discover stories, makers, heritage, creative opportunities and updates from the Raffia Legacy Project. Occasional notes, only when there is something worth sharing.</p>
-            <form onSubmit={submitNewsletter} className="mt-8 space-y-4">
+            <div className="mb-6 h-px w-12 bg-[#B65332]" />
+            <p className="mb-4 pr-8 text-[10px] font-bold uppercase tracking-[0.24em] text-[#D9BD8C]">THE RAFFIA LEGACY LETTER</p>
+            <h2 id="raffia-newsletter-popup-title" className="!m-0 max-w-[360px] !text-[30px] !font-bold !leading-[1.12] tracking-[-0.035em] sm:!text-[38px]" style={{ color: '#F7F0E5' }}>A little more culture in your inbox.</h2>
+            <p className="mt-4 max-w-md text-[14px] leading-[1.7] text-[#D5C9BC] sm:text-[15px]">Discover stories, makers, heritage, creative opportunities and updates from the Raffia Legacy Project. Occasional notes, only when there is something worth sharing.</p>
+            <form onSubmit={submitNewsletter} className="mt-6 space-y-4">
               <input type="hidden" name="source" value="website-popup" />
               <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
               <label className="sr-only" htmlFor="raffia-newsletter-popup-email">Email address</label>
-              <input id="raffia-newsletter-popup-email" type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="Enter your email address" className="min-h-12 w-full border border-white/15 bg-white px-4 text-sm text-[#241A14] outline-none focus:ring-2 focus:ring-[#C8A978]" />
-              <label className="flex items-start gap-3 text-xs leading-relaxed text-white/65">
-                <input type="checkbox" required checked={newsletterConsent} onChange={(event) => setNewsletterConsent(event.target.checked)} className="mt-0.5 accent-[#B65332]" />
+              <input id="raffia-newsletter-popup-email" type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="Enter your email address" className="min-h-12 w-full border border-[#D8C9B8] bg-[#F7F3ED] px-4 text-[15px] text-[#241A14] outline-none placeholder:text-[#82796F] focus:ring-2 focus:ring-[#C8A978]" />
+              <label className="flex items-start gap-3 text-[12px] leading-[1.55] text-[#D5C9BC]">
+                <input type="checkbox" required checked={newsletterConsent} onChange={(event) => setNewsletterConsent(event.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-[#B65332]" />
                 <span>I agree to receive occasional email updates. I can unsubscribe at any time.</span>
               </label>
-              <button type="submit" disabled={newsletterBusy} className="min-h-12 w-full bg-[#B65332] px-6 text-xs font-bold tracking-[0.18em] text-white transition hover:bg-[#D16D48] disabled:opacity-60">{newsletterBusy ? 'JOINING…' : 'JOIN THE MAILING LIST'}</button>
+              <button type="submit" disabled={newsletterBusy} className="min-h-12 w-full bg-[#B65332] px-5 text-[11px] font-bold tracking-[0.16em] text-white transition hover:bg-[#D16D48] disabled:opacity-60">{newsletterBusy ? 'JOINING…' : 'JOIN THE MAILING LIST'}</button>
               {newsletterStatus && <p role="status" aria-live="polite" className="text-xs text-[#E9C99A]">{newsletterStatus}</p>}
             </form>
-            <p className="mt-5 text-center text-[10px] uppercase tracking-wider text-white/35">No spam. Just the good stuff.</p>
+            <p className="mt-5 text-center text-[9px] font-medium uppercase tracking-[0.18em] text-[#9C8C7C]">No spam. Just the good stuff.</p>
           </section>
         </div>
-      )}
+      )}}
     </footer>
   );
 };
