@@ -9,6 +9,8 @@ import { ProductQuickView } from '../components/ProductQuickView';
 import { MotionReveal } from '../components/MotionReveal';
 import { ImageLightbox, LightboxImage } from '../components/ImageLightbox';
 
+const festivalDate = new Date('2026-11-29T00:00:00+01:00');
+
 interface HomePageProps {
   onNavigate: (route: ViewRoute) => void;
   onSelectProduct: (slug: string) => void;
@@ -152,11 +154,23 @@ const FESTIVAL_EVENTS = [
 ];
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct }) => {
+  const [remaining, setRemaining] = useState(() => Math.max(0, festivalDate.getTime() - Date.now()));
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const [activePillarWord, setActivePillarWord] = useState<string>('HISTORY');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
   const { products: PRODUCTS } = useMarketplaceData();
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setRemaining(Math.max(0, festivalDate.getTime() - Date.now())), 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const totalSeconds = Math.floor(remaining / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
   const marketplacePreview = PRODUCTS.slice(0, 3);
 
@@ -178,6 +192,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
     <div className="home-event-root bg-[#F3EBDD] text-[#11100E] overflow-hidden">
       {/* & 02. HERO */}
       <InteractiveHeroGallery
+        days={days}
+        hours={hours}
+        minutes={minutes}
+        seconds={seconds}
         onExploreLegacy={() => scrollToSection('why-raffia')}
         onShopCollection={() => onNavigate({ type: 'marketplace' })}
         onInspectImage={(slide: HeroSlide) =>
