@@ -1,11 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ViewRoute } from '../types';
 import { ArrowUpRight } from 'lucide-react';
 import { BrushStrokeUnderline } from './RaffiaLogo';
+import { supabase } from '../lib/supabase';
 
 interface FooterProps { onNavigate: (route: ViewRoute) => void; }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterConsent, setNewsletterConsent] = useState(false);
+  const [newsletterStatus, setNewsletterStatus] = useState('');
+  const [newsletterBusy, setNewsletterBusy] = useState(false);
+
+  const submitNewsletter = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!supabase) {
+      setNewsletterStatus('The subscription service is not connected yet. Please try again later.');
+      return;
+    }
+    if (!newsletterConsent) {
+      setNewsletterStatus('Please confirm that you want to receive email updates.');
+      return;
+    }
+    setNewsletterBusy(true);
+    setNewsletterStatus('');
+    const { error } = await supabase.functions.invoke('newsletter-subscribe', {
+      body: { email: newsletterEmail.trim(), consent: true, source: 'website-footer', website: String(new FormData(event.currentTarget).get('website') || '') },
+    });
+    setNewsletterBusy(false);
+    if (error) {
+      setNewsletterStatus('We could not complete your subscription right now. Please try again shortly.');
+      return;
+    }
+    setNewsletterEmail('');
+    setNewsletterConsent(false);
+    setNewsletterStatus('Thank you. You are on the Raffia Legacy updates list.');
+  };
+
   const soon = (title: string) => onNavigate({ type: 'coming_soon', title, subtitle: 'This section is being prepared for the next build phase.' });
   return (
     <footer className="site-footer">
@@ -24,6 +55,28 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </p>
         </div>
       </div>
+      <section className="px-6 sm:px-12 py-16 border-y border-white/10 bg-[#1B130F]">
+        <div className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 items-center">
+          <div>
+            <p className="text-xs font-bold tracking-[0.2em] uppercase text-[#C8A978] mb-3">THE RAFFIA LEGACY LETTER</p>
+            <h2 className="text-3xl sm:text-4xl font-black text-white">Stories, culture & opportunities.</h2>
+            <p className="mt-3 text-sm text-white/65 max-w-xl">Receive occasional updates about the project, makers, programmes and festival.</p>
+          </div>
+          <form onSubmit={submitNewsletter} className="space-y-4">
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+            <div className="flex flex-col sm:flex-row gap-2">
+              <label className="sr-only" htmlFor="raffia-newsletter-email">Email address</label>
+              <input id="raffia-newsletter-email" type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="Your email address" className="min-h-12 flex-1 px-4 bg-white text-[#241A14] text-sm outline-none focus:ring-2 focus:ring-[#C8A978]" />
+              <button type="submit" disabled={newsletterBusy} className="min-h-12 px-6 bg-[#B65332] text-white text-xs font-bold tracking-widest hover:bg-[#D16D48] disabled:opacity-60">{newsletterBusy ? 'JOINING…' : 'SUBSCRIBE'}</button>
+            </div>
+            <label className="flex items-start gap-3 text-xs leading-relaxed text-white/60">
+              <input type="checkbox" required checked={newsletterConsent} onChange={(event) => setNewsletterConsent(event.target.checked)} className="mt-0.5 accent-[#B65332]" />
+              <span>I agree to receive occasional email updates from Raffia Legacy. I can unsubscribe at any time.</span>
+            </label>
+            {newsletterStatus && <p role="status" aria-live="polite" className="text-xs text-[#E9C99A]">{newsletterStatus}</p>}
+          </form>
+        </div>
+      </section>
       <div className="footer-links">
         {[
           ['THE PROJECT', ['About the Project','Our Vision','The Legacy Year','Our Programmes','Impact','The Legacy Collection','Partners']],

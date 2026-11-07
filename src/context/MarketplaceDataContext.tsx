@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Collection, Maker, Product } from '../types';
 import { MarketplaceCategory } from '../lib/marketplace';
 import { getMarketplaceCategories, getMarketplaceCollections, getMarketplaceMakers, getMarketplaceProducts } from '../lib/marketplace';
@@ -23,10 +23,19 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
   const [categories, setCategories] = useState<MarketplaceCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const refreshTimer = useRef<number | null>(null);
+  const requestInFlight = useRef(false);
+  const refreshQueued = useRef(false);
+  const hasLoaded = useRef(false);
 
-  const refresh = async () => {
-    setLoading(true);
+  const refresh = useCallback(async () => {
+    if (requestInFlight.current) {
+      refreshQueued.current = true;
+      return;
+    }
+    requestInFlight.current = true;
     setError('');
+    if (!hasLoaded.current) setLoading(true);
     try {
       const [nextProducts, nextCollections, nextMakers, nextCategories] = await Promise.all([
         getMarketplaceProducts(),
@@ -37,36 +46,51 @@ export const MarketplaceDataProvider: React.FC<React.PropsWithChildren> = ({ chi
       setProducts(nextProducts);
       setCollections(nextCollections);
       setMakers(nextMakers);
-      setCategories(nextCategories.length ? nextCategories : Array.from(new Set(nextProducts.map((p) => p.category))).filter((name) => name !== 'ALL').map((name) => ({ id: name, name, slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'), } as MarketplaceCategory)));
+      setCategories(nextCategories.length ? nextCategories : Array.from(new Set(nextProducts.map((p) => p.category))).filter((name) => name !== 'ALL').map((name) => ({ id: name, name, slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-') } as MarketplaceCategory)));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unable to load marketplace data.');
     } finally {
+      requestInFlight.current = false;
+      hasLoaded.current = true;
       setLoading(false);
+      if (refreshQueued.current) {
+        refreshQueued.current = false;
+        window.setTimeout(() => void refresh(), 0);
+      }
     }
-  };
+  }, []);
 
   useEffect(() => {
-    refresh();
-  }, []);
+    void refresh();
+  }, [refresh]);
 
   useEffect(() => {
     const client = supabase;
     if (!client) return;
+
+    const scheduleRefresh = () => {
+      if (refreshTimer.current !== null) window.clearTimeout(refreshTimer.current);
+      refreshTimer.current = window.setTimeout(() => {
+        refreshTimer.current = null;
+        void refresh();
+      }, 350);
+    };
+
     const channel = client
       .channel('marketplace-live-catalog')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'product_images' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'collections' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'makers' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, scheduleRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'product_images' }, scheduleRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'collections' }, scheduleRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'makers' }, scheduleRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, scheduleRefresh)
       .subscribe();
 
-    const timer = window.setInterval(() => refresh(), 60000);
     return () => {
-      window.clearInterval(timer);
+      if (refreshTimer.current !== null) window.clearTimeout(refreshTimer.current);
+      refreshTimer.current = null;
       client.removeChannel(channel);
     };
-  }, []);
+  }, [refresh]);
 
   return (
     <MarketplaceDataContext.Provider value={{ products, collections, makers, categories, loading, error, refresh }}>
