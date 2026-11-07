@@ -1,19 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ViewRoute } from '../types';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, X } from 'lucide-react';
 import { BrushStrokeUnderline } from './RaffiaLogo';
 import { supabase } from '../lib/supabase';
 
 interface FooterProps { onNavigate: (route: ViewRoute) => void; }
+
+const POPUP_DISMISSED_KEY = 'raffia-newsletter-popup-dismissed';
+const POPUP_SUBSCRIBED_KEY = 'raffia-newsletter-popup-subscribed';
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterConsent, setNewsletterConsent] = useState(false);
   const [newsletterStatus, setNewsletterStatus] = useState('');
   const [newsletterBusy, setNewsletterBusy] = useState(false);
+  const [popupOpen, setPopupOpen] = useState(false);
+
+  useEffect(() => {
+    if (window.sessionStorage.getItem(POPUP_DISMISSED_KEY) || window.sessionStorage.getItem(POPUP_SUBSCRIBED_KEY)) return;
+    const timeout = window.setTimeout(() => setPopupOpen(true), 9000);
+    return () => window.clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    if (!popupOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closePopup();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [popupOpen]);
+
+  const closePopup = () => {
+    window.sessionStorage.setItem(POPUP_DISMISSED_KEY, 'true');
+    setPopupOpen(false);
+  };
 
   const submitNewsletter = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const source = String(formData.get('source') || 'website-footer');
+    const honeypot = String(formData.get('website') || '');
+
     if (!supabase) {
       setNewsletterStatus('The subscription service is not connected yet. Please try again later.');
       return;
@@ -25,16 +54,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     setNewsletterBusy(true);
     setNewsletterStatus('');
     const { error } = await supabase.functions.invoke('newsletter-subscribe', {
-      body: { email: newsletterEmail.trim(), consent: true, source: 'website-footer', website: String(new FormData(event.currentTarget).get('website') || '') },
+      body: { email: newsletterEmail.trim(), consent: true, source, website: honeypot },
     });
     setNewsletterBusy(false);
     if (error) {
       setNewsletterStatus('We could not complete your subscription right now. Please try again shortly.');
       return;
     }
+    window.sessionStorage.setItem(POPUP_SUBSCRIBED_KEY, 'true');
     setNewsletterEmail('');
     setNewsletterConsent(false);
     setNewsletterStatus('Thank you. You are on the Raffia Legacy updates list.');
+    setPopupOpen(false);
   };
 
   const soon = (title: string) => onNavigate({ type: 'coming_soon', title, subtitle: 'This section is being prepared for the next build phase.' });
@@ -63,6 +94,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <p className="mt-3 text-sm text-white/65 max-w-xl">Receive occasional updates about the project, makers, programmes and festival.</p>
           </div>
           <form onSubmit={submitNewsletter} className="space-y-4">
+            <input type="hidden" name="source" value="website-footer" />
             <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
             <div className="flex flex-col sm:flex-row gap-2">
               <label className="sr-only" htmlFor="raffia-newsletter-email">Email address</label>
@@ -119,6 +151,41 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
         <button onClick={() => onNavigate({type:'marketplace'})}>Shop Marketplace <ArrowUpRight size={14}/></button>
       </div>
+
+      {popupOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 px-4 py-8 backdrop-blur-sm"
+          role="presentation"
+          onMouseDown={(event) => { if (event.target === event.currentTarget) closePopup(); }}
+        >
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="raffia-newsletter-popup-title"
+            className="relative w-full max-w-xl overflow-hidden border border-[#C8A978]/40 bg-[#211710] px-7 py-10 text-white shadow-2xl sm:px-12 sm:py-14"
+          >
+            <button type="button" onClick={closePopup} aria-label="Close newsletter popup" className="absolute right-4 top-4 p-2 text-white/60 transition hover:text-white">
+              <X size={20} />
+            </button>
+            <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.28em] text-[#C8A978]">THE RAFFIA LEGACY LETTER</p>
+            <h2 id="raffia-newsletter-popup-title" className="max-w-md text-3xl font-black leading-tight sm:text-4xl">A little more culture in your inbox.</h2>
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-white/65">Discover stories, makers, heritage, creative opportunities and updates from the Raffia Legacy Project. Occasional notes, only when there is something worth sharing.</p>
+            <form onSubmit={submitNewsletter} className="mt-8 space-y-4">
+              <input type="hidden" name="source" value="website-popup" />
+              <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+              <label className="sr-only" htmlFor="raffia-newsletter-popup-email">Email address</label>
+              <input id="raffia-newsletter-popup-email" type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="Enter your email address" className="min-h-12 w-full border border-white/15 bg-white px-4 text-sm text-[#241A14] outline-none focus:ring-2 focus:ring-[#C8A978]" />
+              <label className="flex items-start gap-3 text-xs leading-relaxed text-white/65">
+                <input type="checkbox" required checked={newsletterConsent} onChange={(event) => setNewsletterConsent(event.target.checked)} className="mt-0.5 accent-[#B65332]" />
+                <span>I agree to receive occasional email updates. I can unsubscribe at any time.</span>
+              </label>
+              <button type="submit" disabled={newsletterBusy} className="min-h-12 w-full bg-[#B65332] px-6 text-xs font-bold tracking-[0.18em] text-white transition hover:bg-[#D16D48] disabled:opacity-60">{newsletterBusy ? 'JOINING…' : 'JOIN THE MAILING LIST'}</button>
+              {newsletterStatus && <p role="status" aria-live="polite" className="text-xs text-[#E9C99A]">{newsletterStatus}</p>}
+            </form>
+            <p className="mt-5 text-center text-[10px] uppercase tracking-wider text-white/35">No spam. Just the good stuff.</p>
+          </section>
+        </div>
+      )}
     </footer>
   );
 };
