@@ -9,6 +9,16 @@
     <meta property="og:description" content="A living journey of heritage, creativity and opportunity by Dance Ville. Celebrating African raffia culture, the Legacy Year, makers, and contemporary marketplace." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZQFZ88ZWHB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){window.dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      // Route views are sent by the SPA router to avoid duplicate initial page views.
+      gtag('config', 'G-ZQFZ88ZWHB', { send_page_view: false });
+    </script>
     <script>
       // Gracefully prevent browser extension injection exceptions (e.g. MetaMask in sandboxed iframe)
       window.addEventListener('error', function(event) {
@@ -58,4 +68,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
