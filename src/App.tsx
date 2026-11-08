@@ -50,12 +50,12 @@ function routeFromHash(hash: string): ViewRoute {
   }
   if (hash === '#/makers') return { type: 'makers' };
   if (hash.startsWith('#/project')) {
-    const section = hash.replace('#/project', '').replace(/^\//, '') as 'about' | 'vision' | 'legacy-year' | 'programmes' | 'impact' | 'partners' | '';
+    const section = hash.replace('#/project', '').replace(/^\\//, '') as 'about' | 'vision' | 'legacy-year' | 'programmes' | 'impact' | 'partners' | '';
     const validSections = ['about', 'vision', 'legacy-year', 'programmes', 'impact', 'partners'];
     return { type: 'project', section: validSections.includes(section) ? section as any : 'about' };
   }
   if (hash.startsWith('#/get-involved')) {
-    const section = hash.replace('#/get-involved', '').replace(/^\//, '') as any;
+    const section = hash.replace('#/get-involved', '').replace(/^\\//, '') as any;
     const validSections = ['partner','sponsor','donate','volunteer','maker','schools','young-people','creatives','businesses','media'];
     return { type: 'get_involved', section: validSections.includes(section) ? section : 'partner' };
   }
@@ -63,11 +63,11 @@ function routeFromHash(hash: string): ViewRoute {
     return { type: 'legacy_year' };
   }
   if (hash.startsWith('#/explore')) {
-    const section = hash.replace('#/explore', '').replace(/^\//, '') || undefined;
+    const section = hash.replace('#/explore', '').replace(/^\\//, '') || undefined;
     return { type: 'explore', section };
   }
   if (hash.startsWith('#/raffia')) {
-    const topicSlug = hash.replace('#/raffia', '').replace(/^\//, '') || undefined;
+    const topicSlug = hash.replace('#/raffia', '').replace(/^\\//, '') || undefined;
     return { type: 'raffia', topicSlug };
   }
   if (hash.startsWith('#/festival')) {
@@ -119,6 +119,18 @@ export default function App() {
     if (currentRoute.type === 'coming_soon') return `coming-soon-${currentRoute.title}`;
     return currentRoute.type;
   }, [currentRoute]);
+
+  // GA4 virtual page views for this hash-routed single-page application.
+  useEffect(() => {
+    const gtag = (window as any).gtag;
+    if (typeof gtag === 'function') {
+      gtag('event', 'page_view', {
+        page_title: document.title,
+        page_location: window.location.href,
+        page_path: window.location.pathname + window.location.hash,
+      });
+    }
+  }, [routeKey]);
 
   if (currentRoute.type === 'admin') {
     return (
