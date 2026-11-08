@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase';
 import { ViewRoute } from '../types';
 import { Handshake, Heart, Gift, Users, BookOpen, Megaphone, MapPin, Camera, Palette, MessageCircle, CalendarDays, Search, GraduationCap } from 'lucide-react';
 
@@ -31,6 +32,87 @@ const waysToGive = [
   ['VOLUNTEER','Give your time to help make the project happen.',Users],
   ['SHARE EXPERTISE','Contribute your knowledge and professional expertise.',BookOpen],
 ] as const;
+
+
+const SchoolInterestForm: React.FC = () => {
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+  const [form, setForm] = useState({
+    schoolName: '', institutionType: '', contactName: '', position: '',
+    email: '', phone: '', address: '', confirmsInstitution: false, website: '',
+  });
+
+  const update = (field: keyof typeof form, value: string | boolean) => {
+    setForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError('');
+    if (!supabase) {
+      setError('The form is temporarily unavailable. Please try again later.');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const { data, error: submitError } = await supabase.functions.invoke('school-interest-submit', {
+        body: {
+          school_name: form.schoolName.trim(),
+          institution_type: form.institutionType,
+          contact_name: form.contactName.trim(),
+          position: form.position.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          school_address: form.address.trim(),
+          confirms_institution: form.confirmsInstitution,
+          website: form.website,
+        },
+      });
+      if (submitError || data?.error || !data?.ok) {
+        throw new Error(data?.error || submitError?.message || 'We could not send your interest. Please try again.');
+      }
+      setSubmitted(true);
+      setForm({ schoolName: '', institutionType: '', contactName: '', position: '', email: '', phone: '', address: '', confirmsInstitution: false, website: '' });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'We could not send your interest. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div role="status" aria-live="polite" className="bg-[#F3EBDD] border border-[#241A14]/15 p-8 sm:p-10">
+        <p className="text-sm font-bold tracking-[0.16em] uppercase text-[#B65332] mb-3">INTEREST RECEIVED</p>
+        <h3 className="text-2xl sm:text-3xl font-black">THANK YOU. WE'VE GOT YOUR INTEREST.</h3>
+        <p className="mt-4 text-[#73695E] leading-relaxed">Thanks, we've got your interest and will be in touch soon with the next steps for registering your students.</p>
+      </div>
+    );
+  }
+
+  const inputClass = "w-full min-h-12 px-4 py-3 bg-[#F3EBDD] border border-[#241A14]/20 text-[#241A14] placeholder:text-[#8A8177] outline-none focus:border-[#B65332] focus:ring-1 focus:ring-[#B65332]";
+  const labelClass = "block text-sm font-bold mb-2";
+
+  return (
+    <form onSubmit={handleSubmit} className="bg-[#F3EBDD] border border-[#241A14]/15 p-6 sm:p-9 space-y-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <label className="sm:col-span-2"><span className={labelClass}>School name</span><input className={inputClass} name="schoolName" value={form.schoolName} onChange={(e) => update('schoolName', e.target.value)} required maxLength={180} autoComplete="organization" /></label>
+        <label className="sm:col-span-2"><span className={labelClass}>Type of institution</span><select className={inputClass} name="institutionType" value={form.institutionType} onChange={(e) => update('institutionType', e.target.value)} required><option value="">Select institution type</option><option value="primary">Primary</option><option value="secondary">Secondary</option><option value="tertiary">Tertiary</option></select><span className="block mt-2 text-xs text-[#73695E]">Tertiary includes universities, polytechnics and colleges of education.</span></label>
+        <label><span className={labelClass}>Contact person's name</span><input className={inputClass} name="contactName" value={form.contactName} onChange={(e) => update('contactName', e.target.value)} required maxLength={160} autoComplete="name" /></label>
+        <label><span className={labelClass}>Position</span><input className={inputClass} name="position" value={form.position} onChange={(e) => update('position', e.target.value)} required maxLength={120} /></label>
+        <label><span className={labelClass}>Email address</span><input className={inputClass} type="email" name="email" value={form.email} onChange={(e) => update('email', e.target.value)} required maxLength={254} autoComplete="email" /></label>
+        <label><span className={labelClass}>Phone number</span><input className={inputClass} type="tel" name="phone" value={form.phone} onChange={(e) => update('phone', e.target.value)} required maxLength={40} autoComplete="tel" /></label>
+        <label className="sm:col-span-2"><span className={labelClass}>School address</span><textarea className={inputClass + " min-h-24 resize-y"} name="address" value={form.address} onChange={(e) => update('address', e.target.value)} required maxLength={500} autoComplete="street-address" /></label>
+      </div>
+      <label className="flex items-start gap-3 text-sm leading-relaxed text-[#51483F]"><input type="checkbox" className="mt-1 h-4 w-4 accent-[#B65332]" checked={form.confirmsInstitution} onChange={(e) => update('confirmsInstitution', e.target.checked)} required /><span>I confirm we represent the institution listed.</span></label>
+      <div aria-hidden="true" className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden"><label>Leave this field empty<input tabIndex={-1} autoComplete="off" value={form.website} onChange={(e) => update('website', e.target.value)} /></label></div>
+      {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+      <button type="submit" disabled={submitting} className="inline-flex min-h-12 items-center justify-center px-8 bg-[#B65332] text-white font-bold text-sm hover:bg-[#D16D48] disabled:opacity-60 disabled:cursor-not-allowed transition-colors">{submitting ? 'SENDING…' : 'SEND INTEREST'}</button>
+      <p className="text-xs sm:text-sm text-[#73695E] leading-relaxed">We will only use your details to contact you about this challenge.</p>
+    </form>
+  );
+};
 
 export const GetInvolvedPage: React.FC<{ initialSection?: string; onNavigate?: (route: ViewRoute) => void }> = ({ initialSection = 'partner' }) => {
   useEffect(() => {
@@ -123,6 +205,18 @@ export const GetInvolvedPage: React.FC<{ initialSection?: string; onNavigate?: (
             ))}
           </div>
         </div>
+      </div>
+    </section>
+
+
+    <section id="schools" className="scroll-mt-24 py-20 sm:py-28 px-6 sm:px-12 bg-[#EAE1D1] border-b border-[#241A14]/15">
+      <div className="max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-20 items-start">
+        <div>
+          <p className="text-sm font-bold tracking-[0.18em] uppercase text-[#B65332] mb-4">RAFFIA IN SCHOOL CHALLENGE</p>
+          <h2 className="text-4xl sm:text-6xl font-black leading-tight">BRING THE<br /><em className="font-serif font-normal text-[#B65332]">CHALLENGE TO YOUR SCHOOL.</em></h2>
+          <p className="mt-6 text-base sm:text-lg text-[#73695E] leading-relaxed">Thank you for your interest! Please fill out the form below and our team will contact you with registration details.</p>
+        </div>
+        <SchoolInterestForm />
       </div>
     </section>
 
