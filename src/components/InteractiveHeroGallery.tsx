@@ -214,7 +214,7 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
             A YEAR-ROUND CELEBRATION OF RAFFIA
           </p>
           <p className="text-sm sm:text-base text-[#F3EBDD]/90 mt-3 font-sans leading-relaxed max-w-xl mx-auto drop-shadow">
-            A year-round of activities celebrating raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.
+            A year-round celebration of raffia as a symbol of African heritage, sustainable creativity, innovation and economic opportunity.
           </p>
         </motion.div>
 
@@ -223,43 +223,28 @@ export const InteractiveHeroGallery: React.FC<InteractiveHeroGalleryProps> = ({
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
-          className="mb-9 w-full max-w-lg bg-[#241A14]/85 backdrop-blur-md p-4 sm:p-5 border border-white/20 shadow-2xl"
+          className="mb-9 w-full max-w-lg border border-white/20 bg-[#241A14]/85 p-4 shadow-2xl backdrop-blur-md sm:p-5"
         >
-          <div className="flex items-center justify-between gap-4 text-sm font-sans tracking-[0.12em] uppercase text-[#C8A978] pb-3 border-b border-white/10 mb-3">
+          <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-3 mb-3 text-sm font-sans tracking-[0.12em] uppercase text-[#C8A978]">
             <span className="font-bold">THE RAFFIA FESTIVAL</span>
-            <strong className="text-white font-bold">COMING SOON</strong>
+            <strong className="font-bold text-white">29 NOVEMBER 2026</strong>
           </div>
-
           <div className="grid grid-cols-4 gap-2 sm:gap-3 text-center text-white">
-            <div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
-                {String(days).padStart(2, '0')}
-              </b>
-              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
-                DAYS
-              </small>
-            </div><div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
-                {String(hours).padStart(2, '0')}
-              </b>
-              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
-                HOURS
-              </small>
-            </div><div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
-                {String(minutes).padStart(2, '0')}
-              </b>
-              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
-                MINUTES
-              </small>
-            </div><div className="p-2.5 sm:p-3 bg-white/5 border border-white/10">
-              <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#B65332] tabular-nums leading-none">
-                {String(seconds).padStart(2, '0')}
-              </b>
-              <small className="text-xs sm:text-sm font-sans tracking-[0.1em] uppercase text-[#C8A978] font-bold block mt-2">
-                SECONDS
-              </small>
-            </div>
+            {[
+              { value: days, label: 'DAYS' },
+              { value: hours, label: 'HOURS' },
+              { value: minutes, label: 'MINUTES' },
+              { value: seconds, label: 'SECONDS' },
+            ].map((unit) => (
+              <div key={unit.label} className="border border-white/10 bg-white/5 p-2.5 sm:p-3">
+                <b className="block text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-[#F3EBDD] tabular-nums leading-none">
+                  {String(unit.value).padStart(2, '0')}
+                </b>
+                <small className="mt-2 block text-xs sm:text-sm font-sans font-bold tracking-[0.1em] uppercase text-[#C8A978]">
+                  {unit.label}
+                </small>
+              </div>
+            ))}
           </div>
         </motion.div>
 

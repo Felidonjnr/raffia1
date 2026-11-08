@@ -120,7 +120,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         ].map(([title, items]) => (
           <div key={title as string}>
             <h3>{title}</h3>
-            {(items as string[]).slice(0, 5).map(item => (
+            {(items as string[]).map(item => (
               <button
                 key={item}
                 onClick={() => {

@@ -73,7 +73,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({ section, onNavigate })
             >
               <ArrowLeft size={16} /> All Explore
             </button>
-            <span className="block text-sm tracking-[0.2em] uppercase font-bold text-[#C8A978]">PAGE UNDER CONSTRUCTION</span>
+            <span className="block text-sm tracking-[0.2em] uppercase font-bold text-[#C8A978]">A GROWING COLLECTION</span>
             <h3 className="mt-3 text-4xl sm:text-6xl font-extrabold tracking-tight">{active.title}</h3>
             <p className="mt-5 max-w-3xl text-base sm:text-lg text-white/75 leading-relaxed">{active.desc}</p>
             {active.slug === 'archive' && (
@@ -81,7 +81,7 @@ export const ExplorePage: React.FC<ExplorePageProps> = ({ section, onNavigate })
                 {ARCHIVE_NOTE}
               </div>
             )}
-            <p className="mt-8 text-sm text-[#C8A978] font-semibold">This destination is being prepared for the Raffia Legacy Project launch.</p>
+            <p className="mt-8 text-sm text-[#C8A978] font-semibold">New stories, resources and features will be added to this collection as the project develops.</p>
           </motion.section>
         )}
 

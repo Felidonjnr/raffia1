@@ -9,12 +9,12 @@ import { ProductQuickView } from '../components/ProductQuickView';
 import { MotionReveal } from '../components/MotionReveal';
 import { ImageLightbox, LightboxImage } from '../components/ImageLightbox';
 
+const festivalDate = new Date('2026-11-29T00:00:00+01:00');
+
 interface HomePageProps {
   onNavigate: (route: ViewRoute) => void;
   onSelectProduct: (slug: string) => void;
 }
-
-const launch = new Date('2026-10-29T00:00:00+01:00');
 
 // 04. THE PROJECT - 5 Vision Pillars from PDF Page 2
 const PROJECT_CATEGORIES = [
@@ -154,7 +154,7 @@ const FESTIVAL_EVENTS = [
 ];
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct }) => {
-  const [remaining, setRemaining] = useState(() => Math.max(0, launch.getTime() - Date.now()));
+  const [remaining, setRemaining] = useState(() => Math.max(0, festivalDate.getTime() - Date.now()));
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const [activePillarWord, setActivePillarWord] = useState<string>('HISTORY');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
@@ -162,7 +162,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectProduct 
   const { products: PRODUCTS } = useMarketplaceData();
 
   useEffect(() => {
-    const timer = window.setInterval(() => setRemaining(Math.max(0, launch.getTime() - Date.now())), 1000);
+    const timer = window.setInterval(() => setRemaining(Math.max(0, festivalDate.getTime() - Date.now())), 1000);
     return () => window.clearInterval(timer);
   }, []);
 
