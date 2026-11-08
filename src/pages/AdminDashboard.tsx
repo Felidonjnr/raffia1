@@ -11,14 +11,15 @@ import {
 } from '../lib/supabase';
 import { ViewRoute } from '../types';
 import {
-  LayoutDashboard, Package, ShoppingBag, Tags, Settings,
+  LayoutDashboard, Activity, Package, ShoppingBag, Tags, Settings,
   LogOut, Plus, Pencil, Trash2, Save, X, Upload, RefreshCw, ExternalLink,
   CheckCircle2, AlertCircle, Database, Copy, Check, ShieldCheck, ArrowLeft,
   Search, MessageCircle
 } from 'lucide-react';
 import { formatNaira } from '../utils/format';
+import { AnalyticsPanel } from './AnalyticsPanel';
 
-type Tab = 'overview' | 'products' | 'orders' | 'categories' | 'users' | 'settings' | 'database';
+type Tab = 'overview' | 'analytics' | 'products' | 'orders' | 'categories' | 'users' | 'settings' | 'database';
 type Row = Record<string, any>;
 
 const blankProduct: Row = {
@@ -764,6 +765,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           </p>
           {[
             { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+            { id: 'analytics', label: 'Website Analytics', icon: Activity },
             { id: 'products', label: 'Products', icon: Package, badge: products.length },
             { id: 'orders', label: 'Orders', icon: ShoppingBag, badge: orders.length },
             { id: 'categories', label: 'Categories', icon: Tags, badge: categories.length },
@@ -932,6 +934,8 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
               </div>
             </div>
           )}
+
+          {tab === 'analytics' && <AnalyticsPanel client={client} />}
 
           {tab === 'products' && (
             <div className="space-y-7 max-w-7xl">
