@@ -4,6 +4,7 @@ import { CartProvider } from './context/CartContext';
 import { MarketplaceDataProvider } from './context/MarketplaceDataContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
+import { SiteAnnouncement } from './components/SiteAnnouncement';
 import { CartDrawer } from './components/CartDrawer';
 import { SearchModal } from './components/SearchModal';
 import { SEOHead } from './components/SEOHead';
@@ -146,6 +147,7 @@ export default function App() {
         <SEOHead route={currentRoute} />
         <div className="app-shell">
           <Navbar currentRoute={currentRoute} onNavigate={navigateTo} onOpenSearch={() => setIsSearchOpen(true)} />
+          <SiteAnnouncement />
           <main className="app-main">
             <Suspense fallback={<div className="min-h-[60vh] grid place-items-center bg-[#F3EBDD] text-[#241A14] text-sm">Loading experience…</div>}><PageTransition routeKey={routeKey}>
               {currentRoute.type === 'home' && (
