@@ -150,13 +150,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       <div className="footer-bottom flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3 text-xs text-white/60">
           <span>© 2026 Raffia Legacy Project · Dance Ville</span>
-          <span>·</span>
-          <button
-            onClick={() => onNavigate({ type: 'admin' })}
-            className="hover:text-[#E59C6D] transition-colors uppercase tracking-widest text-[11px]"
-          >
-            Admin & Database
-          </button>
         </div>
         <button onClick={() => onNavigate({type:'marketplace'})}>Shop Marketplace <ArrowUpRight size={14}/></button>
       </div>
