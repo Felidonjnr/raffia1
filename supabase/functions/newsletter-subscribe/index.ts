@@ -43,7 +43,7 @@ Deno.serve(async (req: Request) => {
 
     const brevoKey = Deno.env.get("BREVO_API_KEY");
     const listId = Number(Deno.env.get("BREVO_LIST_ID"));
-    if (!brevoKey || !Number.isInteger(listId) || listId <= 0) {
+    if (!recordOnly && (!brevoKey || !Number.isInteger(listId) || listId <= 0)) {
       console.error("Newsletter integration is missing BREVO_API_KEY or BREVO_LIST_ID.");
       return json({ error: "Subscription service is not configured." }, origin, 503);
     }
