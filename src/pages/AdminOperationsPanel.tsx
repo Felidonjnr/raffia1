@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertCircle, CalendarDays, Handshake, Mail, Pencil, Plus, RefreshCw, Save, Trash2, Users, X, FileText, Ticket } from 'lucide-react';
 
-export type AdminOperationsSection = 'events' | 'registrations' | 'volunteers' | 'partnerships' | 'content' | 'newsletter';
+export type AdminOperationsSection = 'events' | 'registrations' | 'volunteers' | 'partnerships' | 'school_interests' | 'content' | 'newsletter';
 type FieldType = 'text' | 'email' | 'tel' | 'url' | 'textarea' | 'number' | 'datetime-local' | 'select' | 'tags';
 type Field = { key: string; label: string; type?: FieldType; required?: boolean; options?: string[]; placeholder?: string; help?: string };
 type Config = { title: string; description: string; table: string; primary: string; secondary?: string; status?: string; fields: Field[]; defaults: Record<string, any>; readOnly?: boolean };
@@ -87,9 +87,25 @@ const configs: Record<AdminOperationsSection, Config> = {
     ],
     defaults: { content_key: '', title: '', content_type: 'page_section', body: '', status: 'draft' },
   },
+  school_interests: {
+    title: 'School Interest', description: 'Review applications from schools interested in the Raffia in School Challenge and track follow-up.',
+    table: 'school_interest_submissions', primary: 'school_name', secondary: 'contact_name', status: 'status',
+    fields: [
+      { key: 'school_name', label: 'School name', required: true },
+      { key: 'institution_type', label: 'Institution type', type: 'select', options: ['primary','secondary','tertiary'], required: true },
+      { key: 'contact_name', label: 'Contact person', required: true },
+      { key: 'position', label: 'Position', required: true },
+      { key: 'email', label: 'Email address', type: 'email', required: true },
+      { key: 'phone', label: 'Phone number', type: 'tel', required: true },
+      { key: 'school_address', label: 'School address', type: 'textarea', required: true },
+      { key: 'status', label: 'Follow-up status', type: 'select', options: ['new','reviewing','contacted','accepted','declined'], required: true },
+      { key: 'admin_notes', label: 'Internal notes', type: 'textarea' },
+    ],
+    defaults: { school_name: '', institution_type: 'secondary', contact_name: '', position: '', email: '', phone: '', school_address: '', status: 'new', admin_notes: '' },
+  },
   newsletter: {
     title: 'Newsletter Subscribers', description: 'Review saved subscriber consent records and manage unsubscribe status.',
-    table: 'newsletter_subscribers', primary: 'email', secondary: 'source', status: 'status', readOnly: false,
+    table: 'newsletter_subscribers', primary: 'email', secondary: 'source', status: 'status', readOnly: true,
     fields: [
       { key: 'email', label: 'Email address', type: 'email', required: true },
       { key: 'source', label: 'Signup source' },
@@ -171,8 +187,12 @@ export const AdminOperationsPanel: React.FC<{ client: any; section: AdminOperati
     if (section === 'events' || section === 'content') {
       const { data: authData } = await client.auth.getUser();
       if (authData?.user?.id) {
-        payload.updated_by = authData.user.id;
-        if (!editor.id) payload.created_by = authData.user.id;
+        if (section === 'events') {
+          payload.updated_by = authData.user.id;
+          if (!editor.id) payload.created_by = authData.user.id;
+        } else {
+          payload.updated_by = authData.user.id;
+        }
       }
     }
     const query = editor.id
@@ -200,7 +220,7 @@ export const AdminOperationsPanel: React.FC<{ client: any; section: AdminOperati
     else { setRows(current => current.map(item => item.id === row.id ? { ...item, status } : item)); setNotice('Status updated.'); }
   };
 
-  const countLabel = section === 'events' ? 'events' : section === 'registrations' ? 'registrations' : section === 'volunteers' ? 'applications' : section === 'partnerships' ? 'enquiries' : section === 'newsletter' ? 'subscribers' : 'content entries';
+  const countLabel = section === 'events' ? 'events' : section === 'registrations' ? 'registrations' : section === 'volunteers' ? 'applications' : section === 'partnerships' ? 'enquiries' : section === 'school_interests' ? 'school enquiries' : section === 'newsletter' ? 'subscribers' : 'content entries';
 
   return <div className="space-y-6 max-w-7xl">
     <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
