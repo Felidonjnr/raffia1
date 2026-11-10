@@ -21,6 +21,50 @@ const EXPERIENCE_IMAGES: Record<string, string> = {
   '08': 'https://upload.wikimedia.org/wikipedia/commons/9/99/Panel%2C_Bushong_people%2C_mid-20th_century%2C_raffia_palm_fiber%2C_plain_weave%2C_openwork_embroidery%2C_and_wrapping%2C_HMA.JPG',
 };
 
+const FestivalRegistrationForm: React.FC<{ events: any[] }> = ({ events }) => {
+  const [form, setForm] = useState({ event_id: events[0]?.id || '', full_name: '', email: '', phone: '', organization: '', ticket_type: 'General', quantity: '1', website: '' });
+  const [consent, setConsent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+  const inputClass = "w-full min-h-12 px-4 py-3 bg-white border border-[#181513]/20 text-[#181513] outline-none focus:border-[#B84A28]";
+  useEffect(() => { if (events.length && !events.some(event => event.id === form.event_id)) setForm(current => ({ ...current, event_id: events[0].id })); }, [events, form.event_id]);
+  const update = (field: keyof typeof form, value: string) => setForm(current => ({ ...current, [field]: value }));
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); setError('');
+    if (!supabase) { setError('Registration is temporarily unavailable. Please try again later.'); return; }
+    if (!consent) { setError('Please confirm that we may contact you about this registration.'); return; }
+    setSubmitting(true);
+    try {
+      const { data, error: submitError } = await supabase.functions.invoke('get-involved-submit', {
+        body: { type: 'event_registration', ...form, consent, website: form.website },
+      });
+      if (submitError || data?.error || !data?.ok) throw new Error(data?.error || submitError?.message || 'We could not complete your registration.');
+      setSubmitted(true);
+      setForm(current => ({ ...current, full_name: '', email: '', phone: '', organization: '', quantity: '1', website: '' }));
+      setConsent(false);
+    } catch (err) { setError(err instanceof Error ? err.message : 'We could not complete your registration.'); }
+    finally { setSubmitting(false); }
+  };
+  if (submitted) return <div role="status" aria-live="polite" className="mt-10 p-8 bg-[#EAE1D1] border border-[#181513]/15"><p className="text-xs font-mono uppercase tracking-widest text-[#B84A28]">REGISTRATION RECEIVED</p><h3 className="font-editorial text-3xl mt-2">Thank you. Your place request is in.</h3><p className="text-sm text-[#57524E] mt-3">Our team will contact you with the next steps.</p></div>;
+  return <form onSubmit={submit} className="mt-10 p-6 sm:p-8 bg-[#EAE1D1] border border-[#181513]/15 space-y-4">
+    <div><p className="text-xs font-mono uppercase tracking-widest text-[#B84A28]">TAKE PART</p><h3 className="font-editorial text-3xl mt-2">Register your interest</h3><p className="text-sm text-[#57524E] mt-2">Submit your details and our team will follow up to confirm your registration.</p></div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <label className="sm:col-span-2"><span className="block text-xs font-bold mb-2">Event</span><select className={inputClass} value={form.event_id} onChange={e => update('event_id',e.target.value)} required>{events.map(item => <option key={item.id} value={item.id}>{item.title}</option>)}</select></label>
+      <label><span className="block text-xs font-bold mb-2">Full name</span><input className={inputClass} value={form.full_name} onChange={e => update('full_name',e.target.value)} required maxLength={160} autoComplete="name"/></label>
+      <label><span className="block text-xs font-bold mb-2">Email address</span><input type="email" className={inputClass} value={form.email} onChange={e => update('email',e.target.value)} required maxLength={254} autoComplete="email"/></label>
+      <label><span className="block text-xs font-bold mb-2">Phone number</span><input type="tel" className={inputClass} value={form.phone} onChange={e => update('phone',e.target.value)} required maxLength={40} autoComplete="tel"/></label>
+      <label><span className="block text-xs font-bold mb-2">Organisation (optional)</span><input className={inputClass} value={form.organization} onChange={e => update('organization',e.target.value)} maxLength={180}/></label>
+      <label><span className="block text-xs font-bold mb-2">Ticket type</span><select className={inputClass} value={form.ticket_type} onChange={e => update('ticket_type',e.target.value)}><option>General</option><option>Student</option><option>VIP</option></select></label>
+      <label><span className="block text-xs font-bold mb-2">Number of places (max 10)</span><input type="number" min="1" max="10" className={inputClass} value={form.quantity} onChange={e => update('quantity',e.target.value)} required/></label>
+    </div>
+    <div aria-hidden="true" className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden"><label>Leave this field empty<input tabIndex={-1} autoComplete="off" value={form.website} onChange={e => update('website',e.target.value)}/></label></div>
+    <label className="flex items-start gap-3 text-sm leading-relaxed text-[#57524E]"><input type="checkbox" className="mt-1 h-4 w-4 accent-[#B84A28]" checked={consent} onChange={e => setConsent(e.target.checked)} required/><span>I agree that Raffia Legacy may contact me about this event registration.</span></label>
+    {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+    <button type="submit" disabled={submitting} className="inline-flex min-h-12 items-center justify-center px-8 bg-[#B84A28] text-white font-bold text-xs tracking-wider disabled:opacity-60">{submitting ? 'SENDING…' : 'SUBMIT REGISTRATION'}</button>
+  </form>;
+};
+
 export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
@@ -131,6 +175,7 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
               </article>
             ))}
           </div>
+          {publishedEvents.some(event => !event.registration_url) && <FestivalRegistrationForm events={publishedEvents.filter(event => !event.registration_url)} />}
         </section>
       )}
 
