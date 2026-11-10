@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { ViewRoute } from '../types';
 import { FESTIVAL_EXPERIENCES } from '../data/legacyData';
 import { ArrowLeft, Sparkles, MapPin, ChevronDown, Maximize2 } from 'lucide-react';
 import { ImageLightbox, LightboxImage } from '../components/ImageLightbox';
+import { supabase } from '../lib/supabase';
 
 interface FestivalPageProps {
   onNavigate: (route: ViewRoute) => void;
@@ -23,6 +24,19 @@ const EXPERIENCE_IMAGES: Record<string, string> = {
 export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
+  const [publishedEvents, setPublishedEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    if (!supabase) return;
+    supabase.from('legacy_events')
+      .select('id,title,summary,starts_at,ends_at,venue,city,state,registration_url,cover_image')
+      .eq('status', 'published')
+      .order('starts_at', { ascending: true, nullsFirst: false })
+      .limit(12)
+      .then(({ data, error }) => { if (active && !error) setPublishedEvents(data || []); });
+    return () => { active = false; };
+  }, []);
 
   const faqs = [
     {
@@ -96,6 +110,29 @@ export const FestivalPage: React.FC<FestivalPageProps> = ({ onNavigate }) => {
           </div>
         </div>
       </section>
+
+      {publishedEvents.length > 0 && (
+        <section className="max-w-[1440px] mx-auto px-6 lg:px-12 py-16 border-b border-[#181513]/10">
+          <div className="max-w-2xl mb-10">
+            <span className="text-xs font-mono uppercase tracking-[0.25em] text-[#B84A28] block mb-2 font-bold">WHAT'S COMING UP</span>
+            <h2 className="font-editorial text-4xl sm:text-5xl font-light text-[#181513]">UPCOMING EVENTS</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {publishedEvents.map((event) => (
+              <article key={event.id} className="bg-white border border-[#181513]/15 overflow-hidden flex flex-col">
+                {event.cover_image && <img src={event.cover_image} alt="" className="w-full aspect-[16/9] object-cover" loading="lazy"/>}
+                <div className="p-6 flex-1 flex flex-col">
+                  <p className="text-[10px] font-mono uppercase tracking-widest text-[#B84A28]">{event.starts_at ? new Date(event.starts_at).toLocaleString() : 'Date to be announced'}</p>
+                  <h3 className="font-editorial text-2xl font-medium mt-2">{event.title}</h3>
+                  <p className="text-sm text-[#57524E] mt-3 leading-relaxed flex-1">{event.summary || ''}</p>
+                  {(event.venue || event.city || event.state) && <p className="text-xs text-[#8C7355] mt-4">{[event.venue,event.city,event.state].filter(Boolean).join(' · ')}</p>}
+                  {event.registration_url && <a href={event.registration_url} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center justify-center min-h-11 px-5 bg-[#B84A28] text-white text-xs font-bold tracking-wider">REGISTER / LEARN MORE</a>}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* The 8 Flagship Experiences strictly from PDF Page 3 */}
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 py-20 border-b border-[#181513]/10">
