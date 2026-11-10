@@ -32,6 +32,7 @@ Deno.serve(async (req: Request) => {
     const consent = body?.consent === true;
     const source = String(body?.source ?? "website").slice(0, 80);
     const honeypot = String(body?.website ?? "");
+    const recordOnly = body?.recordOnly === true;
 
     // Quietly accept bot submissions without forwarding them.
     if (honeypot) return json({ ok: true }, origin);
@@ -73,6 +74,8 @@ Deno.serve(async (req: Request) => {
       console.error("Could not save newsletter consent:", saveError.message);
       return json({ error: "We could not save your subscription. Please try again." }, origin, 500);
     }
+
+    if (recordOnly) return json({ ok: true, recorded: true }, origin);
 
     const brevoResponse = await fetch("https://api.brevo.com/v3/contacts", {
       method: "POST",
