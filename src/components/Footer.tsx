@@ -107,7 +107,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
             <div className="flex flex-col sm:flex-row gap-2">
               <label className="sr-only" htmlFor="raffia-newsletter-email">Email address</label>
-              <input id="raffia-newsletter-email" type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="Your email address" className="min-h-12 flex-1 px-4 bg-white text-[#241A14] text-sm outline-none focus:ring-2 focus:ring-[#C8A978]" />
+              <input id="raffia-newsletter-email" type="email" required autoComplete="email" autoCapitalize="none" spellCheck={false} value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value.replace(/\s/g, ''))} placeholder="Your email address" className="min-h-12 flex-1 px-4 bg-white text-[#241A14] text-sm outline-none focus:ring-2 focus:ring-[#C8A978]" />
               <button type="submit" disabled={newsletterBusy} className="min-h-12 px-6 bg-[#B65332] text-white text-xs font-bold tracking-widest hover:bg-[#D16D48] disabled:opacity-60">{newsletterBusy ? 'JOINING…' : 'SUBSCRIBE'}</button>
             </div>
             <label className="flex items-start gap-3 text-xs leading-relaxed text-white/60">
@@ -185,7 +185,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <input type="hidden" name="source" value="website-popup" />
               <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
               <label className="sr-only" htmlFor="raffia-newsletter-popup-email">Email address</label>
-              <input id="raffia-newsletter-popup-email" type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="Enter your email address" className="min-h-12 w-full border border-[#D8C9B8] bg-[#F7F3ED] px-4 text-[15px] text-[#241A14] outline-none placeholder:text-[#82796F] focus:ring-2 focus:ring-[#C8A978]" />
+              <input id="raffia-newsletter-popup-email" type="email" required autoComplete="email" autoCapitalize="none" spellCheck={false} value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value.replace(/\s/g, ''))} placeholder="Enter your email address" className="min-h-12 w-full border border-[#D8C9B8] bg-[#F7F3ED] px-4 text-[15px] text-[#241A14] outline-none placeholder:text-[#82796F] focus:ring-2 focus:ring-[#C8A978]" />
               <label className="flex items-start gap-3 text-[12px] leading-[1.55] text-[#D5C9BC]">
                 <input type="checkbox" required checked={newsletterConsent} onChange={(event) => setNewsletterConsent(event.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-[#B65332]" />
                 <span>I agree to receive occasional email updates. I can unsubscribe at any time.</span>
