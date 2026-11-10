@@ -114,6 +114,92 @@ const SchoolInterestForm: React.FC = () => {
   );
 };
 
+
+const PartnershipInquiryForm: React.FC = () => {
+  const [form, setForm] = useState({ organization_name: '', contact_name: '', email: '', phone: '', partnership_type: 'Festival Sponsor', message: '', estimated_value: '', website: '' });
+  const [consent, setConsent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+  const inputClass = "w-full min-h-12 px-4 py-3 bg-[#F3EBDD] border border-[#241A14]/20 text-[#241A14] placeholder:text-[#8A8177] outline-none focus:border-[#B65332] focus:ring-1 focus:ring-[#B65332]";
+  const labelClass = "block text-sm font-bold mb-2";
+  const update = (field: keyof typeof form, value: string) => setForm(current => ({ ...current, [field]: value }));
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); setError('');
+    if (!supabase) { setError('The form is temporarily unavailable. Please try again later.'); return; }
+    if (!consent) { setError('Please confirm that we may contact you about this enquiry.'); return; }
+    setSubmitting(true);
+    try {
+      const { data, error: submitError } = await supabase.functions.invoke('get-involved-submit', {
+        body: { type: 'partnership', ...form, consent, website: form.website },
+      });
+      if (submitError || data?.error || !data?.ok) throw new Error(data?.error || submitError?.message || 'We could not send your enquiry.');
+      setSubmitted(true);
+      setForm({ organization_name: '', contact_name: '', email: '', phone: '', partnership_type: 'Festival Sponsor', message: '', estimated_value: '', website: '' });
+      setConsent(false);
+    } catch (err) { setError(err instanceof Error ? err.message : 'We could not send your enquiry.'); }
+    finally { setSubmitting(false); }
+  };
+  if (submitted) return <div role="status" aria-live="polite" className="bg-[#F3EBDD] border border-[#241A14]/15 p-8"><p className="text-sm font-bold tracking-[0.16em] uppercase text-[#B65332] mb-3">ENQUIRY RECEIVED</p><h3 className="text-2xl font-black">THANK YOU FOR REACHING OUT.</h3><p className="mt-3 text-sm text-[#73695E] leading-relaxed">Our partnerships team has received your enquiry and will follow up.</p></div>;
+  return <form onSubmit={submit} className="bg-[#F3EBDD] border border-[#241A14]/15 p-6 sm:p-8 space-y-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <label className="sm:col-span-2"><span className={labelClass}>Organisation name</span><input className={inputClass} value={form.organization_name} onChange={e => update('organization_name',e.target.value)} required maxLength={180} autoComplete="organization"/></label>
+      <label><span className={labelClass}>Contact person</span><input className={inputClass} value={form.contact_name} onChange={e => update('contact_name',e.target.value)} required maxLength={160} autoComplete="name"/></label>
+      <label><span className={labelClass}>Partnership type</span><select className={inputClass} value={form.partnership_type} onChange={e => update('partnership_type',e.target.value)}><option>Festival Sponsor</option><option>Programme Sponsor</option><option>Legacy Partner</option><option>Knowledge Partner</option><option>Media & Creative Partner</option><option>Tourism & Destination Partner</option><option>In-kind Support</option><option>Other</option></select></label>
+      <label><span className={labelClass}>Email address</span><input type="email" className={inputClass} value={form.email} onChange={e => update('email',e.target.value)} required maxLength={254} autoComplete="email"/></label>
+      <label><span className={labelClass}>Phone number</span><input type="tel" className={inputClass} value={form.phone} onChange={e => update('phone',e.target.value)} required maxLength={40} autoComplete="tel"/></label>
+      <label><span className={labelClass}>Estimated support value (optional, NGN)</span><input type="number" min="0" className={inputClass} value={form.estimated_value} onChange={e => update('estimated_value',e.target.value)}/></label>
+      <label className="sm:col-span-2"><span className={labelClass}>Tell us how you would like to collaborate</span><textarea className={inputClass + " min-h-32 resize-y"} value={form.message} onChange={e => update('message',e.target.value)} required maxLength={3000}/></label>
+    </div>
+    <div aria-hidden="true" className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden"><label>Leave this field empty<input tabIndex={-1} autoComplete="off" value={form.website} onChange={e => update('website',e.target.value)}/></label></div>
+    <label className="flex items-start gap-3 text-sm leading-relaxed text-[#51483F]"><input type="checkbox" className="mt-1 h-4 w-4 accent-[#B65332]" checked={consent} onChange={e => setConsent(e.target.checked)} required/><span>I agree that Raffia Legacy may contact me about this partnership enquiry.</span></label>
+    {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+    <button type="submit" disabled={submitting} className="inline-flex min-h-12 items-center justify-center px-8 bg-[#B65332] text-white font-bold text-sm hover:bg-[#D16D48] disabled:opacity-60">{submitting ? 'SENDING…' : 'SEND PARTNERSHIP ENQUIRY'}</button>
+  </form>;
+};
+
+const VolunteerApplicationForm: React.FC = () => {
+  const [form, setForm] = useState({ full_name: '', email: '', phone: '', skills: '', availability: '', motivation: '', website: '' });
+  const [consent, setConsent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+  const inputClass = "w-full min-h-12 px-4 py-3 bg-[#F3EBDD] border border-[#241A14]/20 text-[#241A14] placeholder:text-[#8A8177] outline-none focus:border-[#B65332] focus:ring-1 focus:ring-[#B65332]";
+  const labelClass = "block text-sm font-bold mb-2";
+  const update = (field: keyof typeof form, value: string) => setForm(current => ({ ...current, [field]: value }));
+  const submit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); setError('');
+    if (!supabase) { setError('The form is temporarily unavailable. Please try again later.'); return; }
+    if (!consent) { setError('Please confirm that we may contact you about your application.'); return; }
+    setSubmitting(true);
+    try {
+      const { data, error: submitError } = await supabase.functions.invoke('get-involved-submit', {
+        body: { type: 'volunteer', ...form, consent, website: form.website },
+      });
+      if (submitError || data?.error || !data?.ok) throw new Error(data?.error || submitError?.message || 'We could not send your application.');
+      setSubmitted(true);
+      setForm({ full_name: '', email: '', phone: '', skills: '', availability: '', motivation: '', website: '' });
+      setConsent(false);
+    } catch (err) { setError(err instanceof Error ? err.message : 'We could not send your application.'); }
+    finally { setSubmitting(false); }
+  };
+  if (submitted) return <div role="status" aria-live="polite" className="bg-[#EAE1D1] border border-[#241A14]/15 p-8"><p className="text-sm font-bold tracking-[0.16em] uppercase text-[#B65332] mb-3">APPLICATION RECEIVED</p><h3 className="text-2xl font-black">THANK YOU FOR OFFERING YOUR SKILLS.</h3><p className="mt-3 text-sm text-[#73695E] leading-relaxed">Your volunteer application has been received. Our team will be in touch.</p></div>;
+  return <form onSubmit={submit} className="bg-[#EAE1D1] border border-[#241A14]/15 p-6 sm:p-8 space-y-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <label><span className={labelClass}>Full name</span><input className={inputClass} value={form.full_name} onChange={e => update('full_name',e.target.value)} required maxLength={160} autoComplete="name"/></label>
+      <label><span className={labelClass}>Email address</span><input type="email" className={inputClass} value={form.email} onChange={e => update('email',e.target.value)} required maxLength={254} autoComplete="email"/></label>
+      <label><span className={labelClass}>Phone number</span><input type="tel" className={inputClass} value={form.phone} onChange={e => update('phone',e.target.value)} required maxLength={40} autoComplete="tel"/></label>
+      <label><span className={labelClass}>Availability</span><input className={inputClass} value={form.availability} onChange={e => update('availability',e.target.value)} required maxLength={160} placeholder="e.g. Weekends, evenings"/></label>
+      <label className="sm:col-span-2"><span className={labelClass}>Your skills or areas of interest</span><input className={inputClass} value={form.skills} onChange={e => update('skills',e.target.value)} required maxLength={1000} placeholder="e.g. Project coordination, graphic design, photography"/></label>
+      <label className="sm:col-span-2"><span className={labelClass}>Why would you like to volunteer?</span><textarea className={inputClass + " min-h-32 resize-y"} value={form.motivation} onChange={e => update('motivation',e.target.value)} required maxLength={2000}/></label>
+    </div>
+    <div aria-hidden="true" className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden"><label>Leave this field empty<input tabIndex={-1} autoComplete="off" value={form.website} onChange={e => update('website',e.target.value)}/></label></div>
+    <label className="flex items-start gap-3 text-sm leading-relaxed text-[#51483F]"><input type="checkbox" className="mt-1 h-4 w-4 accent-[#B65332]" checked={consent} onChange={e => setConsent(e.target.checked)} required/><span>I agree that Raffia Legacy may contact me about this volunteer application.</span></label>
+    {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+    <button type="submit" disabled={submitting} className="inline-flex min-h-12 items-center justify-center px-8 bg-[#B65332] text-white font-bold text-sm hover:bg-[#D16D48] disabled:opacity-60">{submitting ? 'SENDING…' : 'SUBMIT VOLUNTEER APPLICATION'}</button>
+  </form>;
+};
+
 export const GetInvolvedPage: React.FC<{ initialSection?: string; onNavigate?: (route: ViewRoute) => void }> = ({ initialSection = 'partner' }) => {
   useEffect(() => {
     const sectionTarget = initialSection === 'sponsor' || initialSection === 'donate' ? 'support' : initialSection;
@@ -155,6 +241,10 @@ export const GetInvolvedPage: React.FC<{ initialSection?: string; onNavigate?: (
               <p className="mt-3 text-sm text-[#73695E] leading-relaxed">{description}</p>
             </article>
           ))}
+        </div>
+        <div className="mt-16 grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-10 items-start">
+          <div><p className="text-sm font-bold tracking-[0.16em] uppercase text-[#B65332] mb-3">START A CONVERSATION</p><h3 className="text-2xl sm:text-3xl font-black">LET'S BUILD SOMETHING THAT LASTS.</h3><p className="mt-4 text-sm text-[#73695E] leading-relaxed">Tell us about your organisation and the kind of partnership you have in mind.</p></div>
+          <PartnershipInquiryForm />
         </div>
       </div>
     </section>
@@ -205,6 +295,7 @@ export const GetInvolvedPage: React.FC<{ initialSection?: string; onNavigate?: (
             ))}
           </div>
         </div>
+        <div className="mt-16 max-w-3xl"><VolunteerApplicationForm /></div>
       </div>
     </section>
 
