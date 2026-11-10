@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { AlertCircle, CalendarDays, Handshake, Mail, Pencil, Plus, RefreshCw, Save, Trash2, Users, X, FileText, Ticket } from 'lucide-react';
+import { AlertCircle, Pencil, Plus, RefreshCw, Save, Trash2, X } from 'lucide-react';
 
 export type AdminOperationsSection = 'events' | 'registrations' | 'volunteers' | 'partnerships' | 'school_interests' | 'content' | 'newsletter';
 type FieldType = 'text' | 'email' | 'tel' | 'url' | 'textarea' | 'number' | 'datetime-local' | 'select' | 'tags';
@@ -38,7 +38,7 @@ const configs: Record<AdminOperationsSection, Config> = {
       { key: 'organization', label: 'Organisation' },
       { key: 'ticket_type', label: 'Ticket type' },
       { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-      { key: 'amount', label: 'Amount (NGN)', type: 'number' },
+      { key: 'amount', label: 'Amount (NGN)', type: 'number', required: true },
       { key: 'status', label: 'Registration status', type: 'select', options: ['pending','confirmed','cancelled','attended'], required: true },
       { key: 'notes', label: 'Notes', type: 'textarea' },
     ],
