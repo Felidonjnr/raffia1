@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { ViewRoute } from '../types';
 import { ArrowUpRight, X } from 'lucide-react';
 import { BrushStrokeUnderline } from './RaffiaLogo';
-import { supabase } from '../lib/supabase';
 
 interface FooterProps { onNavigate: (route: ViewRoute) => void; }
 
@@ -43,23 +42,33 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     const source = String(formData.get('source') || 'website-footer');
     const honeypot = String(formData.get('website') || '');
 
-    if (!supabase) {
-      setNewsletterStatus('The subscription service is not connected yet. Please try again later.');
-      return;
-    }
     if (!newsletterConsent) {
       setNewsletterStatus('Please confirm that you want to receive email updates.');
       return;
     }
     setNewsletterBusy(true);
     setNewsletterStatus('');
-    const { error } = await supabase.functions.invoke('newsletter-subscribe', {
-      body: { email: newsletterEmail.trim(), consent: true, source, website: honeypot },
-    });
-    setNewsletterBusy(false);
-    if (error) {
+    try {
+      const response = await fetch('/api/newsletter-subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: newsletterEmail.trim(),
+          consent: true,
+          source,
+          website: honeypot,
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result?.ok) {
+        setNewsletterStatus(result?.error || 'We could not complete your subscription right now. Please try again shortly.');
+        return;
+      }
+    } catch {
       setNewsletterStatus('We could not complete your subscription right now. Please try again shortly.');
       return;
+    } finally {
+      setNewsletterBusy(false);
     }
     window.sessionStorage.setItem(POPUP_SUBSCRIBED_KEY, 'true');
     setNewsletterEmail('');
