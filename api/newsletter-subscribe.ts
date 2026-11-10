@@ -21,6 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const email = String(body.email ?? "").trim().toLowerCase();
     const consent = body.consent === true;
     const website = String(body.website ?? "");
+    const source = String(body.source ?? "website").slice(0, 80);
 
     // Quietly accept bot submissions without forwarding them.
     if (website) return res.status(200).json({ ok: true });
@@ -50,6 +51,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const details = await response.text();
       console.error("Brevo contact sync failed:", response.status, details.slice(0, 500));
       return res.status(502).json({ error: "We could not complete your subscription right now. Please try again shortly." });
+    }
+
+    // Mirror the successful signup into the protected Raffia subscriber table.
+    // The Edge Function records consent before attempting its idempotent Brevo sync.
+    const supabaseUrl = process.env.VITE_SUPABASE_URL;
+    const publishableKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (supabaseUrl && publishableKey) {
+      try {
+        const recordResponse = await fetch(supabaseUrl + "/functions/v1/newsletter-subscribe", {
+          method: "POST",
+          headers: { apikey: publishableKey, "content-type": "application/json" },
+          body: JSON.stringify({ email, consent: true, source, website: "" }),
+        });
+        if (!recordResponse.ok) console.error("Newsletter database mirror returned:", recordResponse.status);
+      } catch (recordError) {
+        console.error("Newsletter database mirror failed:", recordError);
+      }
+    } else {
+      console.error("Newsletter database mirror skipped: Supabase URL or publishable key is missing.");
     }
 
     return res.status(200).json({ ok: true, synced: true });
