@@ -76,7 +76,7 @@ const configs: Record<AdminOperationsSection, Config> = {
     defaults: { organization_name: '', contact_name: '', email: '', phone: '', partnership_type: 'Other', message: '', estimated_value: '', status: 'new', admin_notes: '' },
   },
   content: {
-    title: 'Content Library', description: 'Draft and organise reusable copy, announcements, articles and FAQ entries for the project.',
+    title: 'Content Library', description: 'Publish site-wide announcements that appear on the public website, and organise draft copy, articles and FAQ entries.',
     table: 'content_entries', primary: 'title', secondary: 'content_key', status: 'status',
     fields: [
       { key: 'content_key', label: 'Content key', required: true, help: 'Unique internal identifier, e.g. home.hero.title.' },
