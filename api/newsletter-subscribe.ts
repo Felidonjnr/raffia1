@@ -25,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Quietly accept bot submissions without forwarding them.
     if (website) return res.status(200).json({ ok: true });
     if (!consent) return res.status(400).json({ error: "Consent is required." });
-    if (email.length > 254 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+    if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res.status(400).json({ error: "Enter a valid email address." });
     }
 
