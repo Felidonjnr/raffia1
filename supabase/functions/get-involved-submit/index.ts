@@ -41,6 +41,46 @@ Deno.serve(async (req: Request) => {
     const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
     const consent_at = new Date().toISOString();
 
+    if (type === "event_registration") {
+      const event_id = clean(body?.event_id, 80);
+      const full_name = clean(body?.full_name, 160);
+      const organization = clean(body?.organization, 180);
+      const ticket_type = clean(body?.ticket_type || "General", 80);
+      const quantity = Number(body?.quantity ?? 1);
+      if (!event_id || !full_name || !Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+        return respond({ error: "Please complete the registration details. Quantity must be between 1 and 10." }, origin, 400);
+      }
+
+      const { data: event, error: eventError } = await admin
+        .from("legacy_events")
+        .select("id,capacity,status")
+        .eq("id", event_id)
+        .eq("status", "published")
+        .maybeSingle();
+      if (eventError || !event) return respond({ error: "This event is not currently accepting registrations." }, origin, 404);
+
+      if (event.capacity !== null) {
+        const { count, error: countError } = await admin
+          .from("event_registrations")
+          .select("id", { count: "exact", head: true })
+          .eq("event_id", event_id)
+          .in("status", ["pending", "confirmed"]);
+        if (countError) return respond({ error: "We could not verify event availability. Please try again." }, origin, 500);
+        if ((count || 0) + quantity > event.capacity) {
+          return respond({ error: "There are not enough places left for this quantity." }, origin, 409);
+        }
+      }
+
+      const { error } = await admin.from("event_registrations").insert({
+        event_id, full_name, email, phone, organization, ticket_type, quantity, consent_at,
+      });
+      if (error) {
+        console.error("Could not save event registration:", error.message);
+        return respond({ error: "We could not save your registration. Please try again." }, origin, 500);
+      }
+      return respond({ ok: true }, origin);
+    }
+
     if (type === "volunteer") {
       const full_name = clean(body?.full_name, 160);
       const skills = (Array.isArray(body?.skills) ? body.skills : clean(body?.skills, 1000).split(","))
