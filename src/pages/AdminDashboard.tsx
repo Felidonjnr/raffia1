@@ -14,12 +14,13 @@ import {
   LayoutDashboard, Activity, Package, ShoppingBag, Tags, Settings,
   LogOut, Plus, Pencil, Trash2, Save, X, Upload, RefreshCw, ExternalLink,
   CheckCircle2, AlertCircle, Database, Copy, Check, ShieldCheck, ArrowLeft,
-  Search, MessageCircle
+  Search, MessageCircle, CalendarDays, Users, Handshake, FileText, Mail, Ticket
 } from 'lucide-react';
 import { formatNaira } from '../utils/format';
 import { AnalyticsPanel } from './AnalyticsPanel';
+import { AdminOperationsPanel } from './AdminOperationsPanel';
 
-type Tab = 'overview' | 'analytics' | 'products' | 'orders' | 'categories' | 'users' | 'settings' | 'database';
+type Tab = 'overview' | 'analytics' | 'events' | 'registrations' | 'volunteers' | 'partnerships' | 'school_interests' | 'content' | 'newsletter' | 'products' | 'orders' | 'categories' | 'users' | 'settings' | 'database';
 type Row = Record<string, any>;
 
 const blankProduct: Row = {
@@ -761,11 +762,18 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
         {/* Sidebar Nav */}
         <aside className="w-full md:w-64 bg-[#211D1A] text-white border-r border-[#181513] p-4 lg:p-5 space-y-1 shrink-0 md:min-h-[calc(100vh-73px)]">
           <p className="text-[11px] font-sans uppercase tracking-widest text-white/40 px-3 py-2 font-bold">
-            Catalog & Orders
+            Management
           </p>
           {[
             { id: 'overview', label: 'Overview', icon: LayoutDashboard },
             { id: 'analytics', label: 'Website Analytics', icon: Activity },
+            { id: 'events', label: 'Events & Festival', icon: CalendarDays },
+            { id: 'registrations', label: 'Event Registrations', icon: Ticket },
+            { id: 'volunteers', label: 'Volunteers', icon: Users },
+            { id: 'partnerships', label: 'Partnerships', icon: Handshake },
+            { id: 'school_interests', label: 'School Interest', icon: FileText },
+            { id: 'content', label: 'Content Library', icon: FileText },
+            { id: 'newsletter', label: 'Newsletter', icon: Mail },
             { id: 'products', label: 'Products', icon: Package, badge: products.length },
             { id: 'orders', label: 'Orders', icon: ShoppingBag, badge: orders.length },
             { id: 'categories', label: 'Categories', icon: Tags, badge: categories.length },
@@ -936,6 +944,13 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           )}
 
           {tab === 'analytics' && <AnalyticsPanel client={client} />}
+          {tab === 'events' && <AdminOperationsPanel client={client} section="events" />}
+          {tab === 'registrations' && <AdminOperationsPanel client={client} section="registrations" />}
+          {tab === 'volunteers' && <AdminOperationsPanel client={client} section="volunteers" />}
+          {tab === 'partnerships' && <AdminOperationsPanel client={client} section="partnerships" />}
+          {tab === 'school_interests' && <AdminOperationsPanel client={client} section="school_interests" />}
+          {tab === 'content' && <AdminOperationsPanel client={client} section="content" />}
+          {tab === 'newsletter' && <AdminOperationsPanel client={client} section="newsletter" />}
 
           {tab === 'products' && (
             <div className="space-y-7 max-w-7xl">
