@@ -62,7 +62,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const recordResponse = await fetch(supabaseUrl + "/functions/v1/newsletter-subscribe", {
           method: "POST",
           headers: { apikey: publishableKey, "content-type": "application/json" },
-          body: JSON.stringify({ email, consent: true, source, website: "" }),
+          body: JSON.stringify({ email, consent: true, source, website: "", recordOnly: true }),
         });
         if (!recordResponse.ok) console.error("Newsletter database mirror returned:", recordResponse.status);
       } catch (recordError) {
