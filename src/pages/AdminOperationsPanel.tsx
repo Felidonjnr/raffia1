@@ -214,8 +214,25 @@ export const AdminOperationsPanel: React.FC<{ client: any; section: AdminOperati
   };
 
   const quickStatus = async (row: Record<string, any>, status: string) => {
-    if (!config.status) return;
-    const { error: updateError } = await client.from(config.table).update({ status, updated_at: new Date().toISOString() }).eq('id', row.id);
+    if (!config.status || !client) return;
+    setError('');
+    setNotice('');
+    if (section === 'newsletter') {
+      const { data, error: syncError } = await client.functions.invoke('newsletter-admin-update', {
+        body: { email: row.email, status },
+      });
+      if (syncError || data?.error || !data?.ok) {
+        setError(data?.error || syncError?.message || 'Could not update the newsletter subscription.');
+        return;
+      }
+      setRows(current => current.map(item => item.id === row.id ? { ...item, status } : item));
+      setNotice(data?.synced === false
+        ? 'Database status updated, but Brevo could not confirm the list change.'
+        : 'Subscription status updated in the database and Brevo.');
+      return;
+    }
+    const { error: updateError } = await client.from(config.table)
+      .update({ status, updated_at: new Date().toISOString() }).eq('id', row.id);
     if (updateError) setError(updateError.message);
     else { setRows(current => current.map(item => item.id === row.id ? { ...item, status } : item)); setNotice('Status updated.'); }
   };
