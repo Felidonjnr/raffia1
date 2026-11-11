@@ -33,6 +33,7 @@ const comingSoon = (title: string, subtitle?: string): ViewRoute => ({
 });
 
 function routeFromHash(hash: string): ViewRoute {
+  if (new URLSearchParams(window.location.search).get('auth') === 'recovery') return { type: 'admin' } as ViewRoute;
   if (hash.startsWith('#/admin')) return { type: 'admin' } as ViewRoute;
   if (hash.startsWith('#/marketplace/')) {
     const slug = hash.replace('#/marketplace/', '');
