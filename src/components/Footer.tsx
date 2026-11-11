@@ -159,8 +159,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   else if (raffiaTopics[item]) onNavigate({ type: 'raffia', topicSlug: raffiaTopics[item] });
                   else if (item === 'People & Makers' || item === 'Meet the Makers') onNavigate({ type: 'makers' });
                   else if (exploreSections[item]) onNavigate({ type: 'explore', section: exploreSections[item] });
+                  else if (item === 'Sell With Us') onNavigate({ type: 'get_involved', section: 'maker' });
                   else if (involvement[item]) onNavigate({ type: 'get_involved', section: involvement[item] });
-                  else if (title === 'MARKETPLACE') onNavigate({ type: 'marketplace' });
+                  else if (title === 'MARKETPLACE') {
+                    const categories: Record<string, 'ALL' | 'FASHION & ACCESSORIES' | 'HOME & LIFESTYLE' | 'ART & DESIGN' | 'TRADITIONAL CRAFT' | 'GIFTS' | 'FESTIVAL MERCHANDISE'> = {
+                      'Shop All': 'ALL', 'Fashion & Accessories': 'FASHION & ACCESSORIES',
+                      'Home & Lifestyle': 'HOME & LIFESTYLE', 'Art & Design': 'ART & DESIGN',
+                      'Traditional Craft': 'TRADITIONAL CRAFT', 'Gifts': 'GIFTS',
+                      'Festival Merchandise': 'FESTIVAL MERCHANDISE',
+                    };
+                    onNavigate({ type: 'marketplace', category: categories[item] || 'ALL' });
+                  }
                   else if (title === 'THE FESTIVAL') onNavigate({ type: 'festival' });
                   else if (title === 'EXPLORE') onNavigate({ type: 'explore' });
                   else soon(item);
