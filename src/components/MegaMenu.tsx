@@ -133,7 +133,14 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
   const clickItem = (itemLabel: string) => {
     onClose();
     if (activeTab === 'MARKETPLACE') {
-      onNavigate({ type: 'marketplace' });
+      const categoryMap: Record<string, 'ALL' | 'OBJECTS & LIVING' | 'TRADITIONAL CRAFT' | 'ART & TEXTILES'> = {
+        'Shop All Products': 'ALL',
+        'Objects & Living': 'OBJECTS & LIVING',
+        'Traditional Craft': 'TRADITIONAL CRAFT',
+        'Art & Textiles': 'ART & TEXTILES',
+      };
+      if (itemLabel === 'Makers & Brands') onNavigate({ type: 'makers' });
+      else onNavigate({ type: 'marketplace', category: categoryMap[itemLabel] || 'ALL' });
       return;
     }
     if (activeTab === 'THE PROJECT') {
