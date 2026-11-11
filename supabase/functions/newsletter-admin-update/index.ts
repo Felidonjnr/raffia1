@@ -48,9 +48,12 @@ Deno.serve(async (req: Request) => {
     if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return respond({ error: "A valid subscriber email is required." }, origin, 400);
     }
-    if (!["subscribed", "unsubscribed"].includes(status)) {
-      return respond({ error: "Choose subscribed or unsubscribed." }, origin, 400);
+    if (!["subscribed", "unsubscribed", "pending_sync"].includes(status)) {
+      return respond({ error: "Choose a valid subscription status." }, origin, 400);
     }
+    // Selecting pending_sync in the dashboard is a retry action: attempt the
+    // Brevo subscribe operation and only mark subscribed after it succeeds.
+    const targetStatus = status === "pending_sync" ? "subscribed" : status;
 
     const brevoKey = Deno.env.get("BREVO_API_KEY");
     const listId = Number(Deno.env.get("BREVO_LIST_ID"));
@@ -59,7 +62,7 @@ Deno.serve(async (req: Request) => {
     }
 
     let brevoResponse: Response;
-    if (status === "subscribed") {
+    if (targetStatus === "subscribed") {
       brevoResponse = await fetch("https://api.brevo.com/v3/contacts", {
         method: "POST",
         headers: { "api-key": brevoKey, "accept": "application/json", "content-type": "application/json" },
@@ -74,20 +77,20 @@ Deno.serve(async (req: Request) => {
     }
 
     // A contact that is already absent from the selected list is already unsubscribed.
-    if (!brevoResponse.ok && !(status === "unsubscribed" && brevoResponse.status === 404)) {
+    if (!brevoResponse.ok && !(targetStatus === "unsubscribed" && brevoResponse.status === 404)) {
       const details = await brevoResponse.text();
       console.error("Brevo subscription update failed:", brevoResponse.status, details.slice(0, 400));
       return respond({ error: "Brevo could not confirm this change. The saved subscription status was left unchanged." }, origin, 502);
     }
 
     const { error: updateError } = await admin.from("newsletter_subscribers")
-      .update({ status, updated_at: new Date().toISOString() }).eq("email", email);
+      .update({ status: targetStatus, updated_at: new Date().toISOString() }).eq("email", email);
     if (updateError) {
       console.error("Brevo updated but database status update failed:", updateError.message);
       return respond({ error: "Brevo was updated, but the dashboard record could not be updated. Refresh and retry." }, origin, 500);
     }
 
-    return respond({ ok: true, synced: true, status }, origin);
+    return respond({ ok: true, synced: true, status: targetStatus }, origin);
   } catch (error) {
     console.error("Newsletter admin update error:", error);
     return respond({ error: "Unable to update this subscription right now." }, origin, 500);
