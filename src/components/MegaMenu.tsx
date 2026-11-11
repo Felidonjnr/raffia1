@@ -116,10 +116,11 @@ const MENUS: Record<MegaMenuTab, MenuData> = {
 };
 
 export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNavigate, onKeepOpen }) => {
+  // Hooks must run in the same order whether the menu is open or closed.
+  const [hoveredItem, setHoveredItem] = useState<{ label: string; image?: string; caption?: string } | null>(null);
+
   if (!activeTab) return null;
   const menu = MENUS[activeTab];
-
-  const [hoveredItem, setHoveredItem] = useState<{ label: string; image?: string; caption?: string } | null>(null);
 
   const activeImage = hoveredItem?.image || menu.defaultImage;
   const activeCaption = hoveredItem?.caption || menu.defaultCaption;
