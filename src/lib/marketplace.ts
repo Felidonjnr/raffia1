@@ -215,80 +215,73 @@ export async function createManualOrder(payload: {
   };
   items: { productId: string; quantity: number }[];
 }) {
-  if (supabaseConfigured && supabase) {
-    try {
-      // Resolve product IDs to database UUIDs if cart has fallback IDs or slugs
-      let resolvedItems = [...payload.items];
-      try {
-        const { data: dbProducts } = await supabase.from('products').select('id, slug');
-        if (dbProducts && dbProducts.length > 0) {
-          resolvedItems = payload.items.map((item) => {
-            const byId = dbProducts.find((p) => p.id === item.productId);
-            if (byId) return item;
-
-            const bySlug = dbProducts.find((p) => p.slug === item.productId);
-            if (bySlug) return { ...item, productId: bySlug.id };
-
-            const fallbackSlug = FALLBACK_SLUGS_BY_ID[item.productId];
-            if (fallbackSlug) {
-              const match = dbProducts.find((p) => p.slug === fallbackSlug);
-              if (match) return { ...item, productId: match.id };
-            }
-            return item;
-          });
-        }
-      } catch (err) {
-        console.warn('Could not pre-resolve database product UUIDs:', err);
-      }
-
-      const { data, error } = await supabase.rpc('create_manual_order', {
-        p_customer: payload.customer,
-        p_items: resolvedItems,
-      });
-
-      if (!error && data) {
-        return data as {
-          order_id: string;
-          order_number: string;
-          subtotal: number;
-          shipping_fee: number;
-          total: number;
-          whatsapp_number: string;
-          bank_name: string;
-          account_name: string;
-          account_number: string;
-        };
-      }
-      if (error) {
-        console.warn('Supabase create_manual_order RPC error; falling back to local order generation:', error.message);
-      }
-    } catch (err) {
-      console.warn('Failed to call Supabase create_manual_order:', err);
-    }
+  if (!supabaseConfigured || !supabase) {
+    throw new Error('Checkout is temporarily unavailable because the order database is not configured. Your cart has not been submitted.');
   }
 
-  // Graceful fallback for offline / development / before Supabase setup
-  const products = (await fallbackModules.products()).PRODUCTS;
-  const subtotal = payload.items.reduce((sum, item) => {
-    const p = products.find((x) => x.id === item.productId || x.slug === item.productId);
-    return sum + (p ? p.price * item.quantity : 0);
-  }, 0);
-  const settings = await getMarketplaceSettings();
-  const shipping_fee = settings.shipping_flat_rate || 15000;
-  const total = subtotal + shipping_fee;
-  const randomSuffix = Math.random().toString(36).substring(2, 8).toUpperCase();
-  const prefix = settings.order_prefix || 'RL';
-  const order_number = `${prefix}-${new Date().getFullYear()}-${randomSuffix}`;
+  if (!payload.items.length) {
+    throw new Error('Your cart is empty.');
+  }
 
-  return {
-    order_id: `local-${Date.now()}`,
-    order_number,
-    subtotal,
-    shipping_fee,
-    total,
-    whatsapp_number: settings.whatsapp_number || import.meta.env.VITE_WHATSAPP_NUMBER || '2348012345678',
-    bank_name: settings.bank_name || '',
-    account_name: settings.account_name || '',
-    account_number: settings.account_number || '',
+  // The database RPC expects snake_case keys. Passing the UI's camelCase
+  // fields directly caused the RPC to fail and the old code to fabricate
+  // a local order number that was never saved.
+  const customer = {
+    name: `${payload.customer.firstName.trim()} ${payload.customer.lastName.trim()}`.trim(),
+    email: payload.customer.email.trim(),
+    phone: payload.customer.phone.trim(),
+    address: payload.customer.address.trim(),
+    city: payload.customer.city.trim(),
+    state: payload.customer.stateRegion.trim(),
+    country: payload.customer.country.trim() || 'Nigeria',
+    postal_code: payload.customer.postalCode?.trim() || '',
+    notes: payload.customer.patronNotes?.trim() || '',
+  };
+
+  // Resolve legacy cart IDs/slugs to the live product UUIDs expected by SQL.
+  const { data: dbProducts, error: productError } = await supabase
+    .from('products')
+    .select('id, slug')
+    .eq('is_active', true);
+  if (productError) {
+    throw new Error(`We could not verify product availability: ${productError.message}`);
+  }
+
+  const resolvedItems = payload.items.map((item) => {
+    const match = dbProducts?.find((product) =>
+      product.id === item.productId ||
+      product.slug === item.productId ||
+      product.slug === FALLBACK_SLUGS_BY_ID[item.productId]
+    );
+    if (!match) {
+      throw new Error('One of the products in your cart is no longer available. Please refresh your cart.');
+    }
+    return { product_id: match.id, quantity: item.quantity };
+  });
+
+  const { data, error } = await supabase.rpc('create_manual_order', {
+    p_customer: customer,
+    p_items: resolvedItems,
+  });
+
+  if (error) {
+    console.error('Supabase create_manual_order RPC failed:', error.message);
+    throw new Error(`We could not save your order: ${error.message}`);
+  }
+  if (!data?.success || !data?.order_id || !data?.order_number) {
+    throw new Error('The order database did not confirm that your order was saved. Please try again.');
+  }
+
+  return data as {
+    success: true;
+    order_id: string;
+    order_number: string;
+    subtotal: number;
+    shipping_fee: number;
+    total: number;
+    whatsapp_number: string;
+    bank_name: string;
+    account_name: string;
+    account_number: string;
   };
 }
