@@ -133,7 +133,15 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
       return;
     }
     if (activeTab === 'THE PROJECT') {
-      onNavigate({ type: 'project' });
+      const sectionMap: Record<string, 'about' | 'vision' | 'legacy-year' | 'programmes' | 'impact' | 'partners'> = {
+        'About the Project': 'about',
+        'Our Vision': 'vision',
+        'The Legacy Year': 'legacy-year',
+        'Our Programmes': 'programmes',
+        'Why This Matters': 'impact',
+        'Partnerships': 'partners',
+      };
+      onNavigate({ type: 'project', section: sectionMap[itemLabel] || 'about' });
       return;
     }
     if (activeTab === 'THE FESTIVAL') {
@@ -141,7 +149,15 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
       return;
     }
     if (activeTab === 'RAFFIA') {
-      onNavigate({ type: 'raffia' });
+      const topicMap: Record<string, string> = {
+        'Why Raffia?': 'what-is-raffia',
+        'Traditional Knowledge': 'traditional-knowledge',
+        'Culture & Identity': 'raffia-culture',
+        'Creativity & Performance': 'raffia-creativity',
+        'Opportunity & Enterprise': 'raffia-enterprise',
+        'Tourism & Experiences': 'future-of-raffia',
+      };
+      onNavigate({ type: 'raffia', topicSlug: topicMap[itemLabel] });
       return;
     }
     if (activeTab === 'EXPLORE') {
@@ -156,7 +172,11 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNaviga
         'Photo Stories': 'photo-stories',
         'Opportunities': 'opportunities',
       };
-      onNavigate({ type: 'explore', section: sectionMap[itemLabel] });
+      if (itemLabel === 'People & Makers') {
+        onNavigate({ type: 'makers' });
+      } else {
+        onNavigate({ type: 'explore', section: sectionMap[itemLabel] });
+      }
       return;
     }
     if (activeTab === 'GET INVOLVED') {
