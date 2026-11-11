@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { ViewRoute } from '../types';
@@ -118,6 +118,10 @@ const MENUS: Record<MegaMenuTab, MenuData> = {
 export const MegaMenu: React.FC<MegaMenuProps> = ({ activeTab, onClose, onNavigate, onKeepOpen }) => {
   // Hooks must run in the same order whether the menu is open or closed.
   const [hoveredItem, setHoveredItem] = useState<{ label: string; image?: string; caption?: string } | null>(null);
+
+  useEffect(() => {
+    setHoveredItem(null);
+  }, [activeTab]);
 
   if (!activeTab) return null;
   const menu = MENUS[activeTab];
