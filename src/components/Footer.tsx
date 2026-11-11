@@ -133,11 +133,36 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <button
                 key={item}
                 onClick={() => {
-                  if (item === 'Meet the Makers' || item === 'People & Makers') onNavigate({ type: 'makers' });
+                  const projectSections: Record<string, 'about' | 'vision' | 'legacy-year' | 'programmes' | 'impact' | 'partners'> = {
+                    'About the Project': 'about', 'Our Vision': 'vision', 'The Legacy Year': 'legacy-year',
+                    'Our Programmes': 'programmes', 'Impact': 'impact',
+                  };
+                  const raffiaTopics: Record<string, string> = {
+                    'What is Raffia?': 'what-is-raffia', 'Raffia 101': 'raffia-101', 'History & Heritage': 'history-heritage',
+                    'Traditional Knowledge': 'traditional-knowledge', 'Raffia & Culture': 'raffia-culture',
+                    'Raffia & Creativity': 'raffia-creativity', 'Raffia & Enterprise': 'raffia-enterprise',
+                    'Glossary / Learning Resources': 'glossary-learning-resources',
+                  };
+                  const exploreSections: Record<string, string> = {
+                    'Raffia Stories': 'raffia-stories', 'Journal': 'journal', 'Global Raffia': 'global-raffia',
+                    'Archive': 'archive', 'Exhibitions': 'exhibitions', 'Videos': 'videos',
+                    'Photo Stories': 'photo-stories', 'Opportunities': 'opportunities',
+                  };
+                  const involvement: Record<string, 'partner' | 'sponsor' | 'donate' | 'volunteer' | 'maker' | 'schools' | 'young-people' | 'creatives' | 'businesses' | 'media'> = {
+                    'Become a Partner': 'partner', 'Sponsor the Festival': 'sponsor', 'Donate': 'donate',
+                    'Volunteer': 'volunteer', 'Become a Maker': 'maker', 'Schools': 'schools',
+                    'Young People': 'young-people', 'Creatives': 'creatives', 'Businesses': 'businesses', 'Media': 'media',
+                  };
+                  if (projectSections[item]) onNavigate({ type: 'project', section: projectSections[item] });
+                  else if (item === 'Partners') onNavigate({ type: 'get_involved', section: 'partner' });
                   else if (item === 'The Legacy Collection') onNavigate({ type: 'collections' });
-                  else if (item === 'The Legacy Year' || item === 'Our Programmes') onNavigate({ type: 'legacy_year' });
-                  else if (item === 'About the Festival' || item === 'Festival Experiences') onNavigate({ type: 'festival' });
+                  else if (raffiaTopics[item]) onNavigate({ type: 'raffia', topicSlug: raffiaTopics[item] });
+                  else if (item === 'People & Makers' || item === 'Meet the Makers') onNavigate({ type: 'makers' });
+                  else if (exploreSections[item]) onNavigate({ type: 'explore', section: exploreSections[item] });
+                  else if (involvement[item]) onNavigate({ type: 'get_involved', section: involvement[item] });
                   else if (title === 'MARKETPLACE') onNavigate({ type: 'marketplace' });
+                  else if (title === 'THE FESTIVAL') onNavigate({ type: 'festival' });
+                  else if (title === 'EXPLORE') onNavigate({ type: 'explore' });
                   else soon(item);
                 }}
               >
