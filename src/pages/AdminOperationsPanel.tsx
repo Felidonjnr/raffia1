@@ -225,7 +225,7 @@ export const AdminOperationsPanel: React.FC<{ client: any; section: AdminOperati
         setError(data?.error || syncError?.message || 'Could not update the newsletter subscription.');
         return;
       }
-      setRows(current => current.map(item => item.id === row.id ? { ...item, status } : item));
+      setRows(current => current.map(item => item.id === row.id ? { ...item, status: data?.status || status } : item));
       setNotice(data?.synced === false
         ? 'Database status updated, but Brevo could not confirm the list change.'
         : 'Subscription status updated in the database and Brevo.');
