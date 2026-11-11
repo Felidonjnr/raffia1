@@ -36,6 +36,7 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
   const [sessionUser, setSessionUser] = useState<any>(null);
   const [role, setRole] = useState('');
   const [authMode, setAuthMode] = useState<'signin' | 'request'>('signin');
+  const [authView, setAuthView] = useState<'signin' | 'forgot' | 'recovery'>(() => new URLSearchParams(window.location.search).get('auth') === 'recovery' ? 'recovery' : 'signin');
   const [authFullName, setAuthFullName] = useState('');
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
@@ -102,8 +103,9 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
       setSessionUser(data.session?.user || null);
       setLoadingAuth(false);
     });
-    const { data: listener } = client.auth.onAuthStateChange((_event, nextSession) => {
+    const { data: listener } = client.auth.onAuthStateChange((event, nextSession) => {
       setSessionUser(nextSession?.user || null);
+      if (event === 'PASSWORD_RECOVERY') setAuthView('recovery');
     });
     runHealthCheck();
     return () => listener.subscription.unsubscribe();
@@ -193,6 +195,30 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
     if (result.error) {
       setAuthError(result.error.message);
     }
+  };
+
+  const sendPasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!client) return;
+    setAuthError(''); setNotice(null);
+    const { error } = await client.auth.resetPasswordForEmail(authEmail.trim(), {
+      redirectTo: `${window.location.origin}/?auth=recovery`
+    });
+    if (error) { setAuthError(error.message); return; }
+    setNotice({ type: 'success', text: 'Password reset email sent. Open the link in your email to choose a new password.' });
+  };
+
+  const saveNewPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!client) return;
+    setAuthError('');
+    if (authPassword.length < 8) { setAuthError('Password must be at least 8 characters.'); return; }
+    if (authPassword !== authConfirmPassword) { setAuthError('Passwords do not match.'); return; }
+    const { error } = await client.auth.updateUser({ password: authPassword });
+    if (error) { setAuthError(error.message); return; }
+    setAuthPassword(''); setAuthConfirmPassword(''); setAuthView('signin');
+    window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+    setNotice({ type: 'success', text: 'Password updated successfully. Sign in with your new password.' });
   };
 
   const requestAccess = async (e: React.FormEvent) => {
@@ -598,106 +624,40 @@ export const AdminDashboard: React.FC<{ onNavigate: (route: ViewRoute) => void }
           </div>
 
           <div>
-            <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-1">
-              Management Portal
-            </span>
+            <span className="text-xs font-sans uppercase tracking-[0.25em] text-[#B84A28] block mb-1">Management Portal</span>
             <h1 className="font-sans text-3xl sm:text-4xl text-[#181513]">
-              {authMode === 'signin' ? 'Admin Access' : 'Request Access'}
+              {authView === 'recovery' ? 'Set New Password' : authView === 'forgot' ? 'Reset Password' : authMode === 'signin' ? 'Admin Access' : 'Request Access'}
             </h1>
             <p className="text-xs text-[#57524E] leading-relaxed mt-2">
-              {authMode === 'signin'
-                ? 'Sign in to manage products, orders, categories, collections, and artisans.'
-                : 'Create your account to request access to the Raffia Legacy administration dashboard. Approval is required before you can enter.'}
+              {authView === 'recovery' ? 'Choose a new password for your existing Raffia Legacy account.' : authView === 'forgot' ? 'Enter your admin email and we will send a secure reset link.' : authMode === 'signin' ? 'Sign in to manage products, orders, categories, collections, and artisans.' : 'Create your account to request access. Approval is required before you can enter.'}
             </p>
           </div>
-
-          {authError && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-xs font-sans">
-              {authError}
-            </div>
+          {authError && <div className="p-3 bg-red-50 border border-red-200 text-red-800 text-xs font-sans">{authError}</div>}
+          {notice && <div className={`p-3 text-xs font-sans border ${notice.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : notice.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-800' : 'bg-green-50 border-green-200 text-green-800'}`}>{notice.text}</div>}
+          {authView === 'recovery' ? (
+            <form onSubmit={saveNewPassword} className="space-y-4">
+              <label className="block"><span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">New Password</span><input type="password" value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} placeholder="At least 8 characters" className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white" minLength={8} required /></label>
+              <label className="block"><span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Confirm New Password</span><input type="password" value={authConfirmPassword} onChange={(e) => setAuthConfirmPassword(e.target.value)} placeholder="Enter it again" className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white" minLength={8} required /></label>
+              <button type="submit" className="w-full py-3.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-sans uppercase tracking-widest font-bold cursor-pointer">Save New Password</button>
+            </form>
+          ) : authView === 'forgot' ? (
+            <form onSubmit={sendPasswordReset} className="space-y-4">
+              <label className="block"><span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Admin Email Address</span><input type="email" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} placeholder="you@example.com" className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white" required /></label>
+              <button type="submit" className="w-full py-3.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-sans uppercase tracking-widest font-bold cursor-pointer">Send Reset Link</button>
+            </form>
+          ) : (
+            <form onSubmit={authMode === 'signin' ? signIn : requestAccess} className="space-y-4">
+              {authMode === 'request' && <label className="block"><span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Full Name</span><input type="text" value={authFullName} onChange={(e) => setAuthFullName(e.target.value)} placeholder="Your full name" className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white" required /></label>}
+              <label className="block"><span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Email Address</span><input type="email" value={authEmail} onChange={(e) => setAuthEmail(e.target.value)} placeholder="you@example.com" className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white" required /></label>
+              <label className="block"><span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Password</span><input type="password" value={authPassword} onChange={(e) => setAuthPassword(e.target.value)} placeholder="At least 8 characters" className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white" minLength={8} required /></label>
+              {authMode === 'request' && <label className="block"><span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Confirm Password</span><input type="password" value={authConfirmPassword} onChange={(e) => setAuthConfirmPassword(e.target.value)} placeholder="Repeat your password" className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white" minLength={8} required /></label>}
+              <button type="submit" className="w-full py-3.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-sans uppercase tracking-widest font-bold cursor-pointer">{authMode === 'signin' ? 'Sign In to Dashboard' : 'Submit Access Request'}</button>
+            </form>
           )}
-
-          {notice && (
-            <div className={`p-3 text-xs font-sans border ${notice.type === 'error' ? 'bg-red-50 border-red-200 text-red-800' : notice.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-800' : 'bg-green-50 border-green-200 text-green-800'}`}>
-              {notice.text}
-            </div>
-          )}
-
-          <form onSubmit={authMode === 'signin' ? signIn : requestAccess} className="space-y-4">
-            {authMode === 'request' && (
-              <label className="block">
-                <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Full Name</span>
-                <input
-                  type="text"
-                  value={authFullName}
-                  onChange={(e) => setAuthFullName(e.target.value)}
-                  placeholder="Your full name"
-                  className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white"
-                  required
-                />
-              </label>
-            )}
-
-            <label className="block">
-              <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Email Address</span>
-              <input
-                type="email"
-                value={authEmail}
-                onChange={(e) => setAuthEmail(e.target.value)}
-                placeholder="you@example.com"
-                className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white"
-                required
-              />
-            </label>
-
-            <label className="block">
-              <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Password</span>
-              <input
-                type="password"
-                value={authPassword}
-                onChange={(e) => setAuthPassword(e.target.value)}
-                placeholder="At least 8 characters"
-                className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white"
-                minLength={8}
-                required
-              />
-            </label>
-
-            {authMode === 'request' && (
-              <label className="block">
-                <span className="text-xs uppercase tracking-wider text-[#57524E] font-sans">Confirm Password</span>
-                <input
-                  type="password"
-                  value={authConfirmPassword}
-                  onChange={(e) => setAuthConfirmPassword(e.target.value)}
-                  placeholder="Repeat your password"
-                  className="w-full p-3 border border-[#181513]/15 mt-1 font-sans text-sm bg-white"
-                  minLength={8}
-                  required
-                />
-              </label>
-            )}
-
-            <button
-              type="submit"
-              className="w-full py-3.5 bg-[#181513] hover:bg-[#B84A28] text-white text-xs font-sans uppercase tracking-widest font-bold transition-colors cursor-pointer"
-            >
-              {authMode === 'signin' ? 'Sign In to Dashboard' : 'Submit Access Request'}
-            </button>
-          </form>
-
-          <div className="text-center pt-1">
-            <button
-              type="button"
-              onClick={() => {
-                setAuthError('');
-                setNotice(null);
-                setAuthMode(authMode === 'signin' ? 'request' : 'signin');
-              }}
-              className="text-sm font-semibold text-[#B84A28] hover:underline cursor-pointer font-sans"
-            >
-              {authMode === 'signin' ? 'Request Access' : 'Back to Sign In'}
-            </button>
+          <div className="text-center pt-1 space-y-2">
+            {authView === 'signin' && authMode === 'signin' && <button type="button" onClick={() => { setAuthError(''); setNotice(null); setAuthView('forgot'); }} className="block w-full text-sm font-semibold text-[#B84A28] hover:underline cursor-pointer font-sans">Forgot Password?</button>}
+            {authView !== 'signin' && <button type="button" onClick={() => { setAuthError(''); setNotice(null); setAuthView('signin'); setAuthMode('signin'); if (authView === 'recovery') window.history.replaceState({}, document.title, window.location.pathname + window.location.hash); }} className="block w-full text-sm font-semibold text-[#B84A28] hover:underline cursor-pointer font-sans">Back to Sign In</button>}
+            {authView === 'signin' && <button type="button" onClick={() => { setAuthError(''); setNotice(null); setAuthMode(authMode === 'signin' ? 'request' : 'signin'); }} className="block w-full text-sm font-semibold text-[#B84A28] hover:underline cursor-pointer font-sans">{authMode === 'signin' ? 'Request Access' : 'Back to Sign In'}</button>}
           </div>
 
           <div className="pt-4 border-t border-[#181513]/10 text-center">
