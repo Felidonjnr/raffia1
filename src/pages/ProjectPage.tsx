@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowUpRight, ArrowLeft, Maximize2 } from 'lucide-react';
 import { ViewRoute } from '../types';
 import { BrushStrokeUnderline } from '../components/RaffiaLogo';
@@ -21,6 +21,13 @@ const sections = [
 export const ProjectPage: React.FC<ProjectPageProps> = ({ initialSection = 'about', onNavigate }) => {
   const [activeSection, setActiveSection] = useState(initialSection);
   const [lightboxImage, setLightboxImage] = useState<LightboxImage | null>(null);
+
+  useEffect(() => {
+    setActiveSection(initialSection);
+    requestAnimationFrame(() => {
+      document.getElementById(initialSection)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, [initialSection]);
 
   const jump = (id: string) => {
     setActiveSection(id as any);
