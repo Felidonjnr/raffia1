@@ -118,6 +118,10 @@ export default function App() {
     if (currentRoute.type === 'product') return `product-${currentRoute.slug}`;
     if (currentRoute.type === 'collections') return `collections-${currentRoute.slug || 'all'}`;
     if (currentRoute.type === 'maker_detail') return `maker-${currentRoute.slug}`;
+    if (currentRoute.type === 'project') return `project-${currentRoute.section || 'about'}`;
+    if (currentRoute.type === 'raffia') return `raffia-${currentRoute.topicSlug || 'all'}`;
+    if (currentRoute.type === 'explore') return `explore-${currentRoute.section || 'all'}`;
+    if (currentRoute.type === 'get_involved') return `get-involved-${currentRoute.section || 'partner'}`;
     if (currentRoute.type === 'coming_soon') return `coming-soon-${currentRoute.title}`;
     return currentRoute.type;
   }, [currentRoute]);
